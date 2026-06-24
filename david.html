@@ -9,6 +9,14 @@
 :root{--terra:#C4622D;--terra-l:#F2A87E;--green:#27AE60;--green-l:#A8E6CF;--gold:#D4A843;--blue:#2980B9;--blue-l:#AED6F1;--red:#E74C3C;--orange:#E67E22;--purple:#8E44AD;--bg:#F0F4F8;--card:#fff;--border:#D5E3EF;--text:#1A2F3A;--muted:#5A7A8A;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:13px;}
+/* BACK NAV */
+.back-nav{position:sticky;top:0;z-index:999;background:#1A1A2E;display:flex;align-items:center;gap:2px;padding:0 36px;overflow-x:auto;scrollbar-width:none;box-shadow:0 2px 8px rgba(0,0,0,.4);}
+.back-nav::-webkit-scrollbar{display:none;}
+.back-nav a{color:rgba(255,255,255,.65);text-decoration:none;padding:10px 13px;font-size:12px;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;display:flex;align-items:center;gap:4px;}
+.back-nav a:hover{color:#fff;border-bottom-color:#AED6F1;}
+.back-nav .back-link{color:#AED6F1;border-bottom-color:rgba(174,214,241,.4);}
+.back-nav .divider{color:rgba(255,255,255,.2);padding:0 4px;font-size:16px;align-self:center;}
+.back-nav .page-title{color:rgba(255,255,255,.8);font-size:12px;font-weight:600;padding:10px 4px;}
 /* HEADER */
 .hdr{background:linear-gradient(135deg,#0F2D45,#1A5276);color:#fff;padding:28px 36px;}
 .hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
@@ -70,6 +78,12 @@ tbody tr:hover{background:#EDF4F9;}
 </style>
 </head>
 <body>
+
+<nav class="back-nav">
+  <a href="index.html" class="back-link">← Main Dashboard</a>
+  <span class="divider">/</span>
+  <span class="page-title">👤 David's Investor View</span>
+</nav>
 
 <div class="hdr">
   <div class="hdr-top">
