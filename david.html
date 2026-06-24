@@ -260,15 +260,9 @@ tbody tr:hover{background:#EDF4F9;}
   </div>
 </div>
 
-<div class="g2">
-  <div class="card">
-    <h2>Cumulative Recovery — David's $5,000 Payback Curve</h2>
-    <div class="cw"><canvas id="paybackChart"></canvas></div>
-  </div>
-  <div class="card">
-    <h2>Monthly Distribution to David</h2>
-    <div class="cw"><canvas id="monthlyChart"></canvas></div>
-  </div>
+<div class="card">
+  <h2>Monthly Distribution to David</h2>
+  <div class="cw"><canvas id="monthlyChart"></canvas></div>
 </div>
 
 <div class="sec-hdr">Capital Call Scenarios — If External Funding Is Needed</div>
@@ -343,44 +337,7 @@ tbody tr:hover{background:#EDF4F9;}
 
 <script>
 const M=['Aug\'26','Sep\'26','Oct\'26','Nov\'26','Dec\'26','Jan\'27','Feb\'27','Mar\'27','Apr\'27','May\'27','Jun\'27','Jul\'27','Aug\'27','Sep\'27','Oct\'27','Nov\'27','Dec\'27','Jan\'28'];
-const cumulative=[0,0,0,0,0,0,0,0,1256,2512,3768,5024,6280,7536,8792,10048,11304,12560];
 const monthly=[0,0,0,0,0,0,0,0,1256,1256,1256,1256,1256,1256,1256,1256,1256,1256];
-
-// PAYBACK CHART
-new Chart(document.getElementById('paybackChart'),{
-  type:'line',
-  data:{labels:M,datasets:[
-    {label:'Cumulative Received',data:cumulative,borderColor:'#27AE60',backgroundColor:'rgba(39,174,96,.1)',borderWidth:2.5,pointRadius:5,
-     pointBackgroundColor:cumulative.map(v=>v>=5000?'#27AE60':'#2980B9'),
-     tension:.4,fill:true},
-    {label:'$5,000 Investment',data:Array(18).fill(5000),borderColor:'#E74C3C',borderWidth:1.5,borderDash:[6,4],pointRadius:0}
-  ]},
-  options:{responsive:true,maintainAspectRatio:false,
-    plugins:{
-      legend:{position:'top',labels:{font:{size:11}}},
-      tooltip:{callbacks:{label:c=>` ${c.dataset.label}: $${c.raw.toLocaleString()}`}}
-    },
-    scales:{y:{ticks:{callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(0,0,0,.04)'}},x:{grid:{display:false}}}
-  },
-  plugins:[{id:'pbline',afterDraw(chart){
-    const ctx=chart.ctx,ca=chart.chartArea,x=chart.scales.x,y=chart.scales.y;
-    const xPB=x.getPixelForValue(11);
-    const y5k=y.getPixelForValue(5000);
-    ctx.save();
-    ctx.strokeStyle='rgba(39,174,96,.6)';ctx.lineWidth=2;ctx.setLineDash([]);
-    ctx.beginPath();ctx.moveTo(xPB,ca.top);ctx.lineTo(xPB,ca.bottom);ctx.stroke();
-    ctx.fillStyle='rgba(39,174,96,.9)';ctx.font='bold 11px Segoe UI';
-    ctx.textBaseline='top';ctx.fillText('💰 Paid back Jul\'27',xPB+4,ca.top+4);
-    ctx.beginPath();ctx.arc(xPB,y5k,6,0,2*Math.PI);ctx.fillStyle='#27AE60';ctx.fill();
-    // first payout line
-    const xFP=x.getPixelForValue(8);
-    ctx.strokeStyle='rgba(41,128,185,.5)';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
-    ctx.beginPath();ctx.moveTo(xFP,ca.top);ctx.lineTo(xFP,ca.bottom);ctx.stroke();
-    ctx.fillStyle='rgba(41,128,185,.9)';ctx.setLineDash([]);
-    ctx.fillText('🟢 First payout Apr\'27',xFP+4,ca.top+20);
-    ctx.restore();
-  }}]
-});
 
 // MONTHLY PAYOUT CHART
 new Chart(document.getElementById('monthlyChart'),{

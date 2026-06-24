@@ -482,15 +482,10 @@ tbody tr:hover{background:#F0EDE8;}
 </div>
 
 <div class="sec" id="revcharts">Revenue &amp; Profit Charts</div>
-<div class="g2">
-  <div class="card">
-    <h2><span class="dot dgo"></span>Monthly Revenue by SKU</h2>
-    <div class="cw"><canvas id="revChart"></canvas></div>
-  </div>
-  <div class="card">
-    <h2><span class="dot dgr"></span>Cumulative Profit Growth</h2>
-    <div class="cw"><canvas id="cumulChart"></canvas></div>
-  </div>
+<div class="card">
+  <h2><span class="dot dgo"></span>Monthly COG vs Net Profit — What Stays in the Business</h2>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Stacked bars show the two components that matter: <strong style="color:var(--terra);">Cost of Goods</strong> (inventory spend) and <strong style="color:var(--green);">Net Profit</strong> (after Amazon fees &amp; ads). The difference from total revenue goes to Amazon and ads.</div>
+  <div class="cwtall"><canvas id="revChart"></canvas></div>
 </div>
 
 <div class="sec" id="price">Price &amp; COG Optimization</div>
@@ -653,34 +648,22 @@ new Chart(document.getElementById('cashChart'),{
   }}]
 });
 
-// ── REVENUE CHART ─────────────────────────────────────────────────
+// ── REVENUE CHART: COG + NET PROFIT ──────────────────────────────
+// Units sold per month: Terra [0,100,200,400,800,1600,3200,3500,...] Gray/Black [75,150,300,350,...]
+const cogData=[404,1201,2402,3459,5035,8187,14491,15673,15673,15673,15673,15673,15673,15673,15673,15673,15673,15673];
+const netProfitData=[0,0,4115,5719,7922,12328,21140,22792,22792,22792,22792,22792,22792,22792,22792,22792,22792,22792];
 new Chart(document.getElementById('revChart'),{
   type:'bar',
   data:{labels:M,datasets:[
-    {label:'Terracotta',data:[0,1895,3790,7580,15160,30320,60640,66325,66325,66325,66325,66325,66325,66325,66325,66325,66325,66325],backgroundColor:'#C4622D',borderRadius:3},
-    {label:'Gray',data:[1264,2528,5055,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898],backgroundColor:'#7A8B8B',borderRadius:3},
-    {label:'Black',data:[1264,2528,5055,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898,5898],backgroundColor:'#2C2C2C',borderRadius:3}
+    {label:'Cost of Goods',data:cogData,backgroundColor:'rgba(196,98,45,.75)',borderRadius:3},
+    {label:'Net Profit',data:netProfitData,backgroundColor:'rgba(39,174,96,.8)',borderRadius:3}
   ]},
   options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: $${c.raw.toLocaleString()}`}}},
+    plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{
+      label:c=>` ${c.dataset.label}: $${c.raw.toLocaleString()}`,
+      footer:items=>`Total kept: $${items.reduce((s,c)=>s+c.raw,0).toLocaleString()}`
+    }}},
     scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'},grid:{color:'rgba(0,0,0,.04)'}}}
-  }
-});
-
-// ── CUMULATIVE PROFIT CHART ───────────────────────────────────────
-const cumP=[0,0,4115,9834,17756,30084,51224,74016,96808,119600,142392,165184,187976,210768,233560,256352,279144,301936];
-new Chart(document.getElementById('cumulChart'),{
-  type:'line',
-  data:{labels:M,datasets:[
-    {label:'Monthly Profit',data:monthlyProfit,borderColor:'#3D9970',backgroundColor:'rgba(61,153,112,.1)',borderWidth:2,pointRadius:3,tension:.4,fill:true,yAxisID:'y'},
-    {label:'Cumulative Profit',data:cumP,borderColor:'#D4A843',backgroundColor:'transparent',borderWidth:2.5,pointRadius:3,tension:.4,yAxisID:'y2'}
-  ]},
-  options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: $${c.raw.toLocaleString()}`}}},
-    scales:{
-      y:{position:'left',ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'},grid:{color:'rgba(0,0,0,.04)'}},
-      y2:{position:'right',ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K',color:'#D4A843'},grid:{drawOnChartArea:false}}
-    }
   }
 });
 
