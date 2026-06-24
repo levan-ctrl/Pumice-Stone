@@ -31,11 +31,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .payback h2{font-size:16px;font-weight:700;margin-bottom:4px;}
 .payback p{font-size:12px;opacity:.9;line-height:1.5;}
 .payback .months-badge{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+/* NOTICE BANNER */
+.notice{background:linear-gradient(90deg,#7B3F00,#E67E22);color:#fff;padding:13px 36px;display:flex;align-items:center;gap:16px;font-size:13px;}
+.notice strong{font-size:14px;}
 /* KPIS */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;padding:20px 36px;}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;padding:20px 36px;}
 .kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);}
 .kpi .v{font-size:22px;font-weight:800;margin:5px 0 3px;}.kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}.kpi .s{font-size:11px;color:var(--muted);}
-.c-gold{color:var(--gold);}.c-grn{color:var(--green);}.c-blue{color:var(--blue);}.c-pur{color:var(--purple);}
+.c-gold{color:var(--gold);}.c-grn{color:var(--green);}.c-blue{color:var(--blue);}.c-pur{color:var(--purple);}.c-org{color:var(--orange);}
 /* MAIN */
 .main{padding:0 36px 40px;}
 .sec-hdr{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;padding:16px 0 8px;}
@@ -53,6 +56,7 @@ tbody tr:nth-child(even){background:#F8FAFC;}
 tbody tr:hover{background:#EDF4F9;}
 .good{color:var(--green);font-weight:700;}.warn{color:var(--orange);font-weight:700;}.danger{color:var(--red);font-weight:700;}
 .tr-pb{background:linear-gradient(90deg,rgba(39,174,96,.12),transparent)!important;border-left:3px solid var(--green);}
+.tr-hold{background:#FFF8F0!important;border-left:3px solid var(--orange);}
 .tr-ads{background:#F8F4FC!important;}
 /* Invest details */
 .inv-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;}
@@ -65,7 +69,7 @@ tbody tr:hover{background:#EDF4F9;}
 .progress-wrap{margin:14px 0;}
 .progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px;}
 .progress-bar{height:12px;background:#E8F4EA;border-radius:6px;overflow:hidden;}
-.progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--green),#52BE80);transition:width .3s;}
+.progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--green),#52BE80);}
 /* Timeline */
 .tl-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
 .tl-row:last-child{border-bottom:none;}
@@ -73,7 +77,7 @@ tbody tr:hover{background:#EDF4F9;}
 .tl-content h4{font-size:13px;font-weight:700;margin-bottom:2px;}
 .tl-content p{font-size:11px;color:var(--muted);line-height:1.4;}
 .tag{display:inline-block;padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700;margin-top:3px;}
-.tag-grn{background:#E8F8F0;color:var(--green);}.tag-org{background:#FEF6EC;color:var(--orange);}.tag-pur{background:#F5EEF8;color:var(--purple);}
+.tag-grn{background:#E8F8F0;color:var(--green);}.tag-org{background:#FEF6EC;color:var(--orange);}.tag-pur{background:#F5EEF8;color:var(--purple);}.tag-red{background:#FEF0EE;color:var(--red);}
 .footer{background:#0F2D45;color:rgba(255,255,255,.5);text-align:center;padding:14px;font-size:11px;margin-top:16px;}
 </style>
 </head>
@@ -100,26 +104,32 @@ tbody tr:hover{background:#EDF4F9;}
   <div style="display:flex;gap:28px;flex-wrap:wrap;">
     <div><div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;">David Invests</div><div style="font-size:18px;font-weight:700;color:#AED6F1;">$5,000</div></div>
     <div><div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;">Total Project Capital</div><div style="font-size:18px;font-weight:700;color:#AED6F1;">$90,729</div></div>
-    <div><div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;">David's Proportional Share</div><div style="font-size:18px;font-weight:700;color:#AED6F1;">5.511%</div></div>
+    <div><div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;">David's Share</div><div style="font-size:18px;font-weight:700;color:#AED6F1;">5.511%</div></div>
     <div><div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;">Of Every Dollar Profit</div><div style="font-size:18px;font-weight:700;color:#AED6F1;">$0.0551</div></div>
   </div>
+</div>
+
+<div class="notice">
+  <span style="font-size:22px;">⚠️</span>
+  <div><strong>No distributions until business is cash-positive.</strong> During the working capital deficit period (Aug 2026 – Mar 2027), all profits are retained by the business. David's first payout is <strong>April 2027</strong> when the business turns self-financing.</div>
 </div>
 
 <div class="payback">
   <div class="payback-icon">💰</div>
   <div>
-    <h2>Full Investment Recovered: April 2027</h2>
-    <p>David receives his proportional 5.51% of net monthly profits (after ads). At current projections using exact Excel figures (Terra $5.51/unit, G/B $5.02/unit), cumulative distributions exceed the $5,000 investment in <strong>April 2027</strong> — 9 months of operations. Every month after April is pure profit for David.</p>
+    <h2>Full Investment Recovered: July 2027</h2>
+    <p>Distributions begin April 2027 at $1,256/month once the business is cash-positive. By July 2027 (4th payout), cumulative distributions reach $5,024 — David's $5,000 is fully recovered. Every month after July is pure profit with no capital at risk.</p>
   </div>
-  <div class="months-badge">✅ Payback in 9 months</div>
+  <div class="months-badge">✅ Payback in July 2027</div>
 </div>
 
 <div class="kpis">
-  <div class="kpi"><div class="l">David's Total Return</div><div class="v c-grn">~$16,639</div><div class="s">Over 18 months</div></div>
-  <div class="kpi"><div class="l">Net Profit on $5K</div><div class="v c-gold">~$11,639</div><div class="s">+233% ROI</div></div>
-  <div class="kpi"><div class="l">Peak Monthly Payout</div><div class="v c-blue">$1,256</div><div class="s">Apr 2027 onward</div></div>
-  <div class="kpi"><div class="l">Investment Recovered</div><div class="v c-grn">Apr 2027</div><div class="s">Month 9 of operations</div></div>
-  <div class="kpi"><div class="l">David's Share of Profits</div><div class="v c-pur">5.51%</div><div class="s">Every month, forever</div></div>
+  <div class="kpi"><div class="l">David's Total Return</div><div class="v c-grn">$12,560</div><div class="s">10 payouts × $1,256</div></div>
+  <div class="kpi"><div class="l">Net Profit on $5K</div><div class="v c-gold">$7,560</div><div class="s">+151% ROI</div></div>
+  <div class="kpi"><div class="l">First Distribution</div><div class="v c-blue">Apr 2027</div><div class="s">Business self-financing</div></div>
+  <div class="kpi"><div class="l">Investment Recovered</div><div class="v c-grn">Jul 2027</div><div class="s">4th payout month</div></div>
+  <div class="kpi"><div class="l">Max Capital Deployed</div><div class="v c-org">$1,879</div><div class="s">Dec 2026 working capital</div></div>
+  <div class="kpi"><div class="l">David's Profit Share</div><div class="v c-pur">5.51%</div><div class="s">Every month, forever</div></div>
 </div>
 
 <div class="main">
@@ -130,37 +140,80 @@ tbody tr:hover{background:#EDF4F9;}
     <div class="inv-row"><span class="lbl">David's investment</span><span class="val" style="color:var(--blue);">$5,000</span></div>
     <div class="inv-row"><span class="lbl">Total project capital needed</span><span class="val">$90,729</span></div>
     <div class="inv-row"><span class="lbl">David's ownership percentage</span><span class="val" style="color:var(--green);">5.511%</span></div>
-    <div class="inv-row"><span class="lbl">Distribution basis</span><span class="val">Monthly net profit</span></div>
-    <div class="inv-row"><span class="lbl">Aug–Sep distribution</span><span class="val" style="color:var(--orange);">$0 (ads reinvestment)</span></div>
-    <div class="inv-row"><span class="lbl">First distribution</span><span class="val" style="color:var(--green);">Oct 2026 — $320</span></div>
+    <div class="inv-row"><span class="lbl">Max working capital obligation</span><span class="val" style="color:var(--orange);">$1,879 (Dec 2026)</span></div>
+    <div class="inv-row"><span class="lbl">Equity stake after working capital</span><span class="val" style="color:var(--blue);">$3,121 free equity</span></div>
+    <div class="inv-row"><span class="lbl">Distribution policy</span><span class="val" style="color:var(--orange);">Holds until cash-positive</span></div>
+    <div class="inv-row"><span class="lbl">First distribution</span><span class="val" style="color:var(--green);">Apr 2027 — $1,256</span></div>
     <div class="progress-wrap">
       <div class="progress-label"><span>Investment recovered</span><span>$5,000 target</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div>
-      <div style="font-size:11px;color:var(--green);margin-top:4px;font-weight:700;">Fully recovered in April 2027 (+$335 over)</div>
+      <div style="font-size:11px;color:var(--green);margin-top:4px;font-weight:700;">Fully recovered in July 2027 (+$24 over)</div>
     </div>
   </div>
   <div class="inv-box">
     <h3>Key Milestones for David</h3>
     <div class="tl-row">
-      <div class="tl-icon" style="background:#FEF6EC;">⚡</div>
-      <div class="tl-content"><h4>Oct 2026 — First Payout</h4><p>$227. Sales ramp begins. Profit uses "after ads" Excel figures. David's cut is separate from the business's cash flow — he gets paid regardless of reorder deposit timing.</p><span class="tag tag-org">Month 3 of ops</span></div>
-    </div>
-    <div class="tl-row">
-      <div class="tl-icon" style="background:#E8F8F0;">💼</div>
-      <div class="tl-content"><h4>Mar 2027 — $4,079 cumulative</h4><p>81.6% of investment recovered. Terracotta now at 3,500 units/month cap. Terra $5.51/unit after ads. Almost there.</p><span class="tag tag-grn">81.6% recovered</span></div>
+      <div class="tl-icon" style="background:#FEF6EC;">⏳</div>
+      <div class="tl-content"><h4>Aug 2026 – Mar 2027 — Holding Period</h4><p>Business is cash-negative (funding reorders). David's profit share is retained inside the business as working capital support. No distributions — capital at work.</p><span class="tag tag-org">8 months · no payout</span></div>
     </div>
     <div class="tl-row">
       <div class="tl-icon" style="background:#E8F8F0;">🟢</div>
-      <div class="tl-content"><h4>April 2027 — FULLY PAID BACK</h4><p>Cumulative distributions: $5,335. David has received his $5,000 back plus $335 profit. Clean month — no reorder payments. All future payments are pure gain.</p><span class="tag tag-grn">100% + $335 profit</span></div>
+      <div class="tl-content"><h4>April 2027 — FIRST PAYOUT: $1,256</h4><p>Business turns self-financing. Cash balance: +$13,818. David receives his first full monthly distribution. This continues every month from here.</p><span class="tag tag-grn">$1,256/month begins</span></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-icon" style="background:#E8F8F0;">💰</div>
+      <div class="tl-content"><h4>July 2027 — FULLY PAID BACK</h4><p>Cumulative distributions: $5,024. David's $5,000 is fully recovered after 4 monthly payouts (Apr, May, Jun, Jul). Every payment after this is pure profit.</p><span class="tag tag-grn">100% recovered + $24</span></div>
     </div>
     <div class="tl-row">
       <div class="tl-icon" style="background:#F5EEF8;">🚀</div>
-      <div class="tl-content"><h4>Apr 2027 → Jan 2028 — Pure Profit</h4><p>$1,256/month for 10 months = $12,560 pure profit, no capital at risk.</p><span class="tag tag-pur">$1,256/mo profit</span></div>
+      <div class="tl-content"><h4>Aug 2027 → Jan 2028 — Pure Profit</h4><p>$1,256/month for 6 months = $7,536 pure profit after payback. Total net over 18 months: $7,560.</p><span class="tag tag-pur">$7,560 net profit</span></div>
     </div>
   </div>
 </div>
 
-<div class="sec-hdr">David's Month-by-Month Distribution Schedule</div>
+<!-- WORKING CAPITAL SECTION -->
+<div class="sec-hdr">Working Capital Obligation — Aug 2026 → Mar 2027</div>
+<div class="card" style="border-left:4px solid var(--orange);">
+  <h2>David's 5.51% Share of Business Cash Deficit</h2>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">While the business is cash-negative, David's proportional share of the shortfall must be covered by his $5,000. The maximum obligation is <strong style="color:var(--red);">$1,879 in December 2026</strong> — well within his $5K. His $5K is structured to cover both working capital AND equity stake.</p>
+  <div style="overflow-x:auto;">
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left;">Month</th>
+        <th>Business Cash Balance</th>
+        <th>David's 5.51% Obligation</th>
+        <th>Covered by $5K?</th>
+        <th>Distribution This Month</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="tr-ads"><td>Aug 2026 📢</td><td style="color:var(--muted);">$0 (ads phase)</td><td style="color:var(--muted);">$0</td><td class="good">✅ Yes</td><td style="color:var(--purple);">$0 — ads</td></tr>
+      <tr class="tr-ads"><td>Sep 2026 📢</td><td style="color:var(--muted);">$0 (ads phase)</td><td style="color:var(--muted);">$0</td><td class="good">✅ Yes</td><td style="color:var(--purple);">$0 — ads</td></tr>
+      <tr class="tr-hold"><td>Oct 2026 ⚡</td><td class="danger">−$8,643</td><td class="warn">−$476</td><td class="good">✅ Yes ($4,524 left)</td><td class="warn">$0 — cash held</td></tr>
+      <tr class="tr-hold"><td>Nov 2026</td><td class="warn">−$2,924</td><td style="color:var(--muted);">−$161</td><td class="good">✅ Yes</td><td class="warn">$0 — cash held</td></tr>
+      <tr class="tr-hold" style="background:#FEF0EE!important;"><td><strong>Dec 2026 ← MAX</strong></td><td class="danger">−$34,108</td><td class="danger"><strong>−$1,879</strong></td><td class="good">✅ Yes ($3,121 left)</td><td class="warn">$0 — cash held</td></tr>
+      <tr class="tr-hold"><td>Jan 2027 ↑</td><td class="warn">−$21,780</td><td class="warn">−$1,200</td><td class="good">✅ Yes</td><td class="warn">$0 — cash held</td></tr>
+      <tr class="tr-hold"><td>Feb 2027</td><td class="warn">−$22,428</td><td class="warn">−$1,236</td><td class="good">✅ Yes</td><td class="warn">$0 — cash held</td></tr>
+      <tr class="tr-hold"><td>Mar 2027</td><td class="warn">−$8,974</td><td class="warn">−$495</td><td class="good">✅ Yes</td><td class="warn">$0 — last month</td></tr>
+      <tr class="tr-pb"><td><strong>Apr 2027 🟢</strong></td><td class="good">+$13,818</td><td class="good">+$761</td><td class="good">✅ Self-financed</td><td class="good"><strong>$1,256 ← FIRST PAYOUT</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;">
+    <div style="background:#FEF6EC;border-radius:8px;padding:14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--orange);margin-bottom:8px;">📋 How David's $5K Is Deployed</div>
+      <div style="font-size:12px;line-height:2;">Working capital (max): <strong style="color:var(--red);">$1,879</strong><br>Free equity (remainder): <strong style="color:var(--blue);">$3,121</strong><br>Total: <strong>$5,000</strong><br><span style="color:var(--muted);">$5K easily covers worst-case deficit.</span></div>
+    </div>
+    <div style="background:#E8F8F0;border-radius:8px;padding:14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;">✅ From April 2027 Onward</div>
+      <div style="font-size:12px;line-height:2;">No more capital calls ever.<br>David's working capital converts to equity.<br>Monthly distributions of <strong>$1,256</strong> for 10 months.</div>
+    </div>
+  </div>
+</div>
+
+<!-- DISTRIBUTION SCHEDULE -->
+<div class="sec-hdr">David's Distribution Schedule — Starts April 2027</div>
 <div class="card">
   <h2>Monthly Payouts — 18 Months (Aug 2026 – Jan 2028)</h2>
   <div style="overflow-x:auto;">
@@ -170,44 +223,45 @@ tbody tr:hover{background:#EDF4F9;}
         <th style="text-align:left;">Month</th>
         <th>Business Net Profit</th>
         <th>David's Share (5.51%)</th>
+        <th>Distributed to David</th>
         <th>Cumulative Received</th>
-        <th>Investment Still at Risk</th>
         <th>Status</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="tr-ads"><td>Aug 2026 📢</td><td style="color:var(--purple);">$0 → reinvested in ads</td><td style="color:var(--purple);">$0</td><td>$0</td><td>$5,000</td><td style="color:var(--purple);">Ads reinvestment</td></tr>
-      <tr class="tr-ads"><td>Sep 2026 📢</td><td style="color:var(--purple);">$0 → reinvested in ads</td><td style="color:var(--purple);">$0</td><td>$0</td><td>$5,000</td><td style="color:var(--purple);">Ads reinvestment</td></tr>
-      <tr><td>Oct 2026</td><td>$4,115</td><td class="good">+$227</td><td>$227</td><td>$4,773</td><td class="warn">4.5% recovered</td></tr>
-      <tr><td>Nov 2026</td><td>$5,719</td><td class="good">+$315</td><td>$542</td><td>$4,458</td><td class="warn">10.8% recovered</td></tr>
-      <tr><td>Dec 2026</td><td>$7,922</td><td class="good">+$437</td><td>$979</td><td>$4,021</td><td class="warn">19.6% recovered</td></tr>
-      <tr><td>Jan 2027</td><td>$12,328</td><td class="good">+$679</td><td>$1,658</td><td>$3,342</td><td class="warn">33.2% recovered</td></tr>
-      <tr><td>Feb 2027</td><td>$21,140</td><td class="good">+$1,165</td><td>$2,823</td><td>$2,177</td><td class="warn">56.5% recovered</td></tr>
-      <tr><td>Mar 2027</td><td>$22,792</td><td class="good">+$1,256</td><td>$4,079</td><td>$921</td><td class="warn">81.6% recovered</td></tr>
-      <tr class="tr-pb"><td><strong>Apr 2027 🟢</strong></td><td>$22,792</td><td class="good"><strong>+$1,256</strong></td><td><strong>$5,335</strong></td><td style="color:var(--green);font-weight:700;">$0 — PAID BACK</td><td class="good">✅ Fully recovered!</td></tr>
-      <tr class="tr-pb"><td>May 2027</td><td>$22,792</td><td class="good">+$1,256</td><td>$6,591</td><td style="color:var(--green);">Pure profit</td><td class="good">+$1,591 profit</td></tr>
-      <tr class="tr-pb"><td>Jun 2027</td><td>$22,792</td><td class="good">+$1,256</td><td>$7,847</td><td style="color:var(--green);">Pure profit</td><td class="good">+$2,847 profit</td></tr>
-      <tr class="tr-pb"><td>Jul 2027</td><td>$22,792</td><td class="good">+$1,256</td><td>$9,103</td><td style="color:var(--green);">Pure profit</td><td class="good">+$4,103 profit</td></tr>
-      <tr class="tr-pb"><td>Aug 2027</td><td>$22,792</td><td class="good">+$1,256</td><td>$10,359</td><td style="color:var(--green);">Pure profit</td><td class="good">+$5,359 profit</td></tr>
-      <tr class="tr-pb"><td>Sep 2027</td><td>$22,792</td><td class="good">+$1,256</td><td>$11,615</td><td style="color:var(--green);">Pure profit</td><td class="good">+$6,615 profit</td></tr>
-      <tr class="tr-pb"><td>Oct 2027</td><td>$22,792</td><td class="good">+$1,256</td><td>$12,871</td><td style="color:var(--green);">Pure profit</td><td class="good">+$7,871 profit</td></tr>
-      <tr class="tr-pb"><td>Nov 2027</td><td>$22,792</td><td class="good">+$1,256</td><td>$14,127</td><td style="color:var(--green);">Pure profit</td><td class="good">+$9,127 profit</td></tr>
-      <tr class="tr-pb"><td>Dec 2027</td><td>$22,792</td><td class="good">+$1,256</td><td>$15,383</td><td style="color:var(--green);">Pure profit</td><td class="good">+$10,383 profit</td></tr>
-      <tr class="tr-pb"><td>Jan 2028</td><td>$22,792</td><td class="good">+$1,256</td><td>$16,639</td><td style="color:var(--green);">Pure profit</td><td class="good">+$11,639 profit</td></tr>
+      <tr class="tr-ads"><td>Aug 2026 📢</td><td style="color:var(--purple);">$0 → ads</td><td style="color:var(--purple);">$0</td><td style="color:var(--purple);">$0</td><td>$0</td><td style="color:var(--purple);">Ads reinvestment</td></tr>
+      <tr class="tr-ads"><td>Sep 2026 📢</td><td style="color:var(--purple);">$0 → ads</td><td style="color:var(--purple);">$0</td><td style="color:var(--purple);">$0</td><td>$0</td><td style="color:var(--purple);">Ads reinvestment</td></tr>
+      <tr class="tr-hold"><td>Oct 2026</td><td>$4,115</td><td class="warn">$227</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Cash negative · held</td></tr>
+      <tr class="tr-hold"><td>Nov 2026</td><td>$5,719</td><td class="warn">$315</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Cash negative · held</td></tr>
+      <tr class="tr-hold"><td>Dec 2026</td><td>$7,922</td><td class="warn">$437</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Cash negative · held</td></tr>
+      <tr class="tr-hold"><td>Jan 2027</td><td>$12,328</td><td class="warn">$679</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Cash negative · held</td></tr>
+      <tr class="tr-hold"><td>Feb 2027</td><td>$21,140</td><td class="warn">$1,165</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Cash negative · held</td></tr>
+      <tr class="tr-hold"><td>Mar 2027</td><td>$22,792</td><td class="warn">$1,256</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Last deficit month</td></tr>
+      <tr class="tr-pb"><td><strong>Apr 2027 🟢</strong></td><td>$22,792</td><td class="good">$1,256</td><td class="good"><strong>$1,256</strong></td><td>$1,256</td><td class="good">✅ First payout!</td></tr>
+      <tr class="tr-pb"><td>May 2027</td><td>$22,792</td><td class="good">$1,256</td><td class="good">$1,256</td><td>$2,512</td><td class="good">25.1% of $5K back</td></tr>
+      <tr class="tr-pb"><td>Jun 2027</td><td>$22,792</td><td class="good">$1,256</td><td class="good">$1,256</td><td>$3,768</td><td class="good">75.4% of $5K back</td></tr>
+      <tr class="tr-pb" style="border-left:3px solid #D4A843!important;background:linear-gradient(90deg,rgba(212,168,67,.12),transparent)!important;"><td><strong>Jul 2027 💰</strong></td><td>$22,792</td><td class="good">$1,256</td><td class="good"><strong>$1,256</strong></td><td><strong>$5,024</strong></td><td class="good" style="color:var(--gold);font-weight:700;">✅ PAID BACK!</td></tr>
+      <tr class="tr-pb"><td>Aug 2027</td><td>$22,792</td><td class="good">$1,256</td><td class="good">$1,256</td><td>$6,280</td><td class="good">+$1,280 pure profit</td></tr>
+      <tr class="tr-pb"><td>Sep 2027</td><td>$22,792</td><td class="good">$1,256</td><td class="good">$1,256</td><td>$7,536</td><td class="good">+$2,536 pure profit</td></tr>
+      <tr class="tr-pb"><td>Oct 2027</td><td>$22,792</td><td class="good">$1,256</td><td class="good">$1,256</td><td>$8,792</td><td class="good">+$3,792 pure profit</td></tr>
+      <tr class="tr-pb"><td>Nov 2027</td><td>$22,792</td><td class="good">$1,256</td><td class="good">$1,256</td><td>$10,048</td><td class="good">+$5,048 pure profit</td></tr>
+      <tr class="tr-pb"><td>Dec 2027</td><td>$22,792</td><td class="good">$1,256</td><td class="good">$1,256</td><td>$11,304</td><td class="good">+$6,304 pure profit</td></tr>
+      <tr class="tr-pb"><td>Jan 2028</td><td>$22,792</td><td class="good">$1,256</td><td class="good">$1,256</td><td>$12,560</td><td class="good">+$7,560 pure profit</td></tr>
       <tr style="background:#0F2D45;color:#fff;font-weight:700;">
         <td style="color:#fff;">18-MONTH TOTAL</td>
         <td style="color:#AED6F1;">$301,936</td>
-        <td style="color:#A8E6CF;">+$16,639</td>
-        <td style="color:#A8E6CF;">$16,639 received</td>
-        <td style="color:#A8E6CF;">$11,639 net profit</td>
-        <td style="color:#A8E6CF;">233% ROI</td>
+        <td style="color:#A8E6CF;">$16,639 earned</td>
+        <td style="color:#A8E6CF;">$12,560 paid out</td>
+        <td style="color:#A8E6CF;">$12,560 received</td>
+        <td style="color:#A8E6CF;">$7,560 net · 151% ROI</td>
       </tr>
     </tbody>
   </table>
   </div>
   <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;font-size:11px;">
-    <span style="background:#F8F4FC;color:var(--purple);padding:3px 10px;border-radius:10px;font-weight:600;">📢 Aug+Sep: profits reinvested in ads, no distribution</span>
-    <span style="background:#E8F8F0;color:var(--green);padding:3px 10px;border-radius:10px;font-weight:600;">🟢 Green rows = investment fully recovered, pure profit</span>
+    <span style="background:#F8F4FC;color:var(--purple);padding:3px 10px;border-radius:10px;font-weight:600;">📢 Aug+Sep: profits → ads, no distribution</span>
+    <span style="background:#FFF8F0;color:var(--orange);padding:3px 10px;border-radius:10px;font-weight:600;border-left:3px solid var(--orange);">⏳ Orange rows: profit earned but held — business cash negative</span>
+    <span style="background:#E8F8F0;color:var(--green);padding:3px 10px;border-radius:10px;font-weight:600;">🟢 Green rows: distributed to David (Apr 2027+)</span>
   </div>
 </div>
 
@@ -217,33 +271,33 @@ tbody tr:hover{background:#EDF4F9;}
     <div class="cw"><canvas id="paybackChart"></canvas></div>
   </div>
   <div class="card">
-    <h2>Monthly Payout to David</h2>
+    <h2>Monthly Distribution to David</h2>
     <div class="cw"><canvas id="monthlyChart"></canvas></div>
   </div>
 </div>
 
-<div class="sec-hdr">Risk & Return Summary</div>
+<div class="sec-hdr">Risk &amp; Return Summary</div>
 <div class="card">
   <h2>What David Should Know</h2>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
     <div style="background:#E8F8F0;border-radius:8px;padding:14px;">
       <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px;">✅ Upside</div>
       <ul style="list-style:none;font-size:12px;line-height:2;">
-        <li>• 233% ROI over 18 months</li>
-        <li>• $1,256/month steady from Apr 2027</li>
+        <li>• 151% ROI over 18 months</li>
+        <li>• $1,256/month from April 2027</li>
         <li>• Proportional share is permanent</li>
-        <li>• Business is already self-financing by Mar 2027 (no more capital calls)</li>
-        <li>• 18-month total profit (after ads): $301,936</li>
+        <li>• After April 2027 — no more capital calls ever</li>
+        <li>• 18-month business profit: $301,936</li>
       </ul>
     </div>
     <div style="background:#FEF6EC;border-radius:8px;padding:14px;">
       <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px;">⚠️ What to Know</div>
       <ul style="list-style:none;font-size:12px;line-height:2;">
-        <li>• Aug + Sep: no distribution (ads)</li>
+        <li>• No distributions Aug 2026 – Mar 2027</li>
+        <li>• Max capital deployed: $1,879 (Dec 2026)</li>
+        <li>• $5K covers all working capital obligations</li>
         <li>• Amazon sales caps can vary</li>
         <li>• Projections assume steady ramp-up</li>
-        <li>• Max deficit month: Dec 2026 (−$26,664) but does NOT affect David's distributions</li>
-        <li>• Monthly profit does not subtract reorders — those are business cash flow</li>
       </ul>
     </div>
     <div style="background:#F0F4F8;border-radius:8px;padding:14px;">
@@ -251,8 +305,8 @@ tbody tr:hover{background:#EDF4F9;}
       <ul style="list-style:none;font-size:12px;line-height:2;">
         <li>• S&amp;P 500: ~10% / year</li>
         <li>• $5K in S&amp;P = ~$5,990 after 18 months</li>
-        <li>• David's projection: $16,639 (+233%)</li>
-        <li>• Payback: 7 months vs never guaranteed</li>
+        <li>• David's projection: $12,560 (+151%)</li>
+        <li>• Payback: July 2027 (guaranteed if projections hold)</li>
         <li>• Risk-adjusted return: significantly above market</li>
       </ul>
     </div>
@@ -261,12 +315,12 @@ tbody tr:hover{background:#EDF4F9;}
 
 </div>
 
-<div class="footer">David's Investor Summary · Sifri Art Pumice Stone · 5.511% equity for $5,000 · Payback April 2027 · 233% ROI · Terra $5.51/unit after ads · Prepared by Levan Rurua · levan@levanrurua.com</div>
+<div class="footer">David's Investor Summary · Sifri Art Pumice Stone · 5.511% equity for $5,000 · First payout April 2027 · Payback July 2027 · 151% ROI · $12,560 total return · Prepared by Levan Rurua · levan@levanrurua.com</div>
 
 <script>
 const M=['Aug\'26','Sep\'26','Oct\'26','Nov\'26','Dec\'26','Jan\'27','Feb\'27','Mar\'27','Apr\'27','May\'27','Jun\'27','Jul\'27','Aug\'27','Sep\'27','Oct\'27','Nov\'27','Dec\'27','Jan\'28'];
-const cumulative=[0,0,227,542,979,1658,2823,4079,5335,6591,7847,9103,10359,11615,12871,14127,15383,16639];
-const monthly=[0,0,227,315,437,679,1165,1256,1256,1256,1256,1256,1256,1256,1256,1256,1256,1256];
+const cumulative=[0,0,0,0,0,0,0,0,1256,2512,3768,5024,6280,7536,8792,10048,11304,12560];
+const monthly=[0,0,0,0,0,0,0,0,1256,1256,1256,1256,1256,1256,1256,1256,1256,1256];
 
 // PAYBACK CHART
 new Chart(document.getElementById('paybackChart'),{
@@ -280,24 +334,26 @@ new Chart(document.getElementById('paybackChart'),{
   options:{responsive:true,maintainAspectRatio:false,
     plugins:{
       legend:{position:'top',labels:{font:{size:11}}},
-      tooltip:{callbacks:{label:c=>` ${c.dataset.label}: $${c.raw.toLocaleString()}`}},
-      annotation:{}
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label}: $${c.raw.toLocaleString()}`}}
     },
     scales:{y:{ticks:{callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(0,0,0,.04)'}},x:{grid:{display:false}}}
   },
   plugins:[{id:'pbline',afterDraw(chart){
     const ctx=chart.ctx,ca=chart.chartArea,x=chart.scales.x,y=chart.scales.y;
-    // payback crossover at index 7
-    const xPB=x.getPixelForValue(8);
+    const xPB=x.getPixelForValue(11);
     const y5k=y.getPixelForValue(5000);
     ctx.save();
-    ctx.setLineDash([]);
-    ctx.strokeStyle='rgba(39,174,96,.6)';ctx.lineWidth=2;
+    ctx.strokeStyle='rgba(39,174,96,.6)';ctx.lineWidth=2;ctx.setLineDash([]);
     ctx.beginPath();ctx.moveTo(xPB,ca.top);ctx.lineTo(xPB,ca.bottom);ctx.stroke();
     ctx.fillStyle='rgba(39,174,96,.9)';ctx.font='bold 11px Segoe UI';
-    ctx.textBaseline='top';ctx.fillText('✅ Paid back Apr\'27',xPB+4,ca.top+4);
-    // dot at crossover
+    ctx.textBaseline='top';ctx.fillText('💰 Paid back Jul\'27',xPB+4,ca.top+4);
     ctx.beginPath();ctx.arc(xPB,y5k,6,0,2*Math.PI);ctx.fillStyle='#27AE60';ctx.fill();
+    // first payout line
+    const xFP=x.getPixelForValue(8);
+    ctx.strokeStyle='rgba(41,128,185,.5)';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+    ctx.beginPath();ctx.moveTo(xFP,ca.top);ctx.lineTo(xFP,ca.bottom);ctx.stroke();
+    ctx.fillStyle='rgba(41,128,185,.9)';ctx.setLineDash([]);
+    ctx.fillText('🟢 First payout Apr\'27',xFP+4,ca.top+20);
     ctx.restore();
   }}]
 });
@@ -306,30 +362,28 @@ new Chart(document.getElementById('paybackChart'),{
 new Chart(document.getElementById('monthlyChart'),{
   type:'bar',
   data:{labels:M,datasets:[{
-    label:'David\'s Monthly Payout',
+    label:'Monthly Distribution',
     data:monthly,
-    backgroundColor:monthly.map((v,i)=>i<2?'rgba(142,68,173,.5)':i<7?'rgba(41,128,185,.7)':'rgba(39,174,96,.7)'),
-    borderColor:monthly.map((v,i)=>i<2?'#8E44AD':i<7?'#2980B9':'#27AE60'),
+    backgroundColor:monthly.map((v,i)=>i<2?'rgba(142,68,173,.4)':i<8?'rgba(230,126,34,.4)':'rgba(39,174,96,.7)'),
+    borderColor:monthly.map((v,i)=>i<2?'#8E44AD':i<8?'#E67E22':'#27AE60'),
     borderWidth:1.5,borderRadius:4
   }]},
   options:{responsive:true,maintainAspectRatio:false,
     plugins:{
-      legend:{position:'top',labels:{font:{size:11}}},
+      legend:{display:false},
       tooltip:{callbacks:{label:c=>` $${c.raw.toLocaleString()}`}}
     },
-    scales:{y:{ticks:{callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(0,0,0,.04)'}},x:{grid:{display:false}}}
+    scales:{y:{ticks:{callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(0,0,0,.04)'},max:1500},x:{grid:{display:false}}}
   },
-  plugins:[{id:'labels',afterDraw(chart){
+  plugins:[{id:'legend',afterDraw(chart){
     const ctx=chart.ctx,ca=chart.chartArea;
-    ctx.save();
-    // legend annotations
-    ctx.font='bold 10px Segoe UI';
-    ctx.fillStyle='rgba(142,68,173,.8)';ctx.fillRect(ca.left+4,ca.top+6,10,10);
-    ctx.fillStyle=var_muted='#5A7A8A';ctx.fillText('Ads months',ca.left+18,ca.top+15);
-    ctx.fillStyle='rgba(41,128,185,.8)';ctx.fillRect(ca.left+90,ca.top+6,10,10);
-    ctx.fillStyle='#5A7A8A';ctx.fillText('Ramp up',ca.left+104,ca.top+15);
-    ctx.fillStyle='rgba(39,174,96,.8)';ctx.fillRect(ca.left+158,ca.top+6,10,10);
-    ctx.fillStyle='#5A7A8A';ctx.fillText('Peak + pure profit',ca.left+172,ca.top+15);
+    ctx.save();ctx.font='bold 10px Segoe UI';
+    ctx.fillStyle='rgba(142,68,173,.7)';ctx.fillRect(ca.left+4,ca.top+6,10,10);
+    ctx.fillStyle='#5A7A8A';ctx.fillText('Ads months',ca.left+18,ca.top+15);
+    ctx.fillStyle='rgba(230,126,34,.7)';ctx.fillRect(ca.left+90,ca.top+6,10,10);
+    ctx.fillStyle='#5A7A8A';ctx.fillText('Held (cash negative)',ca.left+104,ca.top+15);
+    ctx.fillStyle='rgba(39,174,96,.8)';ctx.fillRect(ca.left+220,ca.top+6,10,10);
+    ctx.fillStyle='#5A7A8A';ctx.fillText('Distributions',ca.left+234,ca.top+15);
     ctx.restore();
   }}]
 });
