@@ -210,31 +210,95 @@ tbody tr:hover{background:#F0EDE8;}
 
     <!-- TAB 3: REORDER COSTS -->
     <div id="tab-costs" class="tab-pane">
-      <h2 style="font-size:14px;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--bg);display:flex;align-items:center;gap:7px;"><span class="dot dgr"></span>Every Reorder: Cost, Timing &amp; Funding Source</h2>
+      <h2 style="font-size:14px;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--bg);display:flex;align-items:center;gap:7px;"><span class="dot dgr"></span>Every Reorder — Payment Split (30% Deposit · 70% Balance)</h2>
       <table>
         <thead>
           <tr>
-            <th style="text-align:left;">Event</th><th>Order Date</th><th>SKU</th><th>Units</th>
-            <th>COG Cost</th><th>Logistics</th><th>Total</th>
-            <th>Cash Before</th><th>Cash After</th><th>Source</th>
+            <th style="text-align:left;">Reorder</th>
+            <th>SKU</th><th>Units</th><th>Order Date</th>
+            <th style="background:#7B3F00;">30% Deposit</th><th style="background:#7B3F00;">Deposit Due</th>
+            <th style="background:#145A32;">70% Balance</th><th style="background:#145A32;">Balance Due</th>
+            <th>Total Order</th><th>Source</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="tr-dn"><td><strong>R1 Terra</strong> <span style="font-size:10px;background:#FEF6EC;color:#E67E22;padding:1px 6px;border-radius:8px;font-weight:600;">2K pre-stocked @ $2</span></td><td>Oct 25, 2026</td><td>Terracotta</td><td>7,500</td><td>$25,670</td><td>$1,500</td><td>$27,170</td><td class="good">+$9,750</td><td class="danger">−$17,420</td><td class="danger">Outside capital</td></tr>
-          <tr class="tr-dn"><td><strong>R1 Gray</strong></td><td>Oct 20, 2026</td><td>Gray</td><td>2,000</td><td>$5,380</td><td>$320</td><td>$5,700</td><td class="danger">−$17,420</td><td class="danger">−$23,120</td><td class="danger">Outside capital</td></tr>
-          <tr class="tr-dn"><td><strong>R1 Black</strong></td><td>Oct 20, 2026</td><td>Black</td><td>2,000</td><td>$5,380</td><td>$320</td><td>$5,700</td><td class="danger">−$23,120</td><td class="danger">−$28,820</td><td class="danger">Outside capital</td></tr>
-          <tr class="tr-dn"><td><strong>R2 Terra</strong></td><td>Dec 26, 2026</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="danger">−$9,420</td><td class="danger">−$40,545</td><td class="danger">Last outside $ ← MAX</td></tr>
-          <tr class="tr-sf"><td><strong>R3 Terra 🟢</strong></td><td>Mar 5, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="good">+$40,555</td><td class="good">+$9,430</td><td class="good">✅ Self-financed</td></tr>
-          <tr><td><strong>R4 Terra</strong></td><td>May 15, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="good">+$75,230</td><td class="good">+$32,705</td><td class="good">✅ Self-financed</td></tr>
-          <tr><td><strong>R2 Gray+Black</strong></td><td>May 1, 2027</td><td>Gray+Black</td><td>4,000</td><td>$10,760</td><td>$640</td><td>$11,400</td><td class="good">+$32,705</td><td class="good">+$21,305</td><td class="good">✅ Self-financed</td></tr>
-          <tr><td><strong>R5 Terra</strong></td><td>Jul 16, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="good">+$98,505</td><td class="good">+$67,380</td><td class="good">✅ Self-financed</td></tr>
-          <tr><td><strong>R6 Terra</strong></td><td>Sep 15, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="good">+$133,180</td><td class="good">+$102,055</td><td class="good">✅ Self-financed</td></tr>
-          <tr><td><strong>R3 Gray+Black</strong></td><td>Oct 21, 2027</td><td>Gray+Black</td><td>4,000</td><td>$10,760</td><td>$640</td><td>$11,400</td><td class="good">+$134,955</td><td class="good">+$123,555</td><td class="good">✅ Self-financed</td></tr>
+          <tr class="tr-dn">
+            <td><strong>R1 Terra</strong> <span style="font-size:10px;background:#FEF6EC;color:#E67E22;padding:1px 6px;border-radius:8px;font-weight:600;">2K pre-stocked @ $2</span></td>
+            <td>Terracotta</td><td>7,500</td><td>Oct 25, 2026</td>
+            <td class="danger" style="background:#FEF0EE;">$8,151</td><td style="background:#FEF0EE;font-size:11px;color:var(--red);">Oct 2026</td>
+            <td class="danger" style="background:#FEF0EE;">$19,019</td><td style="background:#FEF0EE;font-size:11px;color:var(--red);">Dec 2026</td>
+            <td>$27,170</td><td class="danger">Outside capital</td>
+          </tr>
+          <tr class="tr-dn">
+            <td><strong>R1 Gray</strong></td>
+            <td>Gray</td><td>2,000</td><td>Oct 20, 2026</td>
+            <td class="danger" style="background:#FEF0EE;">$1,710</td><td style="background:#FEF0EE;font-size:11px;color:var(--red);">Oct 2026</td>
+            <td class="danger" style="background:#FEF0EE;">$3,990</td><td style="background:#FEF0EE;font-size:11px;color:var(--red);">Dec 2026</td>
+            <td>$5,700</td><td class="danger">Outside capital</td>
+          </tr>
+          <tr class="tr-dn">
+            <td><strong>R1 Black</strong></td>
+            <td>Black</td><td>2,000</td><td>Oct 20, 2026</td>
+            <td class="danger" style="background:#FEF0EE;">$1,710</td><td style="background:#FEF0EE;font-size:11px;color:var(--red);">Oct 2026</td>
+            <td class="danger" style="background:#FEF0EE;">$3,990</td><td style="background:#FEF0EE;font-size:11px;color:var(--red);">Dec 2026</td>
+            <td>$5,700</td><td class="danger">Outside capital</td>
+          </tr>
+          <tr class="tr-dn">
+            <td><strong>R2 Terra</strong></td>
+            <td>Terracotta</td><td>7,500</td><td>Dec 26, 2026</td>
+            <td class="danger" style="background:#FEF0EE;">$9,338</td><td style="background:#FEF0EE;font-size:11px;color:var(--red);">Dec 2026</td>
+            <td class="warn" style="background:#FEF6EC;">$21,788</td><td style="background:#FEF6EC;font-size:11px;color:var(--orange);">Feb 2027</td>
+            <td>$31,125</td><td class="danger">Last outside $ ← MAX</td>
+          </tr>
+          <tr class="tr-sf">
+            <td><strong>R3 Terra 🟢</strong></td>
+            <td>Terracotta</td><td>7,500</td><td>Mar 5, 2027</td>
+            <td class="warn" style="background:#FEF6EC;">$9,338</td><td style="background:#FEF6EC;font-size:11px;color:var(--orange);">Mar 2027</td>
+            <td class="good" style="background:#EAF9F1;">$21,788</td><td style="background:#EAF9F1;font-size:11px;color:var(--green);">Jun 2027</td>
+            <td>$31,125</td><td class="good">✅ Self-financed</td>
+          </tr>
+          <tr>
+            <td><strong>R2 Gray+Black</strong></td>
+            <td>Gray+Black</td><td>4,000</td><td>May 1, 2027</td>
+            <td class="good" style="background:#EAF9F1;">$3,420</td><td style="background:#EAF9F1;font-size:11px;color:var(--green);">May 2027</td>
+            <td class="good" style="background:#EAF9F1;">$7,980</td><td style="background:#EAF9F1;font-size:11px;color:var(--green);">Jun 2027</td>
+            <td>$11,400</td><td class="good">✅ Self-financed</td>
+          </tr>
+          <tr>
+            <td><strong>R4 Terra</strong></td>
+            <td>Terracotta</td><td>7,500</td><td>May 15, 2027</td>
+            <td class="good" style="background:#EAF9F1;">$9,338</td><td style="background:#EAF9F1;font-size:11px;color:var(--green);">May 2027</td>
+            <td class="good" style="background:#EAF9F1;">$21,788</td><td style="background:#EAF9F1;font-size:11px;color:var(--green);">Aug 2027</td>
+            <td>$31,125</td><td class="good">✅ Self-financed</td>
+          </tr>
+          <tr>
+            <td><strong>R5 Terra</strong></td>
+            <td>Terracotta</td><td>7,500</td><td>Jul 16, 2027</td>
+            <td class="good" style="background:#EAF9F1;">$9,338</td><td style="background:#EAF9F1;font-size:11px;color:var(--green);">Jul 2027</td>
+            <td class="good" style="background:#EAF9F1;">$21,788</td><td style="background:#EAF9F1;font-size:11px;color:var(--green);">Oct 2027</td>
+            <td>$31,125</td><td class="good">✅ Self-financed</td>
+          </tr>
+          <tr>
+            <td><strong>R6 Terra</strong></td>
+            <td>Terracotta</td><td>7,500</td><td>Sep 15, 2027</td>
+            <td class="good" style="background:#EAF9F1;">$9,338</td><td style="background:#EAF9F1;font-size:11px;color:var(--green);">Sep 2027</td>
+            <td class="good" style="background:#EAF9F1;">$21,788</td><td style="background:#EAF9F1;font-size:11px;color:var(--green);">Nov 2027</td>
+            <td>$31,125</td><td class="good">✅ Self-financed</td>
+          </tr>
+          <tr>
+            <td><strong>R3 Gray+Black</strong></td>
+            <td>Gray+Black</td><td>4,000</td><td>Oct 21, 2027</td>
+            <td class="good" style="background:#EAF9F1;">$3,420</td><td style="background:#EAF9F1;font-size:11px;color:var(--green);">Oct 2027</td>
+            <td class="good" style="background:#EAF9F1;">$7,980</td><td style="background:#EAF9F1;font-size:11px;color:var(--green);">Nov 2027</td>
+            <td>$11,400</td><td class="good">✅ Self-financed</td>
+          </tr>
           <tr style="background:#1A1A2E;color:#fff;">
-            <td colspan="6" style="color:#fff;font-weight:700;">TOTAL REORDER INVESTMENT</td>
+            <td colspan="4" style="color:#fff;font-weight:700;">TOTAL REORDER INVESTMENT</td>
+            <td style="color:#F1948A;font-weight:700;">$56,343 deposits</td>
+            <td colspan="2" style="color:#A8DFBC;font-weight:700;">$160,651 balances</td>
+            <td></td>
             <td style="color:var(--gold);font-weight:700;">$216,995</td>
-            <td colspan="2" style="color:rgba(255,255,255,.6);">Max shortfall: −$40,545 <span style="color:#A8E6CF;">(saved $3,955 vs plan)</span></td>
-            <td style="color:#A8E6CF;">Final: +$222,255</td>
+            <td style="color:#A8E6CF;">Max shortfall −$40,545</td>
           </tr>
         </tbody>
       </table>
