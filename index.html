@@ -21,15 +21,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 /* SF BANNER */
 .sf-banner{background:linear-gradient(90deg,#1a472a,#27ae60);color:#fff;padding:14px 36px;display:flex;align-items:center;gap:20px;}
 .sf-icon{font-size:26px;}.sf-banner h2{font-size:15px;font-weight:700;margin-bottom:2px;}.sf-banner p{font-size:12px;opacity:.9;}
-/* ALERTS */
-.alerts{display:flex;gap:14px;padding:16px 36px;}
-.alert{flex:1;padding:14px 16px;border-radius:8px;border-left:4px solid;}
-.a-red{background:#FEF0EE;border-color:var(--red);}.a-org{background:#FEF6EC;border-color:var(--orange);}.a-grn{background:#EEF8F2;border-color:var(--green);}
-.alert h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
-.a-red h3{color:var(--red);}.a-org h3{color:var(--orange);}.a-grn h3{color:var(--green);}
-.alert .dt{font-size:16px;font-weight:800;margin:2px 0;}.alert p{font-size:12px;line-height:1.4;}
 /* KPIS */
-.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;padding:0 36px 16px;}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;padding:16px 36px;}
 .kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
 .kpi .v{font-size:20px;font-weight:800;margin:4px 0 2px;}.kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}.kpi .s{font-size:10px;color:var(--muted);}
 .c-terra{color:var(--terra);}.c-gold{color:var(--gold);}.c-grn{color:var(--green);}.c-red{color:var(--red);}.c-pur{color:var(--purple);}
@@ -41,7 +34,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0;}
 .dt-d{background:var(--terra);}.dg-d{background:var(--gray);}.db-d{background:var(--blk);}.dgo{background:var(--gold);}.dgr{background:var(--green);}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
 .cw{position:relative;height:260px;}.cwtall{position:relative;height:310px;}
 /* TABLES */
 table{width:100%;border-collapse:collapse;font-size:12px;}
@@ -55,13 +48,8 @@ tbody tr:hover{background:#F0EDE8;}
 .tr-sf{background:linear-gradient(90deg,rgba(61,153,112,.1),transparent)!important;border-left:3px solid var(--green);}
 .tr-dn{background:#FFF3CD!important;}
 .good{color:var(--green);font-weight:700;}.warn{color:var(--orange);font-weight:700;}.danger{color:var(--red);font-weight:700;}
-/* Cash cell detail */
-.cash-cell{line-height:1.7;font-size:11px;}
-.cash-in{color:var(--green);font-weight:700;}
-.cash-out{color:var(--red);font-weight:700;}
 .cash-bal-pos{color:var(--green);font-weight:800;font-size:12px;}
 .cash-bal-neg{color:var(--red);font-weight:800;font-size:12px;}
-.cash-divider{border-top:1px dashed var(--border);margin:2px 0;}
 /* Timeline */
 .tl{position:relative;padding-left:22px;}
 .tl::before{content:'';position:absolute;left:5px;top:10px;bottom:0;width:2px;background:var(--border);}
@@ -74,6 +62,22 @@ tbody tr:hover{background:#F0EDE8;}
 .tl-item h4{font-size:13px;font-weight:700;}.tl-item p{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4;}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-top:3px;}
 .bd-red{background:#FEF0EE;color:var(--red);}.bd-org{background:#FEF6EC;color:var(--orange);}.bd-grn{background:#EEF8F2;color:var(--green);}.bd-pur{background:#F5EEF8;color:var(--purple);}
+/* REORDER TABS */
+.reorder-hub{padding:0 36px 16px;}
+.tab-bar{display:flex;background:#f0ede8;border:1px solid var(--border);border-radius:10px 10px 0 0;border-bottom:none;overflow:hidden;}
+.tab-btn{flex:1;padding:13px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;text-align:center;letter-spacing:.3px;}
+.tab-btn:hover{background:#e8e4df;color:var(--text);}
+.tab-btn.active{background:var(--card);color:#1A1A2E;border-bottom-color:var(--terra);}
+.tab-content{background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;padding:20px;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+/* Alert boxes inside tab */
+.alerts-grid{display:flex;gap:14px;}
+.alert{flex:1;padding:14px 16px;border-radius:8px;border-left:4px solid;}
+.a-red{background:#FEF0EE;border-color:var(--red);}.a-org{background:#FEF6EC;border-color:var(--orange);}.a-grn{background:#EEF8F2;border-color:var(--green);}
+.alert h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.a-red h3{color:var(--red);}.a-org h3{color:var(--orange);}.a-grn h3{color:var(--green);}
+.alert .dt{font-size:16px;font-weight:800;margin:2px 0;}.alert p{font-size:12px;line-height:1.4;}
 .footer{background:#1A1A2E;color:rgba(255,255,255,.5);text-align:center;padding:14px;font-size:11px;}
 </style>
 </head>
@@ -94,40 +98,20 @@ tbody tr:hover{background:#F0EDE8;}
 </div>
 
 <nav class="nav" id="top">
-  <a href="#alerts">🚨 Reorder Alerts</a>
   <a href="#inventory">📦 Inventory Chart</a>
   <a href="#cashflow">💰 Cash Flow</a>
   <a href="#table">📊 18-Month Table</a>
   <a href="#revcharts">📈 Revenue Charts</a>
-  <a href="#reorders">🔄 Reorder Calendar</a>
-  <a href="#costtable">💳 Reorder Costs</a>
+  <a href="#reorder-hub">🔄 Reorders</a>
   <a href="#price">🏷️ Price &amp; COG</a>
   <a href="david.html" style="color:#AED6F1;border-bottom-color:#AED6F1;background:rgba(41,128,185,.18);border-radius:4px 4px 0 0;">👤 Investor View</a>
 </nav>
 
-<div class="sf-banner" id="alerts">
+<div class="sf-banner">
   <div class="sf-icon">🟢</div>
   <div>
-    <h2>Self-Financing Point: March 2027 — No Outside Capital Needed After This</h2>
+    <h2>Self-Financing Point: April 2027 — No Outside Capital Needed After This</h2>
     <p>30% deposit on order, 70% when mfg done. Aug+Sep profits → ads. Profits use exact Excel "after ads" figures: Terra $5.51/unit, Gray/Black $5.02/unit. Maximum cash shortfall: <strong>−$34,108 in December 2026</strong>. Cash turns positive April 2027 (+$13,818).</p>
-  </div>
-</div>
-
-<div class="alerts">
-  <div class="alert a-red">
-    <h3>🚨 December 2026 — Triple Payment (Worst Month)</h3>
-    <div class="dt">Terra R1 70% + G/B R1 70% + Terra R2 30%</div>
-    <p>Three payments land in December: <strong>$21,788</strong> (Terra R1 mfg done Dec 27) + <strong>$7,980</strong> (G/B R1 mfg done Dec 1) + <strong>$9,338</strong> (Terra R2 deposit Dec 26) = $39,106 out, only $11,300 in. Need <strong>$26,664</strong> reserve.</p>
-  </div>
-  <div class="alert a-org">
-    <h3>⚠️ October 2026 — Deposit Month</h3>
-    <div class="dt">Terra R1 30%: Oct 25 · G/B R1 30%: Oct 20</div>
-    <p>Deposits only: <strong>$9,338</strong> + <strong>$3,420</strong> = <strong>$12,758</strong> total. Cash goes to −$6,958, then recovers to +$1,142 in November before December hits. The 70/30 split gives you breathing room.</p>
-  </div>
-  <div class="alert a-grn">
-    <h3>✅ Self-Financing from Apr 2027</h3>
-    <div class="dt">Cash: +$13,818 · Never negative again</div>
-    <p>With exact per-unit profit after ads (Terra $5.51, G/B $5.02), self-financing arrives in April 2027. March is still −$8,974 due to Terra R3 deposit ($9,338). April delivers +$22,792 profit with no payments — balance flips positive and stays there permanently.</p>
   </div>
 </div>
 
@@ -139,6 +123,110 @@ tbody tr:hover{background:#F0EDE8;}
   <div class="kpi"><div class="l">Max Outside Funding</div><div class="v c-red">$34,108</div><div class="s">Dec 2026 peak</div></div>
   <div class="kpi"><div class="l">Total Reorder Spend</div><div class="v c-pur">$220,950</div><div class="s">9 reorder events</div></div>
 </div>
+
+<!-- ── REORDER HUB — 3 TABS ─────────────────────────────────────── -->
+<div style="padding:0 36px 4px;"><div class="sec" id="reorder-hub" style="padding-top:8px;">Reorder Hub — Alerts · Calendar · Costs</div></div>
+<div class="reorder-hub">
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="tab-alerts">🚨 Reorder Alerts</button>
+    <button class="tab-btn" data-tab="tab-calendar">🔄 Reorder Calendar</button>
+    <button class="tab-btn" data-tab="tab-costs">💳 Reorder Costs</button>
+  </div>
+  <div class="tab-content">
+
+    <!-- TAB 1: ALERTS -->
+    <div id="tab-alerts" class="tab-pane active">
+      <div class="alerts-grid">
+        <div class="alert a-red">
+          <h3>🚨 December 2026 — Triple Payment (Worst Month)</h3>
+          <div class="dt">Terra R1 70% + G/B R1 70% + Terra R2 30%</div>
+          <p>Three payments land in December: <strong>$21,788</strong> (Terra R1 mfg done Dec 27) + <strong>$7,980</strong> (G/B R1 mfg done Dec 1) + <strong>$9,338</strong> (Terra R2 deposit Dec 26) = $39,106 out, only $11,300 in. Need <strong>$26,664</strong> reserve.</p>
+        </div>
+        <div class="alert a-org">
+          <h3>⚠️ October 2026 — Deposit Month</h3>
+          <div class="dt">Terra R1 30%: Oct 25 · G/B R1 30%: Oct 20</div>
+          <p>Deposits only: <strong>$9,338</strong> + <strong>$3,420</strong> = <strong>$12,758</strong> total. Cash goes to −$6,958, then recovers to +$1,142 in November before December hits. The 70/30 split gives you breathing room.</p>
+        </div>
+        <div class="alert a-grn">
+          <h3>✅ Self-Financing from Apr 2027</h3>
+          <div class="dt">Cash: +$13,818 · Never negative again</div>
+          <p>With exact per-unit profit after ads (Terra $5.51, G/B $5.02), self-financing arrives in April 2027. March is still −$8,974 due to Terra R3 deposit ($9,338). April delivers +$22,792 profit with no payments — balance flips positive and stays there permanently.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: REORDER CALENDAR -->
+    <div id="tab-calendar" class="tab-pane">
+      <div class="g3">
+        <div>
+          <h2 style="font-size:14px;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--bg);display:flex;align-items:center;gap:7px;"><span class="dot dt-d"></span>Terracotta — 6 Reorders</h2>
+          <div class="tl">
+            <div class="tl-item c-red-i"><h4>Oct 25, 2026 — R1 Order</h4><p>7,500 units · $31,125 · Arrives Jan 29, 2027<br>Cash: −$32,775 (needs outside funding)</p><span class="badge bd-red">Needs reserves</span></div>
+            <div class="tl-item c-org-i"><h4>Dec 26, 2026 — R2 Order</h4><p>7,500 units · $31,125 · Arrives Apr 1, 2027<br>Cash hits worst point: −$44,500</p><span class="badge bd-org">Last outside $ event</span></div>
+            <div class="tl-item c-pur-i"><h4>Mar 5, 2027 — R3 Order ✅</h4><p>7,500 units · $31,125 · Arrives Jun 9, 2027<br>Cash: +$5,475 — fully self-financed</p><span class="badge bd-pur">Self-financed</span></div>
+            <div class="tl-item c-pur-i"><h4>May 15, 2027 — R4 Order ✅</h4><p>7,500 units · $31,125 · Arrives Aug 19, 2027<br>Cash: +$28,750 before payment</p><span class="badge bd-pur">Self-financed</span></div>
+            <div class="tl-item c-pur-i"><h4>Jul 16, 2027 — R5 Order ✅</h4><p>7,500 units · $31,125 · Arrives Oct 20, 2027</p><span class="badge bd-pur">Self-financed</span></div>
+            <div class="tl-item c-pur-i"><h4>Sep 15, 2027 — R6 Order ✅</h4><p>7,500 units · $31,125 · Arrives Dec 20, 2027</p><span class="badge bd-pur">Self-financed</span></div>
+          </div>
+        </div>
+        <div>
+          <h2 style="font-size:14px;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--bg);display:flex;align-items:center;gap:7px;"><span class="dot dg-d"></span>Gray Stone — 3 Reorders</h2>
+          <div class="tl">
+            <div class="tl-item c-red-i"><h4>Oct 20, 2026 — R1 Order</h4><p>2,000 units · $5,700 · Arrives Jan 3, 2027<br>Earlier than before due to 350/mo sales rate.<br>Combine with Black — same supplier (Mia).</p><span class="badge bd-red">Needs reserves (Oct batch)</span></div>
+            <div class="tl-item c-grn-i"><h4>Jan 3, 2027 — R1 Arrives</h4><p>Inventory: 241 → 2,241 units. Much earlier than previous plan — faster sales = faster depletion.</p></div>
+            <div class="tl-item c-pur-i"><h4>May 1, 2027 — R2 Order ✅</h4><p>2,000 units · $5,700 · Arrives Jul 15, 2027<br>Cash: +$38K before payment.</p><span class="badge bd-pur">Self-financed</span></div>
+            <div class="tl-item c-grn-i"><h4>Jul 15, 2027 — R2 Arrives</h4><p>Inventory: 6 → 2,006. Very tight — only 6 units left. Consider ordering 2,500 to give more buffer.</p></div>
+            <div class="tl-item c-pur-i"><h4>Oct 21, 2027 — R3 Order ✅</h4><p>2,000 units · $5,700 · Arrives Jan 4, 2028</p><span class="badge bd-pur">Self-financed</span></div>
+          </div>
+        </div>
+        <div>
+          <h2 style="font-size:14px;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--bg);display:flex;align-items:center;gap:7px;"><span class="dot db-d"></span>Black Stone — 3 Reorders</h2>
+          <div class="tl">
+            <div class="tl-item c-red-i"><h4>Oct 20, 2026 — R1 Order</h4><p>2,000 units · $5,700 · Arrives Jan 3, 2027<br>Ship together with Gray — save freight cost. Both in the October $42,525 batch.</p><span class="badge bd-red">Part of Oct batch</span></div>
+            <div class="tl-item c-grn-i"><h4>Jan 3, 2027 — R1 Arrives</h4><p>Inventory restocked. Pattern runs 6-month cycles at 350/mo sales rate.</p></div>
+            <div class="tl-item c-pur-i"><h4>May 1, 2027 — R2 Order ✅</h4><p>2,000 units · $5,700 · Arrives Jul 15, 2027<br>Same shipment as Gray R2.</p><span class="badge bd-pur">Self-financed</span></div>
+            <div class="tl-item c-pur-i"><h4>Oct 21, 2027 — R3 Order ✅</h4><p>2,000 units · $5,700 · Arrives Jan 4, 2028<br>Same shipment as Gray R3.</p><span class="badge bd-pur">Self-financed</span></div>
+            <div class="tl-item c-grn-i"><h4>Jan 4, 2028 — R3 Arrives</h4><p>Both Gray and Black restocked simultaneously. Efficient combined logistics.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: REORDER COSTS -->
+    <div id="tab-costs" class="tab-pane">
+      <h2 style="font-size:14px;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--bg);display:flex;align-items:center;gap:7px;"><span class="dot dgr"></span>Every Reorder: Cost, Timing &amp; Funding Source</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left;">Event</th><th>Order Date</th><th>SKU</th><th>Units</th>
+            <th>COG Cost</th><th>Logistics</th><th>Total</th>
+            <th>Cash Before</th><th>Cash After</th><th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="tr-dn"><td><strong>R1 Terra</strong></td><td>Oct 25, 2026</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="good">+$9,750</td><td class="danger">−$21,375</td><td class="danger">Outside capital</td></tr>
+          <tr class="tr-dn"><td><strong>R1 Gray</strong></td><td>Oct 20, 2026</td><td>Gray</td><td>2,000</td><td>$5,380</td><td>$320</td><td>$5,700</td><td class="danger">−$21,375</td><td class="danger">−$27,075</td><td class="danger">Outside capital</td></tr>
+          <tr class="tr-dn"><td><strong>R1 Black</strong></td><td>Oct 20, 2026</td><td>Black</td><td>2,000</td><td>$5,380</td><td>$320</td><td>$5,700</td><td class="danger">−$27,075</td><td class="danger">−$32,775</td><td class="danger">Outside capital</td></tr>
+          <tr class="tr-dn"><td><strong>R2 Terra</strong></td><td>Dec 26, 2026</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="danger">−$13,375</td><td class="danger">−$44,500</td><td class="danger">Last outside $ ← MAX</td></tr>
+          <tr class="tr-sf"><td><strong>R3 Terra 🟢</strong></td><td>Mar 5, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="good">+$36,600</td><td class="good">+$5,475</td><td class="good">✅ Self-financed</td></tr>
+          <tr><td><strong>R4 Terra</strong></td><td>May 15, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="good">+$71,275</td><td class="good">+$28,750</td><td class="good">✅ Self-financed</td></tr>
+          <tr><td><strong>R2 Gray+Black</strong></td><td>May 1, 2027</td><td>Gray+Black</td><td>4,000</td><td>$10,760</td><td>$640</td><td>$11,400</td><td class="good">+$28,750</td><td class="good">+$17,350</td><td class="good">✅ Self-financed</td></tr>
+          <tr><td><strong>R5 Terra</strong></td><td>Jul 16, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="good">+$94,550</td><td class="good">+$63,425</td><td class="good">✅ Self-financed</td></tr>
+          <tr><td><strong>R6 Terra</strong></td><td>Sep 15, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="good">+$129,225</td><td class="good">+$98,100</td><td class="good">✅ Self-financed</td></tr>
+          <tr><td><strong>R3 Gray+Black</strong></td><td>Oct 21, 2027</td><td>Gray+Black</td><td>4,000</td><td>$10,760</td><td>$640</td><td>$11,400</td><td class="good">+$131,000</td><td class="good">+$119,600</td><td class="good">✅ Self-financed</td></tr>
+          <tr style="background:#1A1A2E;color:#fff;">
+            <td colspan="6" style="color:#fff;font-weight:700;">TOTAL REORDER INVESTMENT</td>
+            <td style="color:var(--gold);font-weight:700;">$220,950</td>
+            <td colspan="2" style="color:rgba(255,255,255,.6);">Max shortfall: −$44,500</td>
+            <td style="color:#A8E6CF;">Final: +$218,300</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+<!-- ── END REORDER HUB ─────────────────────────────────────────── -->
 
 <div class="main">
 
@@ -159,7 +247,7 @@ tbody tr:hover{background:#F0EDE8;}
 <div class="sec" id="cashflow">Cash Flow &amp; Self-Financing</div>
 <div class="card">
   <h2><span class="dot dgr"></span>Cumulative Cash Balance — Monthly Profit Minus Reorder Payments</h2>
-  <p style="font-size:12px;color:var(--muted);margin-bottom:12px;"><strong style="color:var(--red);">Red zone</strong> = outside capital needed. <strong style="color:var(--green);">Green zone</strong> = self-financed. Green vertical line = self-financing point (Feb 2027).</p>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:12px;"><strong style="color:var(--red);">Red zone</strong> = outside capital needed. <strong style="color:var(--green);">Green zone</strong> = self-financed. Green vertical line = self-financing point (Apr 2027).</p>
   <div class="cwtall"><canvas id="cashChart"></canvas></div>
 </div>
 
@@ -191,7 +279,6 @@ tbody tr:hover{background:#F0EDE8;}
       </tr>
     </thead>
     <tbody>
-      <!-- Aug 2026 -->
       <tr style="background:#F0EDE8!important;">
         <td>Aug 2026 📢</td>
         <td>4,000</td><td>—</td><td>4,000</td>
@@ -202,7 +289,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td style="color:var(--purple);font-weight:700;">−$1,050<br><span style="font-size:10px;font-weight:400;">All profit → ads</span></td>
         <td style="color:var(--muted);font-weight:700;">$0</td>
       </tr>
-      <!-- Sep 2026 -->
       <tr style="background:#F0EDE8!important;">
         <td>Sep 2026 📢</td>
         <td>4,000</td><td>100</td><td>3,900</td>
@@ -213,7 +299,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td style="color:var(--purple);font-weight:700;">−$2,900<br><span style="font-size:10px;font-weight:400;">All profit → ads</span></td>
         <td style="color:var(--muted);font-weight:700;">$0</td>
       </tr>
-      <!-- Oct 2026 — 30% DEPOSITS -->
       <tr class="tr-r">
         <td>Oct 2026 ⚡</td>
         <td>3,900</td><td>200</td><td>3,700</td>
@@ -224,7 +309,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td style="color:var(--orange);font-weight:700;">−$12,758<br><span style="font-size:10px;font-weight:400;color:var(--orange);">Terra R1 30%: −$9,338 (Oct 25)<br>G/B R1 30%: −$3,420 (Oct 20)</span></td>
         <td class="cash-bal-neg">−$8,643</td>
       </tr>
-      <!-- Nov 2026 -->
       <tr>
         <td>Nov 2026</td>
         <td>3,700</td><td>400</td><td>3,300</td>
@@ -235,7 +319,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td style="color:var(--muted);">—</td>
         <td class="cash-bal-neg">−$2,924</td>
       </tr>
-      <!-- Dec 2026 — 70% BALANCES + 30% DEPOSIT -->
       <tr class="tr-r">
         <td>Dec 2026 💰⚡</td>
         <td>3,300</td><td>800</td><td>2,500</td>
@@ -246,7 +329,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td class="danger">−$39,106<br><span style="font-size:10px;font-weight:400;">Terra R1 70%: −$21,788 (Dec 27)<br>G/B R1 70%: −$7,980 (Dec 1)<br>Terra R2 30%: −$9,338 (Dec 26)</span></td>
         <td class="cash-bal-neg">−$34,108 ← MAX</td>
       </tr>
-      <!-- Jan 2027 -->
       <tr class="tr-arr">
         <td>Jan 2027 ↑</td>
         <td>2,500</td><td>1,600</td><td style="color:var(--green);font-weight:700;">8,400 ↑</td>
@@ -257,7 +339,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td style="color:var(--muted);">—</td>
         <td class="cash-bal-neg">−$21,780</td>
       </tr>
-      <!-- Feb 2027 — 70% BALANCE -->
       <tr class="tr-r">
         <td>Feb 2027 💰</td>
         <td>8,400</td><td>3,200</td><td>5,200</td>
@@ -268,7 +349,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td class="danger">−$21,788<br><span style="font-size:10px;font-weight:400;">Terra R2 70%: −$21,788 (Feb 27)<br>Mfg complete, balance due</span></td>
         <td class="cash-bal-neg">−$22,428</td>
       </tr>
-      <!-- Mar 2027 — 30% DEPOSIT (still negative) -->
       <tr class="tr-r">
         <td>Mar 2027 ⚡</td>
         <td>5,200</td><td>3,500</td><td>1,700</td>
@@ -279,7 +359,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td style="color:var(--orange);font-weight:700;">−$9,338<br><span style="font-size:10px;font-weight:400;color:var(--orange);">Terra R3 30%: −$9,338 (Mar 5)</span></td>
         <td class="cash-bal-neg">−$8,974</td>
       </tr>
-      <!-- Apr 2027 — SELF-FINANCING -->
       <tr class="tr-sf">
         <td>Apr 2027 🟢↑</td>
         <td>1,700</td><td>3,500</td><td style="color:var(--green);font-weight:700;">5,700 ↑</td>
@@ -290,7 +369,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td style="color:var(--muted);">—</td>
         <td class="cash-bal-pos">+$13,818 ✅</td>
       </tr>
-      <!-- May 2027 — 70% BALANCE + 30% DEPOSITS -->
       <tr class="tr-r">
         <td>May 2027 💰⚡</td>
         <td>5,700</td><td>3,500</td><td>2,200</td>
@@ -301,7 +379,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td class="danger">−$34,546<br><span style="font-size:10px;font-weight:400;">Terra R3 70%: −$21,788 (May 7)<br>Terra R4 30%: −$9,338 (May 15)<br>G/B R2 30%: −$3,420 (May 1)</span></td>
         <td class="cash-bal-pos">+$2,064</td>
       </tr>
-      <!-- Jun 2027 — 70% BALANCE -->
       <tr class="tr-r">
         <td>Jun 2027 ↑💰</td>
         <td>2,200</td><td>3,500</td><td style="color:var(--green);font-weight:700;">6,200 ↑</td>
@@ -312,7 +389,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td class="danger">−$7,980<br><span style="font-size:10px;font-weight:400;">G/B R2 70%: −$7,980 (Jun 12)<br>Mfg complete, balance due</span></td>
         <td class="cash-bal-pos">+$16,876</td>
       </tr>
-      <!-- Jul 2027 — 70% BALANCE + 30% DEPOSIT -->
       <tr class="tr-r">
         <td>Jul 2027 💰⚡</td>
         <td>6,200</td><td>3,500</td><td>2,700</td>
@@ -323,7 +399,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td class="danger">−$31,126<br><span style="font-size:10px;font-weight:400;">Terra R4 70%: −$21,788 (Jul 17)<br>Terra R5 30%: −$9,338 (Jul 16)</span></td>
         <td class="cash-bal-pos">+$8,542</td>
       </tr>
-      <!-- Aug 2027 -->
       <tr class="tr-arr">
         <td>Aug 2027 ↑</td>
         <td>2,700</td><td>3,500</td><td style="color:var(--green);font-weight:700;">6,700 ↑</td>
@@ -334,7 +409,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td style="color:var(--muted);">—</td>
         <td class="cash-bal-pos">+$31,334</td>
       </tr>
-      <!-- Sep 2027 — 70% BALANCE + 30% DEPOSIT -->
       <tr class="tr-r">
         <td>Sep 2027 💰⚡</td>
         <td>6,700</td><td>3,500</td><td>3,200</td>
@@ -345,7 +419,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td class="danger">−$31,126<br><span style="font-size:10px;font-weight:400;">Terra R5 70%: −$21,788 (Sep 17)<br>Terra R6 30%: −$9,338 (Sep 15)</span></td>
         <td class="cash-bal-pos">+$23,000</td>
       </tr>
-      <!-- Oct 2027 — ARRIVAL + 30% DEPOSIT -->
       <tr class="tr-r">
         <td>Oct 2027 ↑⚡</td>
         <td>3,200</td><td>3,500</td><td style="color:var(--green);font-weight:700;">7,200 ↑</td>
@@ -356,7 +429,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td style="color:var(--orange);font-weight:700;">−$3,420<br><span style="font-size:10px;font-weight:400;color:var(--orange);">G/B R3 30%: −$3,420 (Oct 21)</span></td>
         <td class="cash-bal-pos">+$42,372</td>
       </tr>
-      <!-- Nov 2027 — 70% BALANCE -->
       <tr class="tr-r">
         <td>Nov 2027 💰</td>
         <td>7,200</td><td>3,500</td><td>3,700</td>
@@ -367,7 +439,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td class="danger">−$21,788<br><span style="font-size:10px;font-weight:400;">Terra R6 70%: −$21,788 (Nov 17)<br>Mfg complete, balance due</span></td>
         <td class="cash-bal-pos">+$43,376</td>
       </tr>
-      <!-- Dec 2027 — 70% BALANCE -->
       <tr class="tr-r">
         <td>Dec 2027 ↑💰</td>
         <td>3,700</td><td>3,500</td><td style="color:var(--green);font-weight:700;">7,700 ↑</td>
@@ -378,7 +449,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td class="danger">−$7,980<br><span style="font-size:10px;font-weight:400;">G/B R3 70%: −$7,980 (Dec 2)<br>Mfg complete, balance due</span></td>
         <td class="cash-bal-pos">+$58,188</td>
       </tr>
-      <!-- Jan 2028 -->
       <tr class="tr-arr">
         <td>Jan 2028 ↑</td>
         <td>7,700</td><td>3,500</td><td>4,200</td>
@@ -389,7 +459,6 @@ tbody tr:hover{background:#F0EDE8;}
         <td style="color:var(--muted);">—</td>
         <td class="cash-bal-pos">+$80,980</td>
       </tr>
-      <!-- TOTALS -->
       <tr style="background:#1A1A2E;color:#fff;font-weight:700;">
         <td style="color:#fff;">18-MONTH TOTAL</td>
         <td colspan="3" style="color:var(--terra-l);">~42,200 units sold</td>
@@ -407,9 +476,8 @@ tbody tr:hover{background:#F0EDE8;}
     <span style="background:#FEF6EC;color:var(--orange);padding:3px 10px;border-radius:10px;font-weight:600;">⚡ Reorder payment made this month</span>
     <span style="background:#EEF8F2;color:var(--green);padding:3px 10px;border-radius:10px;font-weight:600;">↑ Restock arrival (inventory jumps)</span>
     <span style="background:#F5EEF8;color:var(--purple);padding:3px 10px;border-radius:10px;font-weight:600;">📢 Aug+Sep profits → ads</span>
-    <span style="background:#FEF6EC;color:var(--orange);padding:3px 10px;border-radius:10px;font-weight:600;">⚡ 30% deposit on order date</span>
     <span style="background:#FEF0EE;color:var(--red);padding:3px 10px;border-radius:10px;font-weight:600;">💰 70% balance when mfg done</span>
-    <span style="background:rgba(61,153,112,.1);border-left:3px solid var(--green);padding:3px 10px;color:var(--green);font-weight:600;">🟢 Self-financing begins Mar 2027</span>
+    <span style="background:rgba(61,153,112,.1);border-left:3px solid var(--green);padding:3px 10px;color:var(--green);font-weight:600;">🟢 Self-financing begins Apr 2027</span>
   </div>
 </div>
 
@@ -423,73 +491,6 @@ tbody tr:hover{background:#F0EDE8;}
     <h2><span class="dot dgr"></span>Cumulative Profit Growth</h2>
     <div class="cw"><canvas id="cumulChart"></canvas></div>
   </div>
-</div>
-
-<div class="sec" id="reorders">Full Reorder Calendar</div>
-<div class="g3">
-  <div class="card">
-    <h2><span class="dot dt-d"></span>Terracotta — 6 Reorders</h2>
-    <div class="tl">
-      <div class="tl-item c-red-i"><h4>Oct 25, 2026 — R1 Order</h4><p>7,500 units · $31,125 · Arrives Jan 29, 2027<br>Cash: −$32,775 (needs outside funding)</p><span class="badge bd-red">Needs reserves</span></div>
-      <div class="tl-item c-org-i"><h4>Dec 26, 2026 — R2 Order</h4><p>7,500 units · $31,125 · Arrives Apr 1, 2027<br>Cash hits worst point: −$44,500</p><span class="badge bd-org">Last outside $ event</span></div>
-      <div class="tl-item c-pur-i"><h4>Mar 5, 2027 — R3 Order ✅</h4><p>7,500 units · $31,125 · Arrives Jun 9, 2027<br>Cash: +$5,475 — fully self-financed</p><span class="badge bd-pur">Self-financed</span></div>
-      <div class="tl-item c-pur-i"><h4>May 15, 2027 — R4 Order ✅</h4><p>7,500 units · $31,125 · Arrives Aug 19, 2027<br>Cash: +$28,750 before payment</p><span class="badge bd-pur">Self-financed</span></div>
-      <div class="tl-item c-pur-i"><h4>Jul 16, 2027 — R5 Order ✅</h4><p>7,500 units · $31,125 · Arrives Oct 20, 2027</p><span class="badge bd-pur">Self-financed</span></div>
-      <div class="tl-item c-pur-i"><h4>Sep 15, 2027 — R6 Order ✅</h4><p>7,500 units · $31,125 · Arrives Dec 20, 2027</p><span class="badge bd-pur">Self-financed</span></div>
-    </div>
-  </div>
-  <div class="card">
-    <h2><span class="dot dg-d"></span>Gray Stone — 3 Reorders</h2>
-    <div class="tl">
-      <div class="tl-item c-red-i"><h4>Oct 20, 2026 — R1 Order</h4><p>2,000 units · $5,700 · Arrives Jan 3, 2027<br>Earlier than before due to 350/mo sales rate.<br>Combine with Black — same supplier (Mia).</p><span class="badge bd-red">Needs reserves (Oct batch)</span></div>
-      <div class="tl-item c-grn-i"><h4>Jan 3, 2027 — R1 Arrives</h4><p>Inventory: 241 → 2,241 units. Much earlier than previous plan — faster sales = faster depletion.</p></div>
-      <div class="tl-item c-pur-i"><h4>May 1, 2027 — R2 Order ✅</h4><p>2,000 units · $5,700 · Arrives Jul 15, 2027<br>Cash: +$38K before payment.</p><span class="badge bd-pur">Self-financed</span></div>
-      <div class="tl-item c-grn-i"><h4>Jul 15, 2027 — R2 Arrives</h4><p>Inventory: 6 → 2,006. Very tight — only 6 units left. Consider ordering 2,500 to give more buffer.</p></div>
-      <div class="tl-item c-pur-i"><h4>Oct 21, 2027 — R3 Order ✅</h4><p>2,000 units · $5,700 · Arrives Jan 4, 2028</p><span class="badge bd-pur">Self-financed</span></div>
-    </div>
-  </div>
-  <div class="card">
-    <h2><span class="dot db-d"></span>Black Stone — 3 Reorders</h2>
-    <div class="tl">
-      <div class="tl-item c-red-i"><h4>Oct 20, 2026 — R1 Order</h4><p>2,000 units · $5,700 · Arrives Jan 3, 2027<br>Ship together with Gray — save freight cost. Both in the October $42,525 batch.</p><span class="badge bd-red">Part of Oct batch</span></div>
-      <div class="tl-item c-grn-i"><h4>Jan 3, 2027 — R1 Arrives</h4><p>Inventory restocked. Pattern runs 6-month cycles at 350/mo sales rate.</p></div>
-      <div class="tl-item c-pur-i"><h4>May 1, 2027 — R2 Order ✅</h4><p>2,000 units · $5,700 · Arrives Jul 15, 2027<br>Same shipment as Gray R2.</p><span class="badge bd-pur">Self-financed</span></div>
-      <div class="tl-item c-pur-i"><h4>Oct 21, 2027 — R3 Order ✅</h4><p>2,000 units · $5,700 · Arrives Jan 4, 2028<br>Same shipment as Gray R3.</p><span class="badge bd-pur">Self-financed</span></div>
-      <div class="tl-item c-grn-i"><h4>Jan 4, 2028 — R3 Arrives</h4><p>Both Gray and Black restocked simultaneously. Efficient combined logistics.</p></div>
-    </div>
-  </div>
-</div>
-
-<div class="sec" id="costtable">Reorder Cost Detail — All 9 Events</div>
-<div class="card">
-  <h2><span class="dot dgr"></span>Every Reorder: Cost, Timing &amp; Funding Source</h2>
-  <table>
-    <thead>
-      <tr>
-        <th style="text-align:left;">Event</th><th>Order Date</th><th>SKU</th><th>Units</th>
-        <th>COG Cost</th><th>Logistics</th><th>Total</th>
-        <th>Cash Before</th><th>Cash After</th><th>Source</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="tr-dn"><td><strong>R1 Terra</strong></td><td>Oct 25, 2026</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="pos">+$9,750</td><td class="neg">−$21,375</td><td class="danger">Outside capital</td></tr>
-      <tr class="tr-dn"><td><strong>R1 Gray</strong></td><td>Oct 20, 2026</td><td>Gray</td><td>2,000</td><td>$5,380</td><td>$320</td><td>$5,700</td><td class="neg">−$21,375</td><td class="neg">−$27,075</td><td class="danger">Outside capital</td></tr>
-      <tr class="tr-dn"><td><strong>R1 Black</strong></td><td>Oct 20, 2026</td><td>Black</td><td>2,000</td><td>$5,380</td><td>$320</td><td>$5,700</td><td class="neg">−$27,075</td><td class="neg">−$32,775</td><td class="danger">Outside capital</td></tr>
-      <tr class="tr-dn"><td><strong>R2 Terra</strong></td><td>Dec 26, 2026</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="neg">−$13,375</td><td class="neg">−$44,500</td><td class="danger">Last outside $ ← MAX</td></tr>
-      <tr class="tr-sf"><td><strong>R3 Terra 🟢</strong></td><td>Mar 5, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="pos">+$36,600</td><td class="pos">+$5,475</td><td class="good">✅ Self-financed</td></tr>
-      <tr><td><strong>R4 Terra</strong></td><td>May 15, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="pos">+$71,275</td><td class="pos">+$28,750</td><td class="good">✅ Self-financed</td></tr>
-      <tr><td><strong>R2 Gray+Black</strong></td><td>May 1, 2027</td><td>Gray+Black</td><td>4,000</td><td>$10,760</td><td>$640</td><td>$11,400</td><td class="pos">+$28,750</td><td class="pos">+$17,350</td><td class="good">✅ Self-financed</td></tr>
-      <tr><td><strong>R5 Terra</strong></td><td>Jul 16, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="pos">+$94,550</td><td class="pos">+$63,425</td><td class="good">✅ Self-financed</td></tr>
-      <tr><td><strong>R6 Terra</strong></td><td>Sep 15, 2027</td><td>Terracotta</td><td>7,500</td><td>$29,625</td><td>$1,500</td><td>$31,125</td><td class="pos">+$129,225</td><td class="pos">+$98,100</td><td class="good">✅ Self-financed</td></tr>
-      <tr><td><strong>R3 Gray+Black</strong></td><td>Oct 21, 2027</td><td>Gray+Black</td><td>4,000</td><td>$10,760</td><td>$640</td><td>$11,400</td><td class="pos">+$131,000</td><td class="pos">+$119,600</td><td class="good">✅ Self-financed</td></tr>
-      <tr style="background:#1A1A2E;color:#fff;">
-        <td colspan="6" style="color:#fff;font-weight:700;">TOTAL REORDER INVESTMENT</td>
-        <td style="color:var(--gold);font-weight:700;">$220,950</td>
-        <td colspan="2" style="color:rgba(255,255,255,.6);">Max shortfall: −$44,500</td>
-        <td style="color:#A8E6CF;">Final: +$218,300</td>
-      </tr>
-    </tbody>
-  </table>
 </div>
 
 <div class="sec" id="price">Price &amp; COG Optimization</div>
@@ -520,35 +521,21 @@ tbody tr:hover{background:#F0EDE8;}
   </div>
 </div>
 
-<div class="sec-hdr">🎯 Strategic Goal: 4-Month Stock Buffer</div>
 <div class="card" style="border-left:4px solid var(--purple);">
-  <h2><span class="dot" style="background:var(--purple);"></span>When to Start Building a 4-Month Inventory Cushion</h2>
+  <h2><span class="dot" style="background:var(--purple);"></span>🎯 Strategic Goal: 4-Month Stock Buffer</h2>
   <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">A 4-month buffer means holding <strong>14,000 Terracotta + 1,400 Gray + 1,400 Black</strong> units on hand at all times (4 months × 3,500 / 350 units). This eliminates any stockout risk and gives you leverage to negotiate bigger discounts on reorders.</p>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
     <div style="background:#F5EEF8;border-radius:8px;padding:14px;">
       <div style="font-weight:700;color:var(--purple);margin-bottom:6px;font-size:13px;">📦 What 4-Month Buffer Costs</div>
-      <div style="font-size:12px;line-height:1.9;">
-        Terra: 14,000 × $4.15 COG = <strong>$58,100</strong><br>
-        Gray: 1,400 × $2.70 = <strong>$3,780</strong><br>
-        Black: 1,400 × $2.70 = <strong>$3,780</strong><br>
-        <strong>Total buffer capital: ~$65,660</strong>
-      </div>
+      <div style="font-size:12px;line-height:1.9;">Terra: 14,000 × $4.15 COG = <strong>$58,100</strong><br>Gray: 1,400 × $2.70 = <strong>$3,780</strong><br>Black: 1,400 × $2.70 = <strong>$3,780</strong><br><strong>Total buffer capital: ~$65,660</strong></div>
     </div>
     <div style="background:#E8F8F0;border-radius:8px;padding:14px;">
       <div style="font-weight:700;color:var(--green);margin-bottom:6px;font-size:13px;">🗓️ When You'll Have Enough Cash</div>
-      <div style="font-size:12px;line-height:1.9;">
-        Cash balance in Jun 2027: <strong>+$16,876</strong><br>
-        Cash balance in Aug 2027: <strong>+$31,334</strong><br>
-        Cash balance in Oct 2027: <strong>+$42,372</strong><br>
-        Target $65K cash → <strong>Dec 2027</strong> (+$58,188)
-      </div>
+      <div style="font-size:12px;line-height:1.9;">Cash balance in Jun 2027: <strong>+$16,876</strong><br>Cash balance in Aug 2027: <strong>+$31,334</strong><br>Cash balance in Oct 2027: <strong>+$42,372</strong><br>Target $65K cash → <strong>Dec 2027</strong> (+$58,188)</div>
     </div>
     <div style="background:#EDF4F9;border-radius:8px;padding:14px;">
-      <div style="font-weight:700;color:var(--blue);margin-bottom:6px;font-size:13px;">🏗️ How to Build It</div>
-      <div style="font-size:12px;line-height:1.9;">
-        At Terra R5 (Jul 2027) or R6 (Sep 2027): increase order from 7,500 → <strong>14,000 units</strong>. This overstocks by ~6,500 units, building the cushion over 2 months.<br>
-        Gray/Black: bump R3 (Oct 2027) from 2,000 → <strong>3,400 units</strong>.
-      </div>
+      <div style="font-weight:700;color:#2980B9;margin-bottom:6px;font-size:13px;">🏗️ How to Build It</div>
+      <div style="font-size:12px;line-height:1.9;">At Terra R5 (Jul 2027) or R6 (Sep 2027): increase order from 7,500 → <strong>14,000 units</strong>. This overstocks by ~6,500 units, building the cushion over 2 months.<br>Gray/Black: bump R3 (Oct 2027) from 2,000 → <strong>3,400 units</strong>.</div>
     </div>
   </div>
   <div style="background:#1A1A2E;color:#fff;border-radius:8px;padding:12px;margin-top:12px;font-size:12px;">
@@ -565,6 +552,16 @@ const M=['Aug\'26','Sep\'26','Oct\'26','Nov\'26','Dec\'26','Jan\'27','Feb\'27','
 const tInv=[4000,3900,3700,3300,2500,8400,5200,1700,5700,2200,6200,2700,6700,3200,7200,3700,7700,4200];
 const gInv=[1425,1275,975,625,275,1925,1575,1225,875,525,175,1825,1475,1125,775,425,75,1725];
 
+// ── TABS ─────────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
 // ── INVENTORY CHART ──────────────────────────────────────────────
 new Chart(document.getElementById('invChart'),{
   type:'line',
@@ -580,19 +577,15 @@ new Chart(document.getElementById('invChart'),{
   plugins:[{id:'markers',afterDraw(chart){
     const ctx=chart.ctx,xsc=chart.scales.x,ysc=chart.scales.y,ca=chart.chartArea;
     ctx.save();
-
-    // danger line
     const y500=ysc.getPixelForValue(500);
     ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(231,76,60,.3)';ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(ca.left,y500);ctx.lineTo(ca.right,y500);ctx.stroke();
     ctx.setLineDash([]);ctx.fillStyle='rgba(231,76,60,.55)';ctx.font='10px Segoe UI';ctx.textBaseline='bottom';
     ctx.fillText('⚠ Danger zone',ca.left+4,y500-2);
-
     function drawMarker(idx,label,color,emoji,yOff,side){
       const xp=xsc.getPixelForValue(idx);
       ctx.save();
-      ctx.setLineDash([5,4]);ctx.strokeStyle=color;ctx.lineWidth=1.8;
-      ctx.globalAlpha=.8;
+      ctx.setLineDash([5,4]);ctx.strokeStyle=color;ctx.lineWidth=1.8;ctx.globalAlpha=.8;
       ctx.beginPath();ctx.moveTo(xp,ca.top);ctx.lineTo(xp,ca.bottom);ctx.stroke();
       ctx.setLineDash([]);ctx.globalAlpha=1;
       const tw=ctx.measureText(emoji+' '+label).width+14;
@@ -606,8 +599,6 @@ new Chart(document.getElementById('invChart'),{
       ctx.fillText(emoji+' '+label,bx+7,by+9);
       ctx.restore();
     }
-
-    // ORDER markers (orange ⚡)
     drawMarker(2,'Terra R1+G/B R1','#E67E22','⚡',6,'r');
     drawMarker(4,'Terra R2','#E67E22','⚡',6,'l');
     drawMarker(7,'Terra R3','#E67E22','⚡',6,'r');
@@ -615,8 +606,6 @@ new Chart(document.getElementById('invChart'),{
     drawMarker(11,'Terra R5','#E67E22','⚡',6,'r');
     drawMarker(13,'Terra R6','#E67E22','⚡',6,'l');
     drawMarker(14,'G/B R3','#E67E22','⚡',28,'r');
-
-    // ARRIVAL markers (green ↑)
     drawMarker(5,'Terra R1+G/B R1 arrive','#27ae60','↑',30,'r');
     drawMarker(8,'Terra R2 arrives','#27ae60','↑',30,'r');
     drawMarker(10,'Terra R3 arrives','#27ae60','↑',30,'l');
@@ -625,7 +614,6 @@ new Chart(document.getElementById('invChart'),{
     drawMarker(14,'Terra R5 arrives','#27ae60','↑',48,'l');
     drawMarker(16,'Terra R6 arrives','#27ae60','↑',30,'r');
     drawMarker(17,'G/B R3 arrives','#27ae60','↑',30,'l');
-
     ctx.restore();
   }}]
 });
@@ -653,11 +641,9 @@ new Chart(document.getElementById('cashChart'),{
   },
   plugins:[{id:'sfline',afterDraw(chart){
     const ctx=chart.ctx,ca=chart.chartArea,y=chart.scales.y2;
-    // zero line
     const y0=y.getPixelForValue(0);
     ctx.save();ctx.strokeStyle='rgba(0,0,0,.25)';ctx.lineWidth=1.5;ctx.setLineDash([]);
     ctx.beginPath();ctx.moveTo(ca.left,y0);ctx.lineTo(ca.right,y0);ctx.stroke();
-    // self-finance at index 6 (Feb'27)
     const xSF=chart.scales.x.getPixelForValue(8);
     ctx.strokeStyle='rgba(61,153,112,.7)';ctx.lineWidth=2;ctx.setLineDash([6,4]);
     ctx.beginPath();ctx.moveTo(xSF,ca.top);ctx.lineTo(xSF,ca.bottom);ctx.stroke();
