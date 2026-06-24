@@ -98,7 +98,6 @@ tbody tr:hover{background:#F0EDE8;}
 </div>
 
 <nav class="nav" id="top">
-  <a href="#inventory">📦 Inventory Chart</a>
   <a href="#cashflow">💰 Cash Flow</a>
   <a href="#table">📊 18-Month Table</a>
   <a href="#revcharts">📈 Revenue Charts</a>
@@ -128,13 +127,28 @@ tbody tr:hover{background:#F0EDE8;}
 <div style="padding:0 36px 4px;"><div class="sec" id="reorder-hub" style="padding-top:8px;">Reorder Hub — Alerts · Calendar · Costs</div></div>
 <div class="reorder-hub">
   <div class="tab-bar">
-    <button class="tab-btn active" data-tab="tab-alerts">🚨 Reorder Alerts</button>
+    <button class="tab-btn active" data-tab="tab-inventory">📦 Inventory Chart</button>
+    <button class="tab-btn" data-tab="tab-alerts">🚨 Reorder Alerts</button>
     <button class="tab-btn" data-tab="tab-calendar">🔄 Reorder Calendar</button>
     <button class="tab-btn" data-tab="tab-costs">💳 Reorder Costs</button>
   </div>
   <div class="tab-content">
 
-    <!-- TAB 1: ALERTS -->
+    <!-- TAB 1: INVENTORY -->
+    <div id="tab-inventory" class="tab-pane active">
+      <h2 style="font-size:14px;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--bg);display:flex;align-items:center;gap:7px;"><span class="dot dt-d"></span>Inventory Depletion, Restock Events &amp; Danger Zones</h2>
+      <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;font-size:11px;">
+        <span style="background:#FDEAE2;color:var(--terra);padding:3px 10px;border-radius:12px;font-weight:600;">● Terracotta (4,000 start)</span>
+        <span style="background:#E8ECEC;color:var(--gray);padding:3px 10px;border-radius:12px;font-weight:600;">● Gray (1,500 start)</span>
+        <span style="background:#E8E8E8;color:var(--blk);padding:3px 10px;border-radius:12px;font-weight:600;">● Black (same as gray)</span>
+        <span style="background:#FEF6EC;color:var(--orange);padding:3px 10px;border-radius:12px;font-weight:600;">⚡ Order placed</span>
+        <span style="background:#EEF8F2;color:var(--green);padding:3px 10px;border-radius:12px;font-weight:600;">↑ Stock arrives</span>
+        <span style="background:#FEF0EE;color:var(--red);padding:3px 10px;border-radius:12px;font-weight:600;">⚠ Danger &lt;500 units</span>
+      </div>
+      <div class="cwtall"><canvas id="invChart"></canvas></div>
+    </div>
+
+    <!-- TAB 2: ALERTS -->
     <div id="tab-alerts" class="tab-pane active">
       <div class="alerts-grid">
         <div class="alert a-red">
@@ -229,20 +243,6 @@ tbody tr:hover{background:#F0EDE8;}
 <!-- ── END REORDER HUB ─────────────────────────────────────────── -->
 
 <div class="main">
-
-<div class="sec" id="inventory">Inventory Levels — 18 Months</div>
-<div class="card">
-  <h2><span class="dot dt-d"></span>Inventory Depletion, Restock Events &amp; Danger Zones</h2>
-  <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;font-size:11px;">
-    <span style="background:#FDEAE2;color:var(--terra);padding:3px 10px;border-radius:12px;font-weight:600;">● Terracotta (4,000 start)</span>
-    <span style="background:#E8ECEC;color:var(--gray);padding:3px 10px;border-radius:12px;font-weight:600;">● Gray (1,500 start)</span>
-    <span style="background:#E8E8E8;color:var(--blk);padding:3px 10px;border-radius:12px;font-weight:600;">● Black (same as gray)</span>
-    <span style="background:#FEF6EC;color:var(--orange);padding:3px 10px;border-radius:12px;font-weight:600;">⚡ Order placed</span>
-    <span style="background:#EEF8F2;color:var(--green);padding:3px 10px;border-radius:12px;font-weight:600;">↑ Stock arrives</span>
-    <span style="background:#FEF0EE;color:var(--red);padding:3px 10px;border-radius:12px;font-weight:600;">⚠ Danger &lt;500 units</span>
-  </div>
-  <div class="cwtall"><canvas id="invChart"></canvas></div>
-</div>
 
 <div class="sec" id="cashflow">Cash Flow &amp; Self-Financing</div>
 <div class="card">
