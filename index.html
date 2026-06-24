@@ -246,7 +246,7 @@ tbody tr:hover{background:#F0EDE8;}
 
 <div class="sec" id="cashflow">Cash Flow &amp; Self-Financing</div>
 <div class="card">
-  <h2><span class="dot dgr"></span>Cumulative Cash Balance — Monthly Profit Minus Reorder Payments</h2>
+  <h2><span class="dot dgr"></span>Cumulative Outside Investment Needed — Cash Deficit Until Self-Financing (Apr 2027)</h2>
   <p style="font-size:12px;color:var(--muted);margin-bottom:12px;"><strong style="color:var(--red);">Red zone</strong> = outside capital needed. <strong style="color:var(--green);">Green zone</strong> = self-financed. Green vertical line = self-financing point (Apr 2027).</p>
   <div class="cwtall"><canvas id="cashChart"></canvas></div>
 </div>
@@ -620,7 +620,7 @@ new Chart(document.getElementById('cashChart'),{
   type:'bar',
   data:{labels:M,datasets:[
     {label:'Monthly Profit',data:monthlyProfit,backgroundColor:'rgba(61,153,112,.35)',borderColor:'rgba(61,153,112,.8)',borderWidth:1,yAxisID:'y',borderRadius:3},
-    {label:'Cumulative Cash Balance',data:cashBal,type:'line',
+    {label:'Cumulative Outside Investment Needed',data:cashBal,type:'line',
      borderColor:cashBal.map(v=>v>=0?'#27ae60':'#E74C3C'),
      segment:{borderColor:ctx=>ctx.p0.parsed.y<0||ctx.p1.parsed.y<0?'#E74C3C':'#27ae60'},
      backgroundColor:'transparent',borderWidth:2.5,pointRadius:5,
