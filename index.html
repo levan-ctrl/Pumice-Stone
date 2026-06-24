@@ -622,14 +622,73 @@ new Chart(document.getElementById('invChart'),{
     }
   },
   plugins:[{id:'zones',afterDraw(chart){
-    const ctx=chart.ctx,x=chart.scales.x,y=chart.scales.y;
-    // danger zone line at 500
-    const y500=y.getPixelForValue(500);
+    const ctx=chart.ctx,xsc=chart.scales.x,ysc=chart.scales.y;
+    const ca=chart.chartArea;
     ctx.save();
-    ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(231,76,60,.35)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(chart.chartArea.left,y500);ctx.lineTo(chart.chartArea.right,y500);ctx.stroke();
-    ctx.fillStyle='rgba(231,76,60,.5)';ctx.font='10px Segoe UI';
-    ctx.fillText('Danger zone <500 units',chart.chartArea.left+4,y500-4);
+
+    // ── Danger zone horizontal line ──────────────────────────────
+    const y500=ysc.getPixelForValue(500);
+    ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(231,76,60,.3)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(ca.left,y500);ctx.lineTo(ca.right,y500);ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ── Helper: draw a vertical alert marker ────────────────────
+    function drawAlert(idx,label,color,emoji,labelOffset,textSide){
+      const xp=xsc.getPixelForValue(idx);
+      // vertical dashed line
+      ctx.save();
+      ctx.setLineDash([5,4]);
+      ctx.strokeStyle=color;ctx.lineWidth=1.8;
+      ctx.beginPath();ctx.moveTo(xp,ca.top+2);ctx.lineTo(xp,ca.bottom);ctx.stroke();
+      ctx.setLineDash([]);
+
+      // badge background
+      const badgeW=label.length*6.4+22,badgeH=20,badgeR=4;
+      const bx=textSide==='right'?xp+4:xp-badgeW-4;
+      const by=labelOffset;
+
+      ctx.beginPath();
+      ctx.roundRect(bx,by,badgeW,badgeH,badgeR);
+      ctx.fillStyle=color;ctx.globalAlpha=.92;ctx.fill();
+      ctx.globalAlpha=1;
+
+      // emoji + text
+      ctx.font='bold 11px Segoe UI';ctx.fillStyle='#fff';ctx.textBaseline='middle';
+      ctx.fillText(emoji+' '+label,bx+6,by+badgeH/2);
+      ctx.restore();
+    }
+
+    // ── Reorder ORDER events (orange ⚡) ─────────────────────────
+    // idx 2 = Oct'26  Terra R1
+    drawAlert(2,'Order Terra R1','#E67E22','⚡',ca.top+6,'right');
+    // idx 4 = Dec'26  Gray+Black R1
+    drawAlert(4,'Order Gray+Black R1','#E67E22','⚡',ca.top+30,'left');
+    // idx 5 = Jan'27  Terra R2
+    drawAlert(5,'Order Terra R2','#E67E22','⚡',ca.top+6,'right');
+    // idx 9 = May'27  Terra R3
+    drawAlert(9,'Order Terra R3','#E67E22','⚡',ca.top+6,'right');
+    // idx 12 = Aug'27 Terra R4 + Gray+Black R2
+    drawAlert(12,'Order Terra R4','#E67E22','⚡',ca.top+6,'right');
+    drawAlert(12,'Order Gray+Black R2','#E67E22','⚡',ca.top+30,'left');
+    // idx 15 = Nov'27 Terra R5
+    drawAlert(15,'Order Terra R5','#E67E22','⚡',ca.top+6,'right');
+
+    // ── Restock ARRIVAL events (green ↑) ─────────────────────────
+    // idx 5 = Jan'27  Terra R1 arrives
+    drawAlert(5,'Terra R1 Arrives','#27ae60','↑',ca.top+56,'left');
+    // idx 7 = Mar'27  Gray+Black R1 arrives
+    drawAlert(7,'Gray+Black Arrives','#27ae60','↑',ca.top+6,'right');
+    // idx 9 = May'27  Terra R2 arrives
+    drawAlert(9,'Terra R2 Arrives','#27ae60','↑',ca.top+56,'left');
+    // idx 12 = Aug'27 Terra R3 arrives
+    drawAlert(12,'Terra R3 Arrives','#27ae60','↑',ca.top+56,'right');
+    // idx 15 = Nov'27 Terra R4 + Gray+Black R2 arrive
+    drawAlert(15,'Terra R4 Arrives','#27ae60','↑',ca.top+56,'left');
+
+    // ── Danger zone label ────────────────────────────────────────
+    ctx.font='10px Segoe UI';ctx.fillStyle='rgba(231,76,60,.6)';ctx.textBaseline='bottom';
+    ctx.fillText('⚠ Danger zone (<500 units)',ca.left+6,y500-3);
+
     ctx.restore();
   }}]
 });
