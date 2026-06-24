@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Levan's Founder View — Sifri Art Pumice Stone</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--terra:#C4622D;--green:#27AE60;--green-l:#A8E6CF;--gold:#D4A843;--blue:#2980B9;--blue-l:#AED6F1;--red:#E74C3C;--orange:#E67E22;--purple:#8E44AD;--bg:#F0F4F8;--card:#fff;--border:#D5E3EF;--text:#1A2F3A;--muted:#5A7A8A;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:13px;}
+.back-nav{position:sticky;top:0;z-index:999;background:#1A1A2E;display:flex;align-items:center;gap:2px;padding:0 36px;overflow-x:auto;scrollbar-width:none;box-shadow:0 2px 8px rgba(0,0,0,.4);}
+.back-nav::-webkit-scrollbar{display:none;}
+.back-nav a{color:rgba(255,255,255,.65);text-decoration:none;padding:10px 13px;font-size:12px;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;}
+.back-nav a:hover{color:#fff;border-bottom-color:#A9DFBF;}
+.back-nav .back-link{color:#A9DFBF;border-bottom-color:rgba(169,223,191,.4);}
+.back-nav .divider{color:rgba(255,255,255,.2);padding:0 4px;font-size:16px;align-self:center;}
+.back-nav .page-title{color:rgba(255,255,255,.8);font-size:12px;font-weight:600;padding:10px 4px;}
+.hdr{background:linear-gradient(135deg,#0B3D0B,#1E8449);color:#fff;padding:28px 36px;}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
+.hdr h1{font-size:26px;font-weight:700;}.hdr h1 span{color:#A9DFBF;}
+.hdr-meta{font-size:12px;opacity:.75;margin-top:4px;}
+.stake-box{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);border-radius:12px;padding:16px 22px;text-align:center;}
+.stake-box .pct{font-size:36px;font-weight:800;color:#A9DFBF;line-height:1.1;}
+.stake-box .lbl{font-size:11px;opacity:.8;margin-top:2px;}
+.payback{background:linear-gradient(90deg,#1a472a,#27ae60);color:#fff;padding:16px 36px;display:flex;align-items:center;gap:24px;}
+.payback-icon{font-size:32px;flex-shrink:0;}
+.payback h2{font-size:16px;font-weight:700;margin-bottom:4px;}
+.payback p{font-size:12px;opacity:.9;line-height:1.5;}
+.payback .months-badge{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.notice{background:linear-gradient(90deg,#7B3F00,#E67E22);color:#fff;padding:13px 36px;display:flex;align-items:center;gap:16px;font-size:13px;}
+.notice strong{font-size:14px;}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;padding:20px 36px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.kpi .v{font-size:22px;font-weight:800;margin:5px 0 3px;}.kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}.kpi .s{font-size:11px;color:var(--muted);}
+.c-gold{color:var(--gold);}.c-grn{color:var(--green);}.c-blue{color:var(--blue);}.c-pur{color:var(--purple);}.c-org{color:var(--orange);}.c-red{color:var(--red);}
+.main{padding:0 36px 40px;}
+.sec-hdr{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;padding:16px 0 8px;}
+.card{background:var(--card);border-radius:12px;border:1px solid var(--border);padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.card h2{font-size:14px;font-weight:700;margin-bottom:14px;padding-bottom:9px;border-bottom:2px solid var(--bg);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.cw{position:relative;height:280px;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead th{background:#0B3D0B;color:#fff;padding:8px 10px;text-align:center;font-size:11px;font-weight:600;}
+thead th:first-child{text-align:left;}
+tbody td{padding:7px 10px;border-bottom:1px solid var(--border);text-align:center;}
+tbody td:first-child{text-align:left;font-weight:600;}
+tbody tr:nth-child(even){background:#F8FAFC;}
+tbody tr:hover{background:#EDF9F0;}
+.good{color:var(--green);font-weight:700;}.warn{color:var(--orange);font-weight:700;}.danger{color:var(--red);font-weight:700;}
+.tr-pb{background:linear-gradient(90deg,rgba(39,174,96,.12),transparent)!important;border-left:3px solid var(--green);}
+.tr-hold{background:#FFF8F0!important;border-left:3px solid var(--orange);}
+.tr-ads{background:#F8F4FC!important;}
+.inv-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;}
+.inv-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;}
+.inv-box h3{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:12px;}
+.inv-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bg);}
+.inv-row:last-child{border-bottom:none;}
+.inv-row .lbl{font-size:12px;}.inv-row .val{font-size:13px;font-weight:700;}
+.tl-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.tl-row:last-child{border-bottom:none;}
+.tl-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px;}
+.tl-content h4{font-size:13px;font-weight:700;margin-bottom:2px;}
+.tl-content p{font-size:11px;color:var(--muted);line-height:1.4;}
+.tag{display:inline-block;padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700;margin-top:3px;}
+.tag-grn{background:#E8F8F0;color:var(--green);}.tag-org{background:#FEF6EC;color:var(--orange);}
+.footer{background:#0B3D0B;color:rgba(255,255,255,.5);text-align:center;padding:14px;font-size:11px;margin-top:16px;}
+</style>
+</head>
+<body>
+
+<nav class="back-nav">
+  <a href="index.html" class="back-link">← Main Dashboard</a>
+  <span class="divider">/</span>
+  <span class="page-title">🌿 Levan's Founder View</span>
+</nav>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div>
+      <h1>Levan's Founder View <span>Sifri Art</span></h1>
+      <div class="hdr-meta">Pumice Stone · Amazon FBA · Aug 2026 – Jan 2028 · Founder &amp; Operator</div>
+    </div>
+    <div class="stake-box">
+      <div class="pct">94.49%</div>
+      <div class="lbl">Equity Stake</div>
+      <div style="font-size:12px;color:#A9DFBF;margin-top:4px;font-weight:600;">$85,729 / $90,729</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:28px;flex-wrap:wrap;">
+    <div><div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;">Levan Invested</div><div style="font-size:18px;font-weight:700;color:#A9DFBF;">$85,729</div></div>
+    <div><div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;">Total Project Capital</div><div style="font-size:18px;font-weight:700;color:#A9DFBF;">$90,729</div></div>
+    <div><div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;">Levan's Share</div><div style="font-size:18px;font-weight:700;color:#A9DFBF;">94.489%</div></div>
+    <div><div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;">Of Every Dollar Profit</div><div style="font-size:18px;font-weight:700;color:#A9DFBF;">$0.9449</div></div>
+  </div>
+</div>
+
+<div class="notice">
+  <span style="font-size:22px;">⚠️</span>
+  <div><strong>No distributions until business is cash-positive.</strong> During the working capital deficit period (Aug 2026 – Mar 2027), all profits are retained by the business. Levan's first payout is <strong>April 2027</strong> when the business turns self-financing.</div>
+</div>
+
+<div class="payback">
+  <div class="payback-icon">💰</div>
+  <div>
+    <h2>Full Investment Recovered: July 2027 (best case) — September 2027 (worst case)</h2>
+    <p>Distributions begin April 2027 at $21,536/month. Payback covers <strong>all money Levan puts in</strong> — initial $85,729 plus any capital call contributions (up to $28,491 worst case). Best case (no capital calls): recovered by July 2027. Worst case: recovered by September 2027. Every month after is pure profit.</p>
+  </div>
+  <div class="months-badge">✅ Payback Jul–Sep 2027</div>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="l">Levan's Total Return</div><div class="v c-grn">$215,360</div><div class="s">10 payouts × $21,536</div></div>
+  <div class="kpi"><div class="l">Net Profit (no extra calls)</div><div class="v c-gold">$129,631</div><div class="s">$215,360 − $85,729 · +151% ROI</div></div>
+  <div class="kpi"><div class="l">First Distribution</div><div class="v c-blue">Apr 2027</div><div class="s">Business self-financing</div></div>
+  <div class="kpi"><div class="l">Investment Recovered</div><div class="v c-grn">Jul–Sep 2027</div><div class="s">Depends on capital calls</div></div>
+  <div class="kpi"><div class="l">Max Extra to Source</div><div class="v c-org">$28,491</div><div class="s">If full $30K raised externally</div></div>
+  <div class="kpi"><div class="l">Levan's Profit Share</div><div class="v c-pur">94.49%</div><div class="s">Every month, forever</div></div>
+</div>
+
+<div class="main">
+
+<div class="inv-breakdown">
+  <div class="inv-box">
+    <h3>Investment Structure</h3>
+    <div class="inv-row"><span class="lbl">Levan's capital invested</span><span class="val" style="color:var(--green);">$85,729</span></div>
+    <div class="inv-row"><span class="lbl">Total initial spend</span><span class="val">$90,729 — fully deployed</span></div>
+    <div class="inv-row"><span class="lbl">↳ 4,000 Terracotta units</span><span class="val" style="color:var(--terra);">$15,760 COG</span></div>
+    <div class="inv-row"><span class="lbl">↳ 1,500 Gray + 1,500 Black</span><span class="val" style="color:var(--muted);">$8,070 COG</span></div>
+    <div class="inv-row"><span class="lbl">↳ Logistics, ads, setup</span><span class="val" style="color:var(--muted);">$66,899</span></div>
+    <div class="inv-row" style="border-top:2px solid var(--bg);margin-top:4px;padding-top:8px;"><span class="lbl">Cash on hand now</span><span class="val" style="color:var(--red);">$0 — all spent</span></div>
+    <div class="inv-row"><span class="lbl">Levan's ownership</span><span class="val" style="color:var(--green);">94.489% of everything</span></div>
+    <div class="inv-row"><span class="lbl">If extra funding needed</span><span class="val" style="color:var(--orange);">Levan sources 94.489%</span></div>
+    <div class="inv-row"><span class="lbl">Max extra (worst case)</span><span class="val" style="color:var(--orange);">$28,491 to source</span></div>
+    <div class="inv-row"><span class="lbl">Distribution policy</span><span class="val" style="color:var(--orange);">Holds until cash-positive</span></div>
+    <div class="inv-row"><span class="lbl">First distribution</span><span class="val" style="color:var(--green);">Apr 2027 — $21,536</span></div>
+  </div>
+  <div class="inv-box">
+    <h3>Key Milestones for Levan</h3>
+    <div class="tl-row">
+      <div class="tl-icon" style="background:#FEF6EC;">⏳</div>
+      <div class="tl-content"><h4>Aug 2026 — Launch</h4><p>$90,729 fully deployed. First sales begin. Profits go to ads for first 2 months.</p><span class="tag tag-org">All capital deployed</span></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-icon" style="background:#FEF0EE;">⚡</div>
+      <div class="tl-content"><h4>Oct–Mar 2027 — Deficit Period</h4><p>Reorder payments exceed profits. Operational cash goes negative. Levan needs to source up to $28,491 as his share of any external raise.</p><span class="tag tag-org">Source external capital</span></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-icon" style="background:#E8F8F0;">🟢</div>
+      <div class="tl-content"><h4>Apr 2027 — Self-Financing</h4><p>Business generates enough profit to fund reorders internally. First distribution: $21,536.</p><span class="tag tag-grn">First payout</span></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-icon" style="background:#E8F8F0;">💰</div>
+      <div class="tl-content"><h4>Jul–Sep 2027 — Payback</h4><p>Cumulative distributions cover all of Levan's invested capital (initial + any extra). Pure profit from here.</p><span class="tag tag-grn">Investment recovered</span></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-icon" style="background:#E8F8F0;">🚀</div>
+      <div class="tl-content"><h4>Jan 2028 — End of Plan</h4><p>$215,360 total distributed to Levan over 10 months. $129,631 net profit. Ongoing business continues beyond plan horizon.</p><span class="tag tag-grn">+151% ROI</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CUMULATIVE OUTSIDE INVESTMENT SECTION -->
+<div class="sec-hdr">Cumulative Outside Investment Needed — Aug 2026 → Mar 2027</div>
+<div class="card" style="border-left:4px solid var(--orange);">
+  <h2>Cumulative Outside Investment Needed — Levan's $85,729 Is Already Deployed</h2>
+  <div style="background:#FEF0EE;border-radius:8px;padding:14px;margin-bottom:16px;font-size:12px;line-height:1.8;">
+    <strong style="color:var(--red);">Context:</strong> The $85,729 (Levan's share of $90,729) was fully spent at launch. The table below shows the <strong>additional operational cash deficit</strong> the business generates from Oct–Mar 2027 as reorder payments exceed incoming revenue. Levan must source 94.489% of any external raise needed to bridge this gap. David covers the remaining 5.511%.
+  </div>
+  <div style="overflow-x:auto;">
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left;">Month</th>
+        <th>Business Cash Balance</th>
+        <th>Total External Needed</th>
+        <th>Levan's Share (94.489%)</th>
+        <th>Distribution This Month</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="tr-ads"><td>Aug 2026 📢</td><td style="color:var(--muted);">$0 (ads phase)</td><td style="color:var(--muted);">$0</td><td style="color:var(--muted);">$0</td><td style="color:var(--purple);">$0 — ads</td></tr>
+      <tr class="tr-ads"><td>Sep 2026 📢</td><td style="color:var(--muted);">$0 (ads phase)</td><td style="color:var(--muted);">$0</td><td style="color:var(--muted);">$0</td><td style="color:var(--purple);">$0 — ads</td></tr>
+      <tr class="tr-hold"><td>Oct 2026 ⚡</td><td class="warn">−$7,456</td><td class="warn">$7,456</td><td class="warn">$7,045</td><td class="warn">$0 — no payout</td></tr>
+      <tr class="tr-hold"><td>Nov 2026</td><td style="color:var(--muted);">−$1,737</td><td style="color:var(--muted);">$1,737</td><td style="color:var(--muted);">$1,641</td><td class="warn">$0 — no payout</td></tr>
+      <tr class="tr-hold" style="background:#FEF0EE!important;"><td><strong>Dec 2026 ← MAX</strong></td><td class="danger">−$30,152</td><td class="danger"><strong>$30,152</strong></td><td class="danger"><strong>$28,491</strong></td><td class="warn">$0 — no payout</td></tr>
+      <tr class="tr-hold"><td>Jan 2027 ↑</td><td class="warn">−$17,824</td><td class="warn">$17,824</td><td class="warn">$16,842</td><td class="warn">$0 — no payout</td></tr>
+      <tr class="tr-hold"><td>Feb 2027</td><td class="warn">−$18,472</td><td class="warn">$18,472</td><td class="warn">$17,454</td><td class="warn">$0 — no payout</td></tr>
+      <tr class="tr-hold"><td>Mar 2027</td><td class="warn">−$5,018</td><td class="warn">$5,018</td><td class="warn">$4,741</td><td class="warn">$0 — last deficit month</td></tr>
+      <tr class="tr-pb"><td><strong>Apr 2027 🟢</strong></td><td class="good">+$17,774</td><td style="color:var(--green);">$0 — self-financed</td><td style="color:var(--green);">$0 extra needed</td><td class="good"><strong>$21,536 ← FIRST PAYOUT</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div style="background:#EDF9F0;border-radius:8px;padding:12px;margin-top:14px;font-size:12px;line-height:1.7;">
+    <strong style="color:var(--green);">Note:</strong> "Total External Needed" is the business running cash deficit on top of the already-spent $90,729. Levan sources 94.489% of any raise; David contributes 5.511%. These are <strong>additional contributions on top of original investment</strong>. From April 2027, no external capital ever needed again.
+  </div>
+</div>
+
+<!-- CAPITAL CALL SCENARIOS -->
+<div class="sec-hdr">Capital Call Scenarios — Levan's Share of Any External Raise</div>
+<div class="card" style="border-left:4px solid var(--green);">
+  <h2>Levan's Extra Contribution to Any External Raise</h2>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Levan's $85,729 is already invested and deployed. If additional external capital is needed, Levan sources 94.489% of that raise. His equity stake stays the same.</p>
+  <div style="overflow-x:auto;">
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left;">Scenario</th>
+        <th>External Raise</th>
+        <th>Levan's Extra (94.489%)</th>
+        <th>Levan's Total Invested</th>
+        <th>Payback Month</th>
+        <th>Net Profit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>No external raise</strong></td><td style="color:var(--green);">$0</td><td style="color:var(--green);">+$0</td><td class="good">$85,729</td><td class="good">Jul 2027 (4th payout)</td><td class="good">$129,631 · 151% ROI</td></tr>
+      <tr style="background:#F8FAFC!important;"><td><strong>Small raise</strong></td><td>$10,000</td><td class="warn">+$9,449</td><td class="warn">$95,178</td><td class="warn">Aug 2027 (5th payout)</td><td class="warn">$120,182 · 126% ROI</td></tr>
+      <tr style="background:#FEF6EC!important;"><td><strong>Medium raise</strong></td><td>$20,000</td><td class="warn">+$18,898</td><td class="warn">$104,627</td><td class="warn">Aug 2027 (5th payout)</td><td class="warn">$110,733 · 106% ROI</td></tr>
+      <tr style="background:#FEF6EC!important;"><td><strong>Large raise</strong></td><td>$30,000</td><td class="warn">+$28,347</td><td class="warn">$114,076</td><td class="warn">Sep 2027 (6th payout)</td><td class="warn">$101,284 · 89% ROI</td></tr>
+      <tr style="background:#FEF0EE!important;"><td><strong>Full deficit (worst case)</strong></td><td>$30,152</td><td class="danger">+$28,491</td><td class="danger">$114,220</td><td class="danger">Sep 2027 (6th payout)</td><td class="danger">$101,140 · 89% ROI</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div style="background:#EDF9F0;border-radius:8px;padding:14px;margin-top:14px;font-size:12px;line-height:1.8;">
+    <strong style="color:var(--green);">Key point:</strong> Even in the worst case (full $30,152 raised externally, Levan contributes $28,491 extra), the ROI is 89% and payback is September 2027. From April 2027 onward, no further capital ever needed.
+  </div>
+</div>
+
+<!-- DISTRIBUTION SCHEDULE -->
+<div class="sec-hdr">Levan's Distribution Schedule — Starts April 2027</div>
+<div class="card">
+  <h2>Monthly Payouts — 18 Months (Aug 2026 – Jan 2028)</h2>
+  <div style="overflow-x:auto;">
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left;">Month</th>
+        <th>Business Net Profit</th>
+        <th>Levan's Share (94.49%)</th>
+        <th>Distributed to Levan</th>
+        <th>Cumulative Received</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="tr-ads"><td>Aug 2026 📢</td><td style="color:var(--purple);">$0 → ads</td><td style="color:var(--purple);">$0</td><td style="color:var(--purple);">$0</td><td>$0</td><td style="color:var(--purple);">Ads reinvestment</td></tr>
+      <tr class="tr-ads"><td>Sep 2026 📢</td><td style="color:var(--purple);">$0 → ads</td><td style="color:var(--purple);">$0</td><td style="color:var(--purple);">$0</td><td>$0</td><td style="color:var(--purple);">Ads reinvestment</td></tr>
+      <tr class="tr-hold"><td>Oct 2026</td><td>$4,115</td><td class="warn">$3,887</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Cash negative · no payout</td></tr>
+      <tr class="tr-hold"><td>Nov 2026</td><td>$5,719</td><td class="warn">$5,403</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Cash negative · no payout</td></tr>
+      <tr class="tr-hold"><td>Dec 2026</td><td>$7,922</td><td class="warn">$7,484</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Cash negative · no payout</td></tr>
+      <tr class="tr-hold"><td>Jan 2027</td><td>$12,328</td><td class="warn">$11,647</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Cash negative · no payout</td></tr>
+      <tr class="tr-hold"><td>Feb 2027</td><td>$21,140</td><td class="warn">$19,974</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Cash negative · no payout</td></tr>
+      <tr class="tr-hold"><td>Mar 2027</td><td>$22,792</td><td class="warn">$21,535</td><td class="warn">$0 — held</td><td>$0</td><td class="warn">Last deficit month</td></tr>
+      <tr class="tr-pb"><td><strong>Apr 2027 🟢</strong></td><td>$22,792</td><td>$21,536</td><td class="good"><strong>$21,536</strong></td><td class="good">$21,536</td><td class="good"><strong>FIRST PAYOUT ✅</strong></td></tr>
+      <tr class="tr-pb"><td><strong>May 2027</strong></td><td>$22,792</td><td>$21,536</td><td class="good"><strong>$21,536</strong></td><td class="good">$43,072</td><td class="good">2nd payout</td></tr>
+      <tr class="tr-pb"><td><strong>Jun 2027</strong></td><td>$22,792</td><td>$21,536</td><td class="good"><strong>$21,536</strong></td><td class="good">$64,608</td><td class="good">3rd payout</td></tr>
+      <tr class="tr-pb"><td><strong>Jul 2027 💰</strong></td><td>$22,792</td><td>$21,536</td><td class="good"><strong>$21,536</strong></td><td class="good">$86,144</td><td class="good">$85,729 recovered ✅</td></tr>
+      <tr class="tr-pb"><td><strong>Aug 2027</strong></td><td>$22,792</td><td>$21,536</td><td class="good"><strong>$21,536</strong></td><td class="good">$107,680</td><td class="good">Pure profit</td></tr>
+      <tr class="tr-pb"><td><strong>Sep 2027</strong></td><td>$22,792</td><td>$21,536</td><td class="good"><strong>$21,536</strong></td><td class="good">$129,216</td><td class="good">Pure profit</td></tr>
+      <tr class="tr-pb"><td><strong>Oct 2027</strong></td><td>$22,792</td><td>$21,536</td><td class="good"><strong>$21,536</strong></td><td class="good">$150,752</td><td class="good">Pure profit</td></tr>
+      <tr class="tr-pb"><td><strong>Nov 2027</strong></td><td>$22,792</td><td>$21,536</td><td class="good"><strong>$21,536</strong></td><td class="good">$172,288</td><td class="good">Pure profit</td></tr>
+      <tr class="tr-pb"><td><strong>Dec 2027</strong></td><td>$22,792</td><td>$21,536</td><td class="good"><strong>$21,536</strong></td><td class="good">$193,824</td><td class="good">Pure profit</td></tr>
+      <tr class="tr-pb"><td><strong>Jan 2028</strong></td><td>$22,792</td><td>$21,536</td><td class="good"><strong>$21,536</strong></td><td class="good">$215,360</td><td class="good">Pure profit</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- CHART -->
+<div class="sec-hdr">Monthly Distribution Chart</div>
+<div class="card">
+  <h2>Levan's Monthly Distribution — 18 Months</h2>
+  <div class="cw"><canvas id="monthlyChart"></canvas></div>
+</div>
+
+<!-- RISK & RETURN -->
+<div class="sec-hdr">Risk &amp; Return Summary</div>
+<div class="card">
+  <h2>Levan's Business Overview</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+    <div style="background:#E8F8F0;border-radius:8px;padding:14px;">
+      <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px;">✅ Upside</div>
+      <ul style="list-style:none;font-size:12px;line-height:2;">
+        <li>• 151% ROI over 18 months (no extra calls)</li>
+        <li>• $21,536/month from April 2027</li>
+        <li>• 94.489% share is permanent</li>
+        <li>• After April 2027 — no capital calls, ever</li>
+        <li>• $215,360 total return by Jan 2028</li>
+        <li>• Business continues beyond Jan 2028</li>
+      </ul>
+    </div>
+    <div style="background:#FEF6EC;border-radius:8px;padding:14px;">
+      <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px;">⚡ Capital Requirements</div>
+      <ul style="list-style:none;font-size:12px;line-height:2;">
+        <li>• $85,729 already deployed (startup)</li>
+        <li>• Up to $28,491 extra if $30K raise needed</li>
+        <li>• Max total exposure: $114,220</li>
+        <li>• Deficit period: Oct 2026 – Mar 2027</li>
+        <li>• No cash available Aug–Sep (ads phase)</li>
+      </ul>
+    </div>
+    <div style="background:#FEF0EE;border-radius:8px;padding:14px;">
+      <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:8px;">⚠️ Risks</div>
+      <ul style="list-style:none;font-size:12px;line-height:2;">
+        <li>• Sales slower than projected</li>
+        <li>• Amazon policy or account issues</li>
+        <li>• Supplier delays (30/70 payment cycle)</li>
+        <li>• ACoS higher than modeled</li>
+        <li>• Reorder timing must be precise</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div class="footer">Sifri Art · Pumice Stone · Levan's Founder View · Aug 2026 – Jan 2028 · Max capital deployment $114,220 worst case · First distribution Apr 2027 · Total return $215,360</div>
+
+<script>
+const M=['Aug\'26','Sep\'26','Oct\'26','Nov\'26','Dec\'26','Jan\'27','Feb\'27','Mar\'27','Apr\'27','May\'27','Jun\'27','Jul\'27','Aug\'27','Sep\'27','Oct\'27','Nov\'27','Dec\'27','Jan\'28'];
+const monthly=[0,0,0,0,0,0,0,0,21536,21536,21536,21536,21536,21536,21536,21536,21536,21536];
+new Chart(document.getElementById('monthlyChart'),{
+  type:'bar',
+  data:{labels:M,datasets:[{
+    label:"Levan's Monthly Distribution",
+    data:monthly,
+    backgroundColor:monthly.map(v=>v>0?'rgba(39,174,96,.75)':'rgba(180,180,180,.3)'),
+    borderColor:monthly.map(v=>v>0?'#27ae60':'rgba(180,180,180,.5)'),
+    borderWidth:1,borderRadius:4
+  }]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:11}}},
+      tooltip:{callbacks:{label:c=>`Distribution: $${c.raw.toLocaleString()}`}}},
+    scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'},grid:{color:'rgba(0,0,0,.04)'},title:{display:true,text:'Monthly Distribution ($)'}}}
+  }
+});
+</script>
+</body>
+</html>

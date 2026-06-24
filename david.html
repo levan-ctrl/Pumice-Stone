@@ -117,17 +117,17 @@ tbody tr:hover{background:#EDF4F9;}
 <div class="payback">
   <div class="payback-icon">💰</div>
   <div>
-    <h2>Full Investment Recovered: July 2027</h2>
-    <p>Distributions begin April 2027 at $1,256/month once the business is cash-positive. By July 2027 (4th payout), cumulative distributions reach $5,024 — David's $5,000 is fully recovered. Every month after July is pure profit with no capital at risk.</p>
+    <h2>Full Investment Recovered: July 2027 (best case) — September 2027 (worst case)</h2>
+    <p>Distributions begin April 2027 at $1,256/month. Payback covers <strong>all money David puts in</strong> — initial $5,000 plus any capital call contributions. Best case (no capital calls): $5,024 cumulative by July 2027. Worst case ($1,661 extra contributed): $7,536 cumulative by September 2027. Every month after payback is pure profit.</p>
   </div>
-  <div class="months-badge">✅ Payback in July 2027</div>
+  <div class="months-badge">✅ Payback Jul–Sep 2027</div>
 </div>
 
 <div class="kpis">
   <div class="kpi"><div class="l">David's Total Return</div><div class="v c-grn">$12,560</div><div class="s">10 payouts × $1,256</div></div>
-  <div class="kpi"><div class="l">Net Profit on $5K</div><div class="v c-gold">$7,560</div><div class="s">+151% ROI</div></div>
+  <div class="kpi"><div class="l">Net Profit (no extra calls)</div><div class="v c-gold">$7,560</div><div class="s">$12,560 − $5,000 · +151% ROI</div></div>
   <div class="kpi"><div class="l">First Distribution</div><div class="v c-blue">Apr 2027</div><div class="s">Business self-financing</div></div>
-  <div class="kpi"><div class="l">Investment Recovered</div><div class="v c-grn">Jul 2027</div><div class="s">4th payout month</div></div>
+  <div class="kpi"><div class="l">Investment Recovered</div><div class="v c-grn">Jul–Sep 2027</div><div class="s">Depends on capital calls</div></div>
   <div class="kpi"><div class="l">Max Extra Contribution</div><div class="v c-org">$1,661</div><div class="s">If full $30K raised externally</div></div>
   <div class="kpi"><div class="l">David's Profit Share</div><div class="v c-pur">5.51%</div><div class="s">Every month, forever</div></div>
 </div>
@@ -278,23 +278,24 @@ tbody tr:hover{background:#EDF4F9;}
     <thead>
       <tr>
         <th style="text-align:left;">Scenario</th>
-        <th>External Raise Needed</th>
+        <th>External Raise</th>
         <th>David's Extra (5.511%)</th>
-        <th>Initial $5K (already spent)</th>
-        <th>David's Total Exposure</th>
+        <th>David's Total Invested</th>
+        <th>Payback Month</th>
+        <th>Net Profit</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td><strong>No external raise</strong></td><td style="color:var(--green);">$0</td><td style="color:var(--green);">+$0</td><td style="color:var(--muted);">$5,000</td><td class="good">$5,000 total</td></tr>
-      <tr style="background:#F8FAFC!important;"><td><strong>Small raise</strong></td><td>$10,000</td><td class="warn">+$551</td><td style="color:var(--muted);">$5,000</td><td class="warn">$5,551 total</td></tr>
-      <tr style="background:#FEF6EC!important;"><td><strong>Medium raise</strong></td><td>$20,000</td><td class="warn">+$1,102</td><td style="color:var(--muted);">$5,000</td><td class="warn">$6,102 total</td></tr>
-      <tr style="background:#FEF6EC!important;"><td><strong>Large raise</strong></td><td>$30,000</td><td class="warn">+$1,653</td><td style="color:var(--muted);">$5,000</td><td class="warn">$6,653 total</td></tr>
-      <tr style="background:#FEF0EE!important;"><td><strong>Full deficit (worst case)</strong></td><td>$30,152</td><td class="danger">+$1,661</td><td style="color:var(--muted);">$5,000</td><td class="danger">$6,661 total</td></tr>
+      <tr><td><strong>No external raise</strong></td><td style="color:var(--green);">$0</td><td style="color:var(--green);">+$0</td><td class="good">$5,000</td><td class="good">Jul 2027 (4th payout)</td><td class="good">$7,560 · 151% ROI</td></tr>
+      <tr style="background:#F8FAFC!important;"><td><strong>Small raise</strong></td><td>$10,000</td><td class="warn">+$551</td><td class="warn">$5,551</td><td class="warn">Aug 2027 (5th payout)</td><td class="warn">$7,009 · 126% ROI</td></tr>
+      <tr style="background:#FEF6EC!important;"><td><strong>Medium raise</strong></td><td>$20,000</td><td class="warn">+$1,102</td><td class="warn">$6,102</td><td class="warn">Aug 2027 (5th payout)</td><td class="warn">$6,458 · 106% ROI</td></tr>
+      <tr style="background:#FEF6EC!important;"><td><strong>Large raise</strong></td><td>$30,000</td><td class="warn">+$1,653</td><td class="warn">$6,653</td><td class="warn">Sep 2027 (6th payout)</td><td class="warn">$5,907 · 89% ROI</td></tr>
+      <tr style="background:#FEF0EE!important;"><td><strong>Full deficit (worst case)</strong></td><td>$30,152</td><td class="danger">+$1,661</td><td class="danger">$6,661</td><td class="danger">Sep 2027 (6th payout)</td><td class="danger">$5,899 · 89% ROI</td></tr>
     </tbody>
   </table>
   </div>
   <div style="background:#EDF4F9;border-radius:8px;padding:14px;margin-top:14px;font-size:12px;line-height:1.8;">
-    <strong style="color:var(--blue);">Key point:</strong> David's $5K is already gone — it funded the startup. Any capital call is a <strong>fresh, additional cash commitment</strong> on top. Maximum extra exposure is $1,879 (worst case: full $34K deficit raised externally). From April 2027, the business is self-financing — no further capital calls ever.
+    <strong style="color:var(--blue);">Key point:</strong> David's $5K is already deployed. Any capital call is a <strong>fresh additional cash commitment</strong>. Payback covers ALL money David puts in — initial $5K + any extra contributions. Monthly $1,256 distributions recover his full investment before pure profit begins. From April 2027, no further capital calls ever.
   </div>
 </div>
 
@@ -318,7 +319,7 @@ tbody tr:hover{background:#EDF4F9;}
         <li>• No distributions Aug 2026 – Mar 2027</li>
         <li>• $5K already fully deployed at launch</li>
         <li>• If extra capital raised → David adds 5.511%</li>
-        <li>• Max extra ever: $1,879 (worst case)</li>
+        <li>• Max extra ever: $1,661 (worst case)</li>
         <li>• Amazon sales projections may vary</li>
       </ul>
     </div>

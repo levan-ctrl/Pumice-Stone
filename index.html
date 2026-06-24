@@ -90,6 +90,7 @@ tbody tr:hover{background:#F0EDE8;}
   </div>
   <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
     <a href="david.html" style="display:inline-flex;align-items:center;gap:7px;background:#2980B9;color:#fff;text-decoration:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:.3px;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:background .2s;" onmouseover="this.style.background='#3498DB'" onmouseout="this.style.background='#2980B9'">👤 David's Investor View →</a>
+    <a href="levan.html" style="display:inline-flex;align-items:center;gap:7px;background:#1E8449;color:#fff;text-decoration:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:.3px;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:background .2s;" onmouseover="this.style.background='#27AE60'" onmouseout="this.style.background='#1E8449'">🌿 Levan's Founder View →</a>
     <div class="hdr-r">
       <strong>18-Month Revenue: $1,043,594</strong>
       6× Terra Reorders · 3× Gray/Black Reorders
@@ -104,13 +105,14 @@ tbody tr:hover{background:#F0EDE8;}
   <a href="#reorder-hub">🔄 Reorders</a>
   <a href="#price">🏷️ Price &amp; COG</a>
   <a href="david.html" style="color:#AED6F1;border-bottom-color:#AED6F1;background:rgba(41,128,185,.18);border-radius:4px 4px 0 0;">👤 Investor View</a>
+  <a href="levan.html" style="color:#A9DFBF;border-bottom-color:#A9DFBF;background:rgba(30,132,73,.18);border-radius:4px 4px 0 0;">🌿 Founder View</a>
 </nav>
 
 <div class="sf-banner">
   <div class="sf-icon">🟢</div>
   <div>
     <h2>Self-Financing Point: April 2027 — No Outside Capital Needed After This</h2>
-    <p>30% deposit on order, 70% when mfg done. Aug+Sep profits → ads. Profits use exact Excel "after ads" figures: Terra $5.51/unit, Gray/Black $5.02/unit. Maximum cash shortfall: <strong>−$30,152 in December 2026</strong> (reduced from −$34,108 — 2,000 Terra units pre-stocked). Cash turns positive April 2027 (+$17,774).</p>
+    <p>$90,729 initial capital (7,000 units + logistics + ads setup) fully deployed at launch. 30/70 payment terms. Aug+Sep profits → ads. Total cumulative investment peaks at <strong>−$120,881 in December 2026</strong> ($90,729 initial + $30,152 operational deficit). Ongoing operations self-finance from April 2027. Initial investment fully recovered Jan 2028.</p>
   </div>
 </div>
 
@@ -119,7 +121,7 @@ tbody tr:hover{background:#F0EDE8;}
   <div class="kpi"><div class="l">18-Month Net Profit</div><div class="v c-grn">$301,936</div><div class="s">After ads · 28.9% margin</div></div>
   <div class="kpi"><div class="l">Peak Monthly Revenue</div><div class="v c-terra">$78,120</div><div class="s">From Mar 2027</div></div>
   <div class="kpi"><div class="l">Peak Monthly Profit</div><div class="v c-grn">$22,792</div><div class="s">After ads · From Mar 2027</div></div>
-  <div class="kpi"><div class="l">Max Outside Funding</div><div class="v c-red">$30,152</div><div class="s">Dec 2026 peak</div></div>
+  <div class="kpi"><div class="l">Max Outside Funding</div><div class="v c-red">$120,881</div><div class="s">Dec 2026 peak · incl. $90,729 initial</div></div>
   <div class="kpi"><div class="l">Total Reorder Spend</div><div class="v c-pur">$220,950</div><div class="s">9 reorder events</div></div>
 </div>
 
@@ -246,7 +248,7 @@ tbody tr:hover{background:#F0EDE8;}
 
 <div class="sec" id="cashflow">Cash Flow &amp; Self-Financing</div>
 <div class="card">
-  <h2><span class="dot dgr"></span>Cumulative Outside Investment Needed — Cash Deficit Until Self-Financing (Apr 2027)</h2>
+  <h2><span class="dot dgr"></span>Cumulative Outside Investment Needed — $90,729 Initial + Reorder Deficits (Peaks Dec 2026 at −$120,881)</h2>
   <p style="font-size:12px;color:var(--muted);margin-bottom:12px;"><strong style="color:var(--red);">Red zone</strong> = outside capital needed. <strong style="color:var(--green);">Green zone</strong> = self-financed. Green vertical line = self-financing point (Apr 2027).</p>
   <div class="cwtall"><canvas id="cashChart"></canvas></div>
 </div>
@@ -614,7 +616,7 @@ new Chart(document.getElementById('invChart'),{
 });
 
 // ── CASH FLOW CHART ───────────────────────────────────────────────
-const cashBal=[0,0,-7456,-1737,-30152,-17824,-18472,-5018,17774,6020,20832,12498,35290,26956,46328,47332,62144,84936];
+const cashBal=[-90729,-90729,-98185,-92466,-120881,-108553,-109201,-95747,-72955,-84709,-69897,-78231,-55439,-63773,-44401,-43397,-28585,-5793];
 const monthlyProfit=[0,0,4115,5719,7922,12328,21140,22792,22792,22792,22792,22792,22792,22792,22792,22792,22792,22792];
 new Chart(document.getElementById('cashChart'),{
   type:'bar',
@@ -631,7 +633,7 @@ new Chart(document.getElementById('cashChart'),{
     plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: $${c.raw.toLocaleString()}`}}},
     scales:{
       y:{position:'left',title:{display:true,text:'Monthly Profit ($)'},ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'},grid:{color:'rgba(0,0,0,.04)'}},
-      y2:{position:'right',title:{display:true,text:'Running Cash ($)'},ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K',color:ctx=>ctx.tick&&ctx.tick.value<0?'#E74C3C':'#27ae60'},grid:{drawOnChartArea:false}}
+      y2:{position:'right',title:{display:true,text:'Total Investment Outstanding ($)'},ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K',color:ctx=>ctx.tick&&ctx.tick.value<0?'#E74C3C':'#27ae60'},grid:{drawOnChartArea:false}}
     }
   },
   plugins:[{id:'sfline',afterDraw(chart){
@@ -643,7 +645,7 @@ new Chart(document.getElementById('cashChart'),{
     ctx.strokeStyle='rgba(61,153,112,.7)';ctx.lineWidth=2;ctx.setLineDash([6,4]);
     ctx.beginPath();ctx.moveTo(xSF,ca.top);ctx.lineTo(xSF,ca.bottom);ctx.stroke();
     ctx.fillStyle='rgba(61,153,112,.9)';ctx.font='bold 11px Segoe UI';ctx.setLineDash([]);
-    ctx.textBaseline='top';ctx.fillText('🟢 Self-financing Apr\'27',xSF+4,ca.top+4);
+    ctx.textBaseline='top';ctx.fillText('🟢 Reorders self-financed Apr\'27',xSF+4,ca.top+4);
     ctx.restore();
   }}]
 });
