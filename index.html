@@ -148,12 +148,12 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
   <div class="hdr-r">
     <div class="lbl">24-Month Net Profit</div>
     <div class="big" id="hProfit">—</div>
-    <div class="lbl">on $90,729 invested · <span style="color:var(--tl)" id="hROI">—</span></div>
+    <div class="lbl">on $100,729 total capital · <span style="color:var(--tl)" id="hROI">—</span></div>
   </div>
 </div>
 
 <div class="kpis">
-  <div class="kpi"><div class="l">Invested</div><div class="v" style="color:var(--terra)">$90,729</div><div class="s">0 debt · self-funded</div></div>
+  <div class="kpi"><div class="l">Total Capital</div><div class="v" style="color:var(--terra)">$100,729</div><div class="s">$90,729 spent + $10K Jan 2027</div></div>
   <div class="kpi"><div class="l">24-Mo Revenue</div><div class="v" style="color:var(--gold)" id="kRev">—</div><div class="s">Aug 2026–Jul 2028</div></div>
   <div class="kpi"><div class="l">24-Mo Net Profit</div><div class="v" style="color:var(--grn)" id="kProfit">—</div><div class="s" id="kMargin">—</div></div>
   <div class="kpi"><div class="l">Peak Month Profit</div><div class="v" style="color:var(--terra)" id="kPeak">—</div><div class="s" id="kPeakM">—</div></div>
@@ -236,8 +236,12 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
   </div>
 
   <div class="inv-bar">
-    <div><div class="lbl2">TOTAL INVESTMENT</div><div class="amt">$90,729</div></div>
-    <div class="rgt">4,000 Terracotta+Glass File · 1,500 Black · 1,500 Gray<br>+2,000 terra kits pre-assembled (need stones only for next reorder)</div>
+    <div><div class="lbl2">ALREADY SPENT</div><div class="amt">$90,729</div></div>
+    <div class="rgt">4,000 Terracotta+Glass File · 1,500 Black · 1,500 Gray<br>+2,000 terra kits pre-assembled (stone only needed)</div>
+  </div>
+  <div style="background:linear-gradient(90deg,#4A2070,#8E44AD);color:#fff;border-radius:8px;padding:9px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+    <div><div style="font-size:10px;opacity:.75">PLANNED INJECTION — Jan 1, 2027</div><div style="font-size:20px;font-weight:800">+ $10,000</div></div>
+    <div style="text-align:right;font-size:10.5px;opacity:.85;line-height:1.6;">Not yet invested · added to total capital<br><strong style="font-size:13px">= $100,729 total</strong></div>
   </div>
 
   <div class="ps">
@@ -261,8 +265,8 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
       <div class="arow"><span>Oct 2026</span><span class="val">200 / 80 / 80</span></div>
       <div class="arow"><span>Nov 2026</span><span class="val">400 / 160 / 160</span></div>
       <div class="arow"><span>Dec 2026 — gray/black cap</span><span class="val">800 / 300 / 300</span></div>
-      <div class="arow"><span>Jan 2027</span><span class="val">1,600 / 300 / 300</span></div>
-      <div class="arow"><span>Feb 2027+ — terra cap reached</span><span class="val" style="color:var(--grn)">3,000 / 300 / 300</span></div>
+      <div class="arow"><span>Jan 2027 — terra cap reached</span><span class="val" style="color:var(--grn)">1,500 / 300 / 300</span></div>
+      <div class="arow"><span>Feb 2027+</span><span class="val" style="color:var(--grn)">1,500 / 300 / 300</span></div>
       <div class="arow" style="font-size:10px;color:var(--red)"><span>Aug + Sep: all profit → launch ads (0 cash retained)</span></div>
     </div>
     <div class="acard">
@@ -364,7 +368,7 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
 <div class="sec" id="monthly" style="padding-top:10px;padding-bottom:4px;">
   <div class="tbl-wrap">
     <button class="tbl-toggle" id="tblBtn" onclick="toggleTbl()">
-      <span>📋 Full 24-Month Breakdown — Units Sold, Lost Sales, Stock, Revenue, Profit, Cash</span>
+      <span>📋 Full 24-Month Breakdown — Units Sold, Stock, Revenue, Profit, Cash</span>
       <span class="arr">▼</span>
     </button>
     <div class="tbl-inner" id="tblInner">
@@ -372,18 +376,18 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
         <thead>
           <tr>
             <th rowspan="2" style="text-align:left">Month</th>
-            <th colspan="3" style="background:#7A3010">TERRACOTTA+GLASS</th>
-            <th colspan="3" style="background:#3A6060">GRAY</th>
-            <th colspan="3" style="background:#2A2A2A">BLACK</th>
+            <th colspan="2" style="background:#7A3010">TERRACOTTA+GLASS</th>
+            <th colspan="2" style="background:#3A6060">GRAY</th>
+            <th colspan="2" style="background:#2A2A2A">BLACK</th>
             <th rowspan="2" style="background:#1A3A5C">Revenue</th>
             <th rowspan="2" style="background:#1A4A2E">Profit</th>
             <th rowspan="2" style="background:#3A2050">Cash In</th>
             <th rowspan="2" style="background:#2E1A4A">Cash</th>
           </tr>
           <tr>
-            <th style="background:#7A3010">Sold</th><th style="background:#7A3010;color:#FFB8A0">↑Price</th><th style="background:#7A3010">Stock</th>
-            <th style="background:#3A6060">Sold</th><th style="background:#3A6060;color:#A8D0D0">↑Price</th><th style="background:#3A6060">Stock</th>
-            <th style="background:#2A2A2A">Sold</th><th style="background:#2A2A2A;color:#C0C0C0">↑Price</th><th style="background:#2A2A2A">Stock</th>
+            <th style="background:#7A3010">Sold</th><th style="background:#7A3010">Stock</th>
+            <th style="background:#3A6060">Sold</th><th style="background:#3A6060">Stock</th>
+            <th style="background:#2A2A2A">Sold</th><th style="background:#2A2A2A">Stock</th>
           </tr>
         </thead>
         <tbody id="tblBody"></tbody>
@@ -414,7 +418,7 @@ const MSH = MFL.map(s=>s.replace(' 20','\''));
 // First 2 months (m=0,1 = Aug+Sep): all profit goes to launch ads → zero cash retained
 function dem(m) {
   return {
-    terra: m < 1 ? 0 : Math.min(3000, Math.round(100 * Math.pow(2, m-1))),
+    terra: m < 1 ? 0 : Math.min(1500, Math.round(100 * Math.pow(2, m-1))),
     gray:  Math.min(300, Math.round(20 * Math.pow(2, m))),
     black: Math.min(300, Math.round(20 * Math.pow(2, m)))
   };
@@ -484,45 +488,15 @@ function simulate() {
       }
     });
 
-    // Sales — throttle to avoid stockout when restock is multiple months away
-    // Throttling simulates a price increase to slow demand and preserve stock
+    // Sales — sell as much as stock allows
     const d=dem(m);
-    const sold={}, throttled={};
-    SKUS.forEach(sku=>{
-      const stock=Math.max(0,inv[sku]);
-      const rawDem=d[sku];
-      if(stock<=0){sold[sku]=0;throttled[sku]=false;return;}
-      // Find next pending arrival for this SKU
-      const nextArr=orders.filter(o=>o.sku===sku&&o.arrM>m)
-                          .sort((a,b)=>a.arrM-b.arrM)[0];
-      let sellAmt;
-      if(!nextArr){
-        // No restock coming — spread remaining stock over rest of period
-        const moLeft=Math.max(1,24-m);
-        const safe=Math.floor(stock/moLeft);
-        sellAmt=Math.min(rawDem,Math.max(safe,1));
-        throttled[sku]=sellAmt<rawDem;
-      } else {
-        const moToArr=nextArr.arrM-m;
-        if(moToArr<=1||stock>=rawDem*moToArr){
-          // Restock arrives next month, or enough stock — sell normally
-          sellAmt=Math.min(rawDem,stock);
-          throttled[sku]=false;
-        } else {
-          // Multiple months until restock — spread stock evenly (= price increase)
-          const safe=Math.floor(stock/moToArr);
-          sellAmt=Math.max(1,Math.min(rawDem,safe));
-          throttled[sku]=safe<rawDem;
-        }
-      }
-      sold[sku]=sellAmt;
-    });
-    // Genuine lost sales only when stock=0 and throttle wasn't the limiter
-    const lost={
-      terra: (!throttled.terra && d.terra>sold.terra) ? d.terra-sold.terra : 0,
-      gray:  (!throttled.gray  && d.gray >sold.gray)  ? d.gray -sold.gray  : 0,
-      black: (!throttled.black && d.black>sold.black) ? d.black-sold.black : 0
+    const sold={
+      terra:Math.min(d.terra, Math.max(0,inv.terra)),
+      gray: Math.min(d.gray,  Math.max(0,inv.gray)),
+      black:Math.min(d.black, Math.max(0,inv.black))
     };
+    const throttled={terra:false,gray:false,black:false};
+    const lost={terra:d.terra-sold.terra, gray:d.gray-sold.gray, black:d.black-sold.black};
     SKUS.forEach(s=>inv[s]-=sold[s]);
 
     const rev=SKUS.reduce((a,s)=>a+sold[s]*PRICE[s],0);
@@ -531,7 +505,7 @@ function simulate() {
     totRev+=rev; totP+=prf; cumP+=prf;
     if(prf>peakP){peakP=prf;peakPm=m;}
     if(rev>peakR) peakR=rev;
-    if(payM===-1&&cumP>=90729) payM=m;
+    if(payM===-1&&cumP>=100729) payM=m;
     if(f10M===-1&&prf>=10000)  f10M=m;
 
     rows.push({
@@ -555,7 +529,8 @@ const $f=(n,d=0)=>'$'+n.toFixed(d).replace(/\B(?=(\d{3})+(?!\d))/g,',');
 const Nf=n=>n.toLocaleString();
 
 // ── KPIs ──────────────────────────────────────────────────────────────────────
-const roi=((totP/90729)*100).toFixed(0);
+const TOTAL_INV=100729; // $90,729 spent + $10,000 Jan 2027 injection
+const roi=((totP/TOTAL_INV)*100).toFixed(0);
 document.getElementById('hProfit').textContent=$f(totP);
 document.getElementById('hROI').textContent=roi+'% ROI';
 document.getElementById('kRev').textContent=$f(totRev);
@@ -627,17 +602,10 @@ if(negCash.length){
   a.innerHTML=`<span>✅</span><div><strong>Cash never goes negative</strong> — all reorders sized within available cash. Simulation uses only $0 start + organic profit + $10K Jan 2027 injection.</div>`;
   ar.appendChild(a);
 }
-const throttleMos=rows.filter(r=>r.hasThrottle);
-if(throttleMos.length){
-  const a=document.createElement('div');a.className='alrt ora';
-  const names=throttleMos.slice(0,4).map(r=>r.label).join(', ');
-  a.innerHTML=`<span>💰</span><div><strong>Price-managed in ${throttleMos.length} month(s):</strong> ${names}${throttleMos.length>4?'…':''} — stock throttled via price increase to stay on Amazon without stockout. Shown as orange ↑ in the table.</div>`;
-  ar.appendChild(a);
-}
 if(lostMos.length){
-  const a=document.createElement('div');a.className='alrt red';
+  const a=document.createElement('div');a.className='alrt ora';
   const names=lostMos.slice(0,4).map(r=>r.label).join(', ');
-  a.innerHTML=`<span>❌</span><div><strong>Genuine stockouts in ${lostMos.length} month(s):</strong> ${names}${lostMos.length>4?'…':''} — stock hit zero and could not be throttled.</div>`;
+  a.innerHTML=`<span>⚠️</span><div><strong>Demand exceeds stock in ${lostMos.length} month(s):</strong> ${names}${lostMos.length>4?'…':''} — reorder earlier or increase order quantity to close the gap.</div>`;
   ar.appendChild(a);
 }
 if(lowCash.length){
@@ -680,37 +648,24 @@ const tbody=document.getElementById('tblBody');
 rows.forEach(r=>{
   const tr=document.createElement('tr');
   const cls=[];
-  if(r.hasLost)     cls.push('st');
-  if(r.hasThrottle) cls.push('th');
-  if(r.inj)         cls.push('pp');
-  if(r.hasRO)       cls.push('rr');
+  if(r.inj)   cls.push('pp');
+  if(r.hasRO) cls.push('rr');
   tr.className=cls.join(' ');
 
   const cashCls=r.cash<0?'neg':r.cash<3000?'wc':'pos';
   const roTag=r.hasRO?` <span style="font-size:9px;background:var(--ora);color:#fff;padding:1px 4px;border-radius:5px;font-weight:700">ORDER</span>`:'';
 
-  // Throttle cells: show reduced amount in orange when price-managed
-  const tCell=(sku,lostAmt,isThrottle)=>{
-    if(isThrottle) return `<td style="color:var(--ora);font-weight:700">${Nf(lostAmt)}↑</td>`;
-    if(lostAmt>0)  return `<td class="neg mut">${Nf(lostAmt)}</td>`;
-    return `<td class="mut">—</td>`;
-  };
-
-  // Cash In column: show injection prominently
-  const injCell = r.inj
-    ? `<td style="color:var(--pur);font-weight:800;background:#EEE8F8">+${$f(r.inj)}</td>`
-    : `<td class="mut">—</td>`;
+  const injCell=r.inj
+    ?`<td style="color:var(--pur);font-weight:800;background:#EEE8F8">+${$f(r.inj)}</td>`
+    :`<td class="mut">—</td>`;
 
   tr.innerHTML=`
     <td>${r.label}${roTag}</td>
     <td>${Nf(r.sold.terra)}</td>
-    ${tCell('terra', r.throttled.terra ? dem(r.m).terra-r.sold.terra : r.lost.terra, r.throttled.terra)}
     <td>${Nf(r.stockT)}</td>
     <td>${Nf(r.sold.gray)}</td>
-    ${tCell('gray',  r.throttled.gray  ? dem(r.m).gray -r.sold.gray  : r.lost.gray,  r.throttled.gray)}
     <td>${Nf(r.stockGr)}</td>
     <td>${Nf(r.sold.black)}</td>
-    ${tCell('black', r.throttled.black ? dem(r.m).black-r.sold.black : r.lost.black, r.throttled.black)}
     <td>${Nf(r.stockB)}</td>
     <td>${$f(r.rev)}</td>
     <td class="${r.prf>=10000?'pos':''}">${$f(r.prf)}</td>
@@ -719,7 +674,7 @@ rows.forEach(r=>{
   tbody.appendChild(tr);
 });
 const totR=document.createElement('tr');
-totR.innerHTML=`<td class="tot" colspan="10">24-MONTH TOTAL</td><td class="tot">${$f(totRev)}</td><td class="tot">${$f(totP)}</td><td class="tot" style="color:#C8B8F0">+$10,000</td><td class="tot">—</td>`;
+totR.innerHTML=`<td class="tot" colspan="7">24-MONTH TOTAL</td><td class="tot">${$f(totRev)}</td><td class="tot">${$f(totP)}</td><td class="tot" style="color:#C8B8F0">+$10,000</td><td class="tot">—</td>`;
 tbody.appendChild(totR);
 
 function toggleTbl(){
