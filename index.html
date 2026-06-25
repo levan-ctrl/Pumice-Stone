@@ -114,8 +114,9 @@ td{padding:5px 7px;border-bottom:1px solid var(--bdr);text-align:center;white-sp
 td:first-child{text-align:left;font-weight:600;font-size:10.5px;}
 tr:hover td{background:#F7F3EE;}
 tr.rr td{border-left:3px solid var(--ora)!important;}
-tr.pp td{background:var(--grn-l)!important;}
+tr.pp td{background:#EEF2FC!important;}
 tr.st td{background:#FEF0EE!important;}
+tr.th td{background:#FEF8ED!important;}
 tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
 .pos{color:var(--grn);font-weight:700;}
 .neg{color:var(--red);font-weight:700;}
@@ -376,12 +377,13 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
             <th colspan="3" style="background:#2A2A2A">BLACK</th>
             <th rowspan="2" style="background:#1A3A5C">Revenue</th>
             <th rowspan="2" style="background:#1A4A2E">Profit</th>
+            <th rowspan="2" style="background:#3A2050">Cash In</th>
             <th rowspan="2" style="background:#2E1A4A">Cash</th>
           </tr>
           <tr>
-            <th style="background:#7A3010">Sold</th><th style="background:#7A3010;color:#FFB8A0">Lost</th><th style="background:#7A3010">Stock</th>
-            <th style="background:#3A6060">Sold</th><th style="background:#3A6060;color:#A8D0D0">Lost</th><th style="background:#3A6060">Stock</th>
-            <th style="background:#2A2A2A">Sold</th><th style="background:#2A2A2A;color:#C0C0C0">Lost</th><th style="background:#2A2A2A">Stock</th>
+            <th style="background:#7A3010">Sold</th><th style="background:#7A3010;color:#FFB8A0">↑Price</th><th style="background:#7A3010">Stock</th>
+            <th style="background:#3A6060">Sold</th><th style="background:#3A6060;color:#A8D0D0">↑Price</th><th style="background:#3A6060">Stock</th>
+            <th style="background:#2A2A2A">Sold</th><th style="background:#2A2A2A;color:#C0C0C0">↑Price</th><th style="background:#2A2A2A">Stock</th>
           </tr>
         </thead>
         <tbody id="tblBody"></tbody>
@@ -432,7 +434,8 @@ function simulate() {
   let prevPrf = 0;
 
   for (let m=0; m<24; m++) {
-    if (m===5) cash += 10000; // Jan 2027 injection
+    const inj = m===5 ? 10000 : 0;
+    if (inj) cash += inj;
 
     // Arrivals
     orders.filter(o=>o.arrM===m).forEach(o=>{ inv[o.sku]+=o.units; });
@@ -443,29 +446,10 @@ function simulate() {
       const a=o.total*0.70; cash-=a; balOut+=a; o.bPaid=true;
     });
 
-    // Sales
-    const d=dem(m);
-    const sold={
-      terra:Math.min(d.terra, Math.max(0,inv.terra)),
-      gray: Math.min(d.gray,  Math.max(0,inv.gray)),
-      black:Math.min(d.black, Math.max(0,inv.black))
-    };
-    const lost={terra:d.terra-sold.terra, gray:d.gray-sold.gray, black:d.black-sold.black};
-    SKUS.forEach(s=>inv[s]-=sold[s]);
-
-    const rev=SKUS.reduce((a,s)=>a+sold[s]*PRICE[s],0);
-    const prf=SKUS.reduce((a,s)=>a+sold[s]*PRF[s],0);
-    // 30-day Amazon payout: receive PREVIOUS month's profit now
-    // Aug+Sep (m<2) profit went to ads, so prevPrf stays 0 for those months
+    // 30-day Amazon payout: receive PREVIOUS month's profit
     cash += prevPrf;
-    prevPrf = (m < 2) ? 0 : prf; // ads months don't feed next month's cash
-    totRev+=rev; totP+=prf; cumP+=prf;
-    if(prf>peakP){peakP=prf;peakPm=m;}
-    if(rev>peakR) peakR=rev;
-    if(payM===-1&&cumP>=90729) payM=m;
-    if(f10M===-1&&prf>=10000)  f10M=m;
 
-    // Reorder logic
+    // Place reorders BEFORE sales so throttle logic can see newly-placed arrivals
     let depOut=0;
     SKUS.forEach(sku=>{
       const lead=LEAD[sku];
@@ -500,14 +484,64 @@ function simulate() {
       }
     });
 
+    // Sales — throttle to avoid stockout when restock is multiple months away
+    // Throttling simulates a price increase to slow demand and preserve stock
+    const d=dem(m);
+    const sold={}, throttled={};
+    SKUS.forEach(sku=>{
+      const stock=Math.max(0,inv[sku]);
+      const rawDem=d[sku];
+      if(stock<=0){sold[sku]=0;throttled[sku]=false;return;}
+      // Find next pending arrival for this SKU
+      const nextArr=orders.filter(o=>o.sku===sku&&o.arrM>m)
+                          .sort((a,b)=>a.arrM-b.arrM)[0];
+      let sellAmt;
+      if(!nextArr){
+        // No restock coming — spread remaining stock over rest of period
+        const moLeft=Math.max(1,24-m);
+        const safe=Math.floor(stock/moLeft);
+        sellAmt=Math.min(rawDem,Math.max(safe,1));
+        throttled[sku]=sellAmt<rawDem;
+      } else {
+        const moToArr=nextArr.arrM-m;
+        if(moToArr<=1||stock>=rawDem*moToArr){
+          // Restock arrives next month, or enough stock — sell normally
+          sellAmt=Math.min(rawDem,stock);
+          throttled[sku]=false;
+        } else {
+          // Multiple months until restock — spread stock evenly (= price increase)
+          const safe=Math.floor(stock/moToArr);
+          sellAmt=Math.max(1,Math.min(rawDem,safe));
+          throttled[sku]=safe<rawDem;
+        }
+      }
+      sold[sku]=sellAmt;
+    });
+    // Genuine lost sales only when stock=0 and throttle wasn't the limiter
+    const lost={
+      terra: (!throttled.terra && d.terra>sold.terra) ? d.terra-sold.terra : 0,
+      gray:  (!throttled.gray  && d.gray >sold.gray)  ? d.gray -sold.gray  : 0,
+      black: (!throttled.black && d.black>sold.black) ? d.black-sold.black : 0
+    };
+    SKUS.forEach(s=>inv[s]-=sold[s]);
+
+    const rev=SKUS.reduce((a,s)=>a+sold[s]*PRICE[s],0);
+    const prf=SKUS.reduce((a,s)=>a+sold[s]*PRF[s],0);
+    prevPrf=(m<2)?0:prf; // ads months don't feed next month's cash
+    totRev+=rev; totP+=prf; cumP+=prf;
+    if(prf>peakP){peakP=prf;peakPm=m;}
+    if(rev>peakR) peakR=rev;
+    if(payM===-1&&cumP>=90729) payM=m;
+    if(f10M===-1&&prf>=10000)  f10M=m;
+
     rows.push({
-      m, label:MFL[m],
-      sold, lost,
+      m, label:MFL[m], inj,
+      sold, lost, throttled,
       stockT:Math.max(0,inv.terra), stockGr:Math.max(0,inv.gray), stockB:Math.max(0,inv.black),
       rev, prf, cash, depOut, balOut,
-      inj:m===5?10000:0,
       hasRO:depOut>0,
-      hasLost:(lost.terra+lost.gray+lost.black)>0
+      hasLost:(lost.terra+lost.gray+lost.black)>0,
+      hasThrottle:(throttled.terra||throttled.gray||throttled.black)
     });
   }
   return{rows,reorders,orders,totRev,totP,peakP,peakPm,peakR,payM,f10M};
@@ -593,10 +627,17 @@ if(negCash.length){
   a.innerHTML=`<span>✅</span><div><strong>Cash never goes negative</strong> — all reorders sized within available cash. Simulation uses only $0 start + organic profit + $10K Jan 2027 injection.</div>`;
   ar.appendChild(a);
 }
-if(lostMos.length){
+const throttleMos=rows.filter(r=>r.hasThrottle);
+if(throttleMos.length){
   const a=document.createElement('div');a.className='alrt ora';
+  const names=throttleMos.slice(0,4).map(r=>r.label).join(', ');
+  a.innerHTML=`<span>💰</span><div><strong>Price-managed in ${throttleMos.length} month(s):</strong> ${names}${throttleMos.length>4?'…':''} — stock throttled via price increase to stay on Amazon without stockout. Shown as orange ↑ in the table.</div>`;
+  ar.appendChild(a);
+}
+if(lostMos.length){
+  const a=document.createElement('div');a.className='alrt red';
   const names=lostMos.slice(0,4).map(r=>r.label).join(', ');
-  a.innerHTML=`<span>⚠️</span><div><strong>Lost sales in ${lostMos.length} month(s):</strong> ${names}${lostMos.length>4?'…':''} — demand exceeded stock because cash-constrained late reorders couldn't arrive in time for the ramp-up.</div>`;
+  a.innerHTML=`<span>❌</span><div><strong>Genuine stockouts in ${lostMos.length} month(s):</strong> ${names}${lostMos.length>4?'…':''} — stock hit zero and could not be throttled.</div>`;
   ar.appendChild(a);
 }
 if(lowCash.length){
@@ -639,33 +680,46 @@ const tbody=document.getElementById('tblBody');
 rows.forEach(r=>{
   const tr=document.createElement('tr');
   const cls=[];
-  if(r.hasLost) cls.push('st');
-  if(r.m===5)   cls.push('pp');
-  if(r.hasRO)   cls.push('rr');
+  if(r.hasLost)     cls.push('st');
+  if(r.hasThrottle) cls.push('th');
+  if(r.inj)         cls.push('pp');
+  if(r.hasRO)       cls.push('rr');
   tr.className=cls.join(' ');
 
   const cashCls=r.cash<0?'neg':r.cash<3000?'wc':'pos';
-  const injTag=r.inj?` <span style="font-size:9px;background:var(--pur);color:#fff;padding:1px 4px;border-radius:5px;font-weight:700">+$10K</span>`:'';
   const roTag=r.hasRO?` <span style="font-size:9px;background:var(--ora);color:#fff;padding:1px 4px;border-radius:5px;font-weight:700">ORDER</span>`:'';
 
+  // Throttle cells: show reduced amount in orange when price-managed
+  const tCell=(sku,lostAmt,isThrottle)=>{
+    if(isThrottle) return `<td style="color:var(--ora);font-weight:700">${Nf(lostAmt)}↑</td>`;
+    if(lostAmt>0)  return `<td class="neg mut">${Nf(lostAmt)}</td>`;
+    return `<td class="mut">—</td>`;
+  };
+
+  // Cash In column: show injection prominently
+  const injCell = r.inj
+    ? `<td style="color:var(--pur);font-weight:800;background:#EEE8F8">+${$f(r.inj)}</td>`
+    : `<td class="mut">—</td>`;
+
   tr.innerHTML=`
-    <td>${r.label}${injTag}${roTag}</td>
+    <td>${r.label}${roTag}</td>
     <td>${Nf(r.sold.terra)}</td>
-    <td class="${r.lost.terra>0?'neg mut':''}">${r.lost.terra>0?Nf(r.lost.terra):'—'}</td>
+    ${tCell('terra', r.throttled.terra ? dem(r.m).terra-r.sold.terra : r.lost.terra, r.throttled.terra)}
     <td>${Nf(r.stockT)}</td>
     <td>${Nf(r.sold.gray)}</td>
-    <td class="${r.lost.gray>0?'neg mut':''}">${r.lost.gray>0?Nf(r.lost.gray):'—'}</td>
+    ${tCell('gray',  r.throttled.gray  ? dem(r.m).gray -r.sold.gray  : r.lost.gray,  r.throttled.gray)}
     <td>${Nf(r.stockGr)}</td>
     <td>${Nf(r.sold.black)}</td>
-    <td class="${r.lost.black>0?'neg mut':''}">${r.lost.black>0?Nf(r.lost.black):'—'}</td>
+    ${tCell('black', r.throttled.black ? dem(r.m).black-r.sold.black : r.lost.black, r.throttled.black)}
     <td>${Nf(r.stockB)}</td>
     <td>${$f(r.rev)}</td>
     <td class="${r.prf>=10000?'pos':''}">${$f(r.prf)}</td>
+    ${injCell}
     <td class="${cashCls}">${$f(r.cash)}</td>`;
   tbody.appendChild(tr);
 });
 const totR=document.createElement('tr');
-totR.innerHTML=`<td class="tot" colspan="10">24-MONTH TOTAL</td><td class="tot">${$f(totRev)}</td><td class="tot">${$f(totP)}</td><td class="tot">—</td>`;
+totR.innerHTML=`<td class="tot" colspan="10">24-MONTH TOTAL</td><td class="tot">${$f(totRev)}</td><td class="tot">${$f(totP)}</td><td class="tot" style="color:#C8B8F0">+$10,000</td><td class="tot">—</td>`;
 tbody.appendChild(totR);
 
 function toggleTbl(){
