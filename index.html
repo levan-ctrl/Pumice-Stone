@@ -253,13 +253,14 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
   <div class="ass-grid">
     <div class="acard">
       <h3>Sales Ramp (doubling monthly → cap)</h3>
-      <div class="arow"><span>Aug 2026 (month 1)</span><span class="val" style="color:var(--terra)">100 / 20 / 20</span></div>
-      <div class="arow"><span>Sep 2026</span><span class="val">200 / 40 / 40</span></div>
-      <div class="arow"><span>Oct 2026</span><span class="val">400 / 80 / 80</span></div>
-      <div class="arow"><span>Nov 2026</span><span class="val">800 / 160 / 160</span></div>
-      <div class="arow"><span>Dec 2026 (gray/black cap)</span><span class="val">1,600 / 300 / 300</span></div>
-      <div class="arow"><span>Jan 2027+ (terra cap)</span><span class="val" style="color:var(--grn)">3,000 / 300 / 300</span></div>
-      <div class="arow" style="font-size:10px;color:var(--mut)"><span colspan="2">Format: Terra / Gray / Black per month</span></div>
+      <div class="arow"><span>Aug 2026 — Gray+Black only (Aug 10)</span><span class="val" style="color:var(--gray)">— / 20 / 20</span></div>
+      <div class="arow"><span>Sep 2026 — Terra launches (Sep 1)</span><span class="val" style="color:var(--terra)">100 / 40 / 40</span></div>
+      <div class="arow"><span>Oct 2026</span><span class="val">200 / 80 / 80</span></div>
+      <div class="arow"><span>Nov 2026</span><span class="val">400 / 160 / 160</span></div>
+      <div class="arow"><span>Dec 2026 — gray/black cap</span><span class="val">800 / 300 / 300</span></div>
+      <div class="arow"><span>Jan 2027</span><span class="val">1,600 / 300 / 300</span></div>
+      <div class="arow"><span>Feb 2027+ — terra cap reached</span><span class="val" style="color:var(--grn)">3,000 / 300 / 300</span></div>
+      <div class="arow" style="font-size:10px;color:var(--red)"><span>Aug + Sep: all profit → launch ads (0 cash retained)</span></div>
     </div>
     <div class="acard">
       <h3>Unit Economics (from Economics file)</h3>
@@ -399,11 +400,14 @@ const MIN_Q  = {terra:2000, gray:1500, black:1500};
 const MFL = ['Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Feb 2027','Mar 2027','Apr 2027','May 2027','Jun 2027','Jul 2027','Aug 2027','Sep 2027','Oct 2027','Nov 2027','Dec 2027','Jan 2028','Feb 2028','Mar 2028','Apr 2028','May 2028','Jun 2028','Jul 2028'];
 const MSH = MFL.map(s=>s.replace(' 20','\''));
 
+// Terra starts Sep (m=1): 100→200→400→800→1600→3000 cap
+// Gray/Black start Aug (m=0): 20→40→80→160→300 cap
+// First 2 months (m=0,1 = Aug+Sep): all profit goes to launch ads → zero cash retained
 function dem(m) {
   return {
-    terra: Math.min(3000, Math.round(100*Math.pow(2,m))),
-    gray:  Math.min(300,  Math.round(20 *Math.pow(2,m))),
-    black: Math.min(300,  Math.round(20 *Math.pow(2,m)))
+    terra: m < 1 ? 0 : Math.min(3000, Math.round(100 * Math.pow(2, m-1))),
+    gray:  Math.min(300, Math.round(20 * Math.pow(2, m))),
+    black: Math.min(300, Math.round(20 * Math.pow(2, m)))
   };
 }
 
@@ -441,7 +445,9 @@ function simulate() {
 
     const rev=SKUS.reduce((a,s)=>a+sold[s]*PRICE[s],0);
     const prf=SKUS.reduce((a,s)=>a+sold[s]*PRF[s],0);
-    cash+=prf; totRev+=rev; totP+=prf; cumP+=prf;
+    // Aug+Sep (m=0,1): all profit goes to launch ads — cash stays at 0 for those months
+    const cashIn = m < 2 ? 0 : prf;
+    cash+=cashIn; totRev+=rev; totP+=prf; cumP+=prf;
     if(prf>peakP){peakP=prf;peakPm=m;}
     if(rev>peakR) peakR=rev;
     if(payM===-1&&cumP>=90729) payM=m;
