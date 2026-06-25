@@ -161,7 +161,8 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
 
 <!-- INVESTMENT -->
 <div class="sec" id="inv" style="padding-top:12px;">
-  <div class="sec-hd">Initial Investment — $90,729 Total <span class="chip">Hover for line items</span></div>
+  <div class="sec-hd">Initial Investment — $90,729 Total <span class="chip" style="cursor:pointer;user-select:none;" onclick="toggleInv()">▼ Show breakdown</span></div>
+  <div id="invDetail" style="display:none;">
   <div class="inv-row">
     <div class="ib" style="--c:#C4622D">
       <div class="ib-bar"></div><div class="ib-cat">R&amp;D / Work Time</div>
@@ -245,6 +246,7 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
       <p>Planned 6,000 terracotta, assembled 4,000. The other 2,000 kits (wooden handle + glass file/silicon part + packaging + bags) are already paid for and ready. First reorder needs <strong>only stones at $1.72/unit × 2,000 = $3,440</strong> instead of full COG $3.935 × 2,000 = $7,870. You save <strong>$4,430</strong> on the first restock.</p>
     </div>
   </div>
+  </div><!-- /invDetail -->
 </div>
 
 <!-- ASSUMPTIONS -->
@@ -669,6 +671,13 @@ tbody.appendChild(totR);
 function toggleTbl(){
   document.getElementById('tblBtn').classList.toggle('op');
   document.getElementById('tblInner').classList.toggle('op');
+}
+function toggleInv(){
+  const d=document.getElementById('invDetail');
+  const chip=document.querySelector('#inv .chip');
+  const show=d.style.display==='none';
+  d.style.display=show?'block':'none';
+  chip.textContent=(show?'▲ Hide':'▼ Show')+' breakdown';
 }
 
 // NAV highlight
