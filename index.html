@@ -264,12 +264,15 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
     </div>
     <div class="acard">
       <h3>Unit Economics (from Economics file)</h3>
-      <div class="arow"><span>Terracotta sell price</span><span class="val" style="color:var(--terra)">$23.57</span></div>
+      <div class="arow"><span>Terracotta Amazon listing price</span><span class="val" style="color:var(--mut)">$23.57</span></div>
       <div class="arow"><span>Terracotta COG (incl. glass file)</span><span class="val">$3.94</span></div>
       <div class="arow"><span>Terracotta profit after ads</span><span class="val" style="color:var(--grn)">$8.03 / unit</span></div>
-      <div class="arow"><span>Gray / Black sell price</span><span class="val" style="color:var(--gray)">$16.57</span></div>
+      <div class="arow"><span>Terracotta net revenue (COG+profit)</span><span class="val" style="color:var(--terra)">$11.97 / unit</span></div>
+      <div class="arow"><span>Gray / Black listing price</span><span class="val" style="color:var(--mut)">$16.57</span></div>
       <div class="arow"><span>Gray / Black COG</span><span class="val">$2.69</span></div>
       <div class="arow"><span>Gray / Black profit after ads</span><span class="val" style="color:var(--grn)">$3.58 / unit</span></div>
+      <div class="arow"><span>Gray / Black net revenue (COG+profit)</span><span class="val" style="color:var(--gray)">$6.27 / unit</span></div>
+      <div class="arow" style="font-size:10px;color:var(--mut)"><span>Amazon fees + FBA + PPC are deducted by Amazon and never reach the seller</span></div>
     </div>
     <div class="acard">
       <h3>Lead Times &amp; Payment Terms</h3>
@@ -290,7 +293,7 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
 <div class="sec" id="chart" style="padding-top:12px;">
   <div class="chart-wrap">
     <h3>
-      Monthly Revenue &amp; Net Profit
+      Monthly Net Revenue &amp; Profit <span style="font-size:10px;font-weight:400;color:var(--mut)">(Revenue = COG + profit — fees &amp; ads never paid out)</span>
       <div class="ct-bar">
         <button class="ct-btn act" data-m="both">Both</button>
         <button class="ct-btn" data-m="rev">Revenue</button>
@@ -388,7 +391,8 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
 
 <script>
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
-const PRICE  = {terra:23.57, gray:16.57, black:16.57};
+// Net revenue = COG + net profit (Amazon fees + FBA + ads are never paid out to seller)
+const PRICE  = {terra:11.965, gray:6.265, black:6.265};
 const PRF    = {terra:8.03,  gray:3.58,  black:3.58};
 const COG    = {terra:3.935, gray:2.685, black:2.685};
 const LEAD   = {terra:4, gray:3, black:3};
