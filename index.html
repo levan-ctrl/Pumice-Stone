@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sifri Art — Pumice Stone Business Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --terra:#C4622D; --terra-l:#F2A87E; --terra-d:#8B3D1A;
+  --glass:#7BA7BC; --glass-l:#BDD8E6;
+  --gray:#7A8B8B; --blk:#3C3C3C;
+  --gold:#D4A843; --green:#2E8B57; --green-l:#EEF8F2;
+  --red:#C0392B; --orange:#E67E22;
+  --bg:#F7F3EE; --card:#fff; --border:#E0D5C8;
+  --text:#2A2A2A; --muted:#6B6B6B;
+  --nav:#1C1410;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:999;background:var(--nav);display:flex;gap:0;padding:0 32px;overflow-x:auto;scrollbar-width:none;}
+.nav::-webkit-scrollbar{display:none;}
+.nav a{color:rgba(255,255,255,.6);text-decoration:none;padding:11px 14px;font-size:11.5px;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;letter-spacing:.3px;}
+.nav a:hover,.nav a.active{color:#fff;border-bottom-color:var(--terra-l);}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#1C1410 0%,#3D1E0A 50%,#C4622D 100%);color:#fff;padding:28px 32px;display:flex;justify-content:space-between;align-items:flex-end;position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(244,164,96,.15),transparent 60%);}
+.hdr-l{position:relative;}
+.hdr h1{font-size:26px;font-weight:800;letter-spacing:-.3px;}
+.hdr h1 span{color:var(--terra-l);}
+.hdr-sub{font-size:12px;opacity:.7;margin-top:4px;}
+.hdr-r{text-align:right;position:relative;}
+.hdr-r .big{font-size:28px;font-weight:800;color:var(--gold);}
+.hdr-r .lbl{font-size:11px;opacity:.7;}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:14px 32px;}
+.kpi{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;text-align:center;}
+.kpi .v{font-size:20px;font-weight:800;margin:4px 0 2px;}
+.kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:600;}
+.kpi .s{font-size:10px;color:var(--muted);}
+.c-terra{color:var(--terra);} .c-gold{color:var(--gold);} .c-grn{color:var(--green);}
+.c-glass{color:var(--glass);} .c-red{color:var(--red);}
+
+/* ── INVESTMENT SECTION ── */
+.inv-wrap{padding:6px 32px 0;}
+.inv-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.inv-title span{background:var(--terra);color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;letter-spacing:.3px;}
+
+.inv-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;}
+.inv-btn{position:relative;background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;transition:all .2s;text-align:left;min-width:120px;}
+.inv-btn:hover{border-color:currentColor;box-shadow:0 2px 12px rgba(0,0,0,.1);}
+.inv-btn .ib-line{height:4px;border-radius:2px;background:currentColor;margin-bottom:8px;transition:height .15s;}
+.inv-btn:hover .ib-line{height:6px;}
+.inv-btn .ib-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
+.inv-btn .ib-amt{font-size:16px;font-weight:800;}
+.inv-btn .ib-pct{font-size:10px;color:var(--muted);}
+
+/* Tooltip panel */
+.inv-tooltip{display:none;position:absolute;top:calc(100% + 8px);left:0;background:#fff;border:1.5px solid var(--border);border-radius:10px;min-width:220px;box-shadow:0 6px 24px rgba(0,0,0,.12);z-index:100;padding:12px 14px;}
+.inv-tooltip::before{content:'';position:absolute;top:-7px;left:18px;width:12px;height:12px;background:#fff;border-left:1.5px solid var(--border);border-top:1.5px solid var(--border);transform:rotate(45deg);}
+.inv-btn:hover .inv-tooltip{display:block;}
+.inv-tooltip .it-row{display:flex;justify-content:space-between;gap:16px;padding:3px 0;border-bottom:1px solid var(--bg);font-size:11.5px;}
+.inv-tooltip .it-row:last-child{border-bottom:none;font-weight:700;color:var(--terra);padding-top:6px;margin-top:3px;}
+.inv-tooltip .it-row span:first-child{color:var(--text);}
+.inv-tooltip .it-row span:last-child{font-weight:600;white-space:nowrap;}
+
+.inv-total-bar{background:linear-gradient(90deg,var(--terra-d),var(--terra));color:#fff;border-radius:8px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
+.inv-total-bar .itb-l{font-size:11px;opacity:.85;}
+.inv-total-bar .itb-v{font-size:20px;font-weight:800;}
+.inv-total-bar .itb-breakdown{font-size:10.5px;opacity:.8;}
+
+/* FORECAST */
+.fc-wrap{padding:12px 32px 0;}
+.sec-hdr{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;padding:12px 0 8px;display:flex;align-items:center;gap:10px;}
+.sec-hdr span{background:var(--nav);color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;letter-spacing:.3px;}
+
+.fc-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+.fc-card{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;}
+.fc-card h3{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin-bottom:8px;}
+.fc-card .fcv{font-size:22px;font-weight:800;color:var(--green);}
+.fc-card .fcsub{font-size:11px;color:var(--muted);margin-top:2px;}
+.fc-card .fc-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--bg);}
+.fc-card .fc-row:last-child{border-bottom:none;font-weight:700;}
+
+/* Table */
+.tbl-wrap{background:var(--card);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.tbl-toggle{width:100%;padding:12px 16px;background:var(--nav);color:#fff;font-size:12px;font-weight:700;cursor:pointer;border:none;text-align:left;display:flex;justify-content:space-between;align-items:center;letter-spacing:.3px;}
+.tbl-toggle .arr{transition:transform .3s;}
+.tbl-toggle.open .arr{transform:rotate(180deg);}
+.tbl-inner{display:none;overflow-x:auto;}
+.tbl-inner.open{display:block;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+thead th{background:#1C1410;color:#fff;padding:7px 8px;text-align:center;font-size:10.5px;font-weight:600;white-space:nowrap;}
+thead th:first-child{text-align:left;min-width:90px;}
+tbody td{padding:5.5px 8px;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle;}
+tbody td:first-child{text-align:left;font-weight:600;font-size:11px;}
+tbody tr:hover{background:#F7F3EE;}
+tbody tr.q1{background:#FEF6EC;}
+tbody tr.peak{background:#EEF8F2;}
+tbody tr.reorder{border-left:3px solid var(--orange);}
+.pos{color:var(--green);font-weight:700;}
+.neg{color:var(--red);font-weight:700;}
+.warn{color:var(--orange);font-weight:700;}
+.tot-row td{background:#1C1410!important;color:#fff;font-weight:700;font-size:12px;}
+.product-tag{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;}
+.pt-t{background:var(--terra);}
+.pt-g{background:var(--glass);}
+.pt-gr{background:var(--gray);}
+.pt-b{background:var(--blk);}
+
+/* Chart */
+.chart-card{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px;}
+.chart-card h3{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.chart-toggle-bar{display:flex;gap:6px;margin-bottom:12px;}
+.ct-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg);color:var(--muted);transition:all .15s;}
+.ct-btn.active{background:var(--terra);color:#fff;border-color:var(--terra);}
+.cw{position:relative;height:260px;}
+
+/* Legend */
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;margin-bottom:8px;}
+.leg-item{display:flex;align-items:center;gap:4px;}
+.leg-dot{width:10px;height:10px;border-radius:50%;}
+
+.footer{background:var(--nav);color:rgba(255,255,255,.4);text-align:center;padding:12px;font-size:10.5px;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="#invest" class="active">💰 Investment</a>
+  <a href="#forecast">📊 24-Month Forecast</a>
+  <a href="#monthly">📋 Monthly Table</a>
+  <a href="#chart">📈 Chart</a>
+</nav>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-l">
+    <h1>Sifri Art <span>Pumice Stone</span></h1>
+    <div class="hdr-sub">100% Self-Funded · Aug 2026 – Jul 2028 · 4 Product Lines</div>
+  </div>
+  <div class="hdr-r">
+    <div class="lbl">24-Month Net Profit</div>
+    <div class="big" id="hdr-profit">$392,840</div>
+    <div class="lbl">on $90,729 invested · <span style="color:var(--terra-l);">433% ROI</span></div>
+  </div>
+</div>
+
+<!-- KPIs -->
+<div class="kpis">
+  <div class="kpi"><div class="l">Total Invested</div><div class="v c-terra">$90,729</div><div class="s">Personal capital · 0 debt</div></div>
+  <div class="kpi"><div class="l">24-Mo Revenue</div><div class="v c-gold" id="kpi-rev">$1,386,440</div><div class="s">Aug 2026 – Jul 2028</div></div>
+  <div class="kpi"><div class="l">24-Mo Net Profit</div><div class="v c-grn" id="kpi-profit">$392,840</div><div class="s">28.3% blended margin</div></div>
+  <div class="kpi"><div class="l">Peak Month Profit</div><div class="v c-terra" id="kpi-peak">$29,240</div><div class="s">From Mar 2027 onward</div></div>
+  <div class="kpi"><div class="l">Payback Month</div><div class="v" style="color:#8E44AD;" id="kpi-payback">Jan 2027</div><div class="s">Investment fully recovered</div></div>
+</div>
+
+<!-- ── INVESTMENT ── -->
+<div class="inv-wrap" id="invest">
+  <div class="inv-title">Initial Investment Breakdown <span>Hover any category</span></div>
+
+  <div class="inv-buttons">
+
+    <!-- R&D -->
+    <div class="inv-btn" style="color:var(--terra);">
+      <div class="ib-line"></div>
+      <div class="ib-cat">R&amp;D / Work Time</div>
+      <div class="ib-amt">$48,000</div>
+      <div class="ib-pct">52.9% of total</div>
+      <div class="inv-tooltip">
+        <div class="it-row"><span>14 Months of Work &amp; Ideation</span><span>$48,000</span></div>
+        <div class="it-row"><span>Total</span><span>$48,000</span></div>
+      </div>
+    </div>
+
+    <!-- Design -->
+    <div class="inv-btn" style="color:var(--gold);">
+      <div class="ib-line"></div>
+      <div class="ib-cat">Design &amp; Packaging</div>
+      <div class="ib-amt">$835</div>
+      <div class="ib-pct">0.9% of total</div>
+      <div class="inv-tooltip">
+        <div class="it-row"><span>Packaging Design ×3</span><span>$310</span></div>
+        <div class="it-row"><span>Design</span><span>$80</span></div>
+        <div class="it-row"><span>Design Update</span><span>$20</span></div>
+        <div class="it-row"><span>Design Brush</span><span>$30</span></div>
+        <div class="it-row"><span>Charts</span><span>$20</span></div>
+        <div class="it-row"><span>Wooden Handle</span><span>$80</span></div>
+        <div class="it-row"><span>Box Sample</span><span>$75</span></div>
+        <div class="it-row"><span>3D Models</span><span>$20</span></div>
+        <div class="it-row"><span>Vine / Display</span><span>$200</span></div>
+        <div class="it-row"><span>Total</span><span>$835</span></div>
+      </div>
+    </div>
+
+    <!-- Samples -->
+    <div class="inv-btn" style="color:#8E44AD;">
+      <div class="ib-line"></div>
+      <div class="ib-cat">Samples &amp; Prototypes</div>
+      <div class="ib-amt">$682</div>
+      <div class="ib-pct">0.8% of total</div>
+      <div class="inv-tooltip">
+        <div class="it-row"><span>Samples (initial)</span><span>$10</span></div>
+        <div class="it-row"><span>Samples (2nd round)</span><span>$150</span></div>
+        <div class="it-row"><span>Black Part Sample</span><span>$52</span></div>
+        <div class="it-row"><span>Samples (China)</span><span>$100</span></div>
+        <div class="it-row"><span>White &amp; Black Samples</span><span>$50</span></div>
+        <div class="it-row"><span>Samples (final)</span><span>$50</span></div>
+        <div class="it-row"><span>B&amp;W Stone Samples</span><span>$270</span></div>
+        <div class="it-row"><span>Total</span><span>$682</span></div>
+      </div>
+    </div>
+
+    <!-- Equipment -->
+    <div class="inv-btn" style="color:var(--gray);">
+      <div class="ib-line"></div>
+      <div class="ib-cat">Equipment &amp; Tools</div>
+      <div class="ib-amt">$900</div>
+      <div class="ib-pct">1.0% of total</div>
+      <div class="inv-tooltip">
+        <div class="it-row"><span>3D Printer</span><span>$750</span></div>
+        <div class="it-row"><span>Tool</span><span>$150</span></div>
+        <div class="it-row"><span>Total</span><span>$900</span></div>
+      </div>
+    </div>
+
+    <!-- Travel -->
+    <div class="inv-btn" style="color:var(--orange);">
+      <div class="ib-line"></div>
+      <div class="ib-cat">Travel &amp; Sourcing</div>
+      <div class="ib-amt">$4,385</div>
+      <div class="ib-pct">4.8% of total</div>
+      <div class="inv-tooltip">
+        <div class="it-row"><span>Trip to China (1st)</span><span>$1,000</span></div>
+        <div class="it-row"><span>China Travel (2nd)</span><span>$1,650</span></div>
+        <div class="it-row"><span>Travel to China (3rd)</span><span>$1,500</span></div>
+        <div class="it-row"><span>Hotel</span><span>$100</span></div>
+        <div class="it-row"><span>Delivery</span><span>$60</span></div>
+        <div class="it-row"><span>Phone</span><span>$75</span></div>
+        <div class="it-row"><span>Total</span><span>$4,385</span></div>
+      </div>
+    </div>
+
+    <!-- Inventory -->
+    <div class="inv-btn" style="color:var(--terra-d);">
+      <div class="ib-line"></div>
+      <div class="ib-cat">Inventory &amp; Materials</div>
+      <div class="ib-amt">$31,677</div>
+      <div class="ib-pct">34.9% of total</div>
+      <div class="inv-tooltip" style="right:0;left:auto;">
+        <div class="inv-tooltip" style="position:static;display:block;border:none;box-shadow:none;padding:0;min-width:auto;">
+        </div>
+        <div class="it-row"><span>Wood Order (handles)</span><span>$10,622</span></div>
+        <div class="it-row"><span>Packaging</span><span>$4,400</span></div>
+        <div class="it-row"><span>Terracotta Stone R1</span><span>$2,060</span></div>
+        <div class="it-row"><span>Terracotta Stone R2</span><span>$8,320</span></div>
+        <div class="it-row"><span>Silicon (Glass)</span><span>$1,250</span></div>
+        <div class="it-row"><span>B&amp;W Stone ×2</span><span>$2,459</span></div>
+        <div class="it-row"><span>Glass</span><span>$1,255</span></div>
+        <div class="it-row"><span>Bags</span><span>$1,311</span></div>
+        <div class="it-row"><span>Total</span><span>$31,677</span></div>
+      </div>
+    </div>
+
+    <!-- Logistics -->
+    <div class="inv-btn" style="color:var(--red);">
+      <div class="ib-line"></div>
+      <div class="ib-cat">Logistics &amp; Ops</div>
+      <div class="ib-amt">$4,250</div>
+      <div class="ib-pct">4.7% of total</div>
+      <div class="inv-tooltip">
+        <div class="it-row"><span>Transportation to FBA</span><span>$2,100</span></div>
+        <div class="it-row"><span>Destroy / Disposal</span><span>$2,150</span></div>
+        <div class="it-row"><span>Total</span><span>$4,250</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="inv-total-bar">
+    <div>
+      <div class="itb-l">TOTAL INVESTMENT</div>
+      <div class="itb-v">$90,729</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="itb-breakdown">4,000 Terracotta · 4,000 Glass · 1,500 Black · 1,500 Gray</div>
+      <div class="itb-breakdown">11,000 units · 100% self-funded · 0 outside capital</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FORECAST SUMMARY ── -->
+<div class="fc-wrap" id="forecast">
+  <div class="sec-hdr">24-Month Profit Forecast <span>Aug 2026 – Jul 2028</span></div>
+
+  <div class="fc-summary">
+    <div class="fc-card">
+      <h3>Revenue by Product Line</h3>
+      <div class="fc-row"><span><span class="product-tag pt-t"></span>Terracotta (4,000 + reorders)</span><span class="c-terra" id="rev-terra">$612,960</span></div>
+      <div class="fc-row"><span><span class="product-tag pt-g"></span>Glass (4,000 + reorders)</span><span class="c-glass" id="rev-glass">$524,280</span></div>
+      <div class="fc-row"><span><span class="product-tag pt-gr"></span>Gray Stone (1,500 + reorders)</span><span style="color:var(--gray);" id="rev-gray">$126,060</span></div>
+      <div class="fc-row"><span><span class="product-tag pt-b"></span>Black Stone (1,500 + reorders)</span><span style="color:var(--blk);" id="rev-black">$123,140</span></div>
+      <div class="fc-row"><span><strong>Total Revenue</strong></span><span><strong id="rev-total">$1,386,440</strong></span></div>
+    </div>
+    <div class="fc-card">
+      <h3>Net Profit Summary</h3>
+      <div class="fc-row"><span>Gross Profit (before ads)</span><span id="gross-profit">$471,408</span></div>
+      <div class="fc-row"><span>Ad Spend (est. 8%)</span><span class="neg" id="ad-spend">−$110,915</span></div>
+      <div class="fc-row"><span>FBA + Fulfillment</span><span class="neg">−$55,458</span></div>
+      <div class="fc-row"><span>COGS (all units)</span><span class="neg">−$138,236</span></div>
+      <div class="fc-row"><span><strong>24-Month Net Profit</strong></span><span><strong class="c-grn" id="net-profit">$392,840</strong></span></div>
+    </div>
+    <div class="fc-card">
+      <h3>Key Milestones</h3>
+      <div class="fc-row"><span>Investment Recovered</span><span style="color:#8E44AD;font-weight:700;">Jan 2027</span></div>
+      <div class="fc-row"><span>First $10K Profit Month</span><span style="color:var(--green);font-weight:700;">Dec 2026</span></div>
+      <div class="fc-row"><span>Peak Monthly Revenue</span><span class="c-terra">$104,520 (Mar'27+)</span></div>
+      <div class="fc-row"><span>Peak Monthly Profit</span><span class="c-grn">$29,240 (Mar'27+)</span></div>
+      <div class="fc-row"><span>ROI on $90,729</span><span class="c-grn" style="font-size:14px;font-weight:800;">433%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CHART ── -->
+<div style="padding:0 32px;" id="chart">
+  <div class="chart-card">
+    <h3>Monthly Performance — Revenue &amp; Net Profit</h3>
+    <div class="chart-toggle-bar">
+      <button class="ct-btn active" onclick="switchChart('revenue')">Revenue</button>
+      <button class="ct-btn" onclick="switchChart('profit')">Net Profit</button>
+      <button class="ct-btn" onclick="switchChart('both')">Both</button>
+    </div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--terra);"></div> Revenue</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--green);"></div> Net Profit</div>
+    </div>
+    <div class="cw"><canvas id="mainChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ── MONTHLY TABLE ── -->
+<div style="padding:0 32px 32px;" id="monthly">
+  <div class="sec-hdr">Complete 24-Month Monthly Breakdown</div>
+  <div class="tbl-wrap">
+    <button class="tbl-toggle" onclick="toggleTable(this)">
+      <span>📋 Show All 24 Months — Units · Revenue · Profit · Inventory</span>
+      <span class="arr">▼</span>
+    </button>
+    <div class="tbl-inner" id="mainTable">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2" style="text-align:left;">Month</th>
+            <th colspan="2" style="background:#8B3D1A;">TERRA</th>
+            <th colspan="2" style="background:#4A7A95;">GLASS</th>
+            <th colspan="2" style="background:#4A6060;">GRAY</th>
+            <th colspan="2" style="background:#2A2A2A;">BLACK</th>
+            <th rowspan="2" style="background:#1C3A5C;">Revenue</th>
+            <th rowspan="2" style="background:#1A4A2E;">Net Profit</th>
+            <th rowspan="2" style="background:#2E2E2E;">Running Cash</th>
+          </tr>
+          <tr>
+            <th style="background:#8B3D1A;">Sales</th><th style="background:#8B3D1A;">Stock</th>
+            <th style="background:#4A7A95;">Sales</th><th style="background:#4A7A95;">Stock</th>
+            <th style="background:#4A6060;">Sales</th><th style="background:#4A6060;">Stock</th>
+            <th style="background:#2A2A2A;">Sales</th><th style="background:#2A2A2A;">Stock</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="footer">Sifri Art LLC · Pumice Stone Dashboard · Data as of June 2026 · 100% Self-Funded</div>
+
+<script>
+// ── DATA MODEL ──────────────────────────────────────────────────────────────
+const SELL = { terra:19.99, glass:18.99, gray:13.99, black:13.99 };
+const PROFIT = { terra:5.51, glass:5.20, gray:5.02, black:5.02 };
+
+// Starting inventory
+let inv = { terra:4000, glass:4000, gray:1500, black:1500 };
+let cash = 35000; // working capital reserve
+
+// Monthly sales plan (24 months Aug 2026–Jul 2028)
+const salesPlan = [
+  // Aug'26  Sep'26  Oct'26  Nov'26  Dec'26  Jan'27
+  {t:100,  g:80,   gr:40,  b:40  },
+  {t:200,  g:160,  gr:80,  b:80  },
+  {t:300,  g:250,  gr:250, b:250 },
+  {t:500,  g:400,  gr:300, b:300 },
+  {t:900,  g:700,  gr:350, b:350 },
+  {t:1400, g:1100, gr:350, b:350 },
+  // Feb'27  Mar'27  Apr'27  May'27  Jun'27  Jul'27
+  {t:1800, g:1400, gr:400, b:400 },
+  {t:2200, g:1700, gr:400, b:400 },
+  {t:2200, g:1700, gr:400, b:400 },
+  {t:2200, g:1700, gr:400, b:400 },
+  {t:2200, g:1700, gr:400, b:400 },
+  {t:2200, g:1700, gr:400, b:400 },
+  // Aug'27  Sep'27  Oct'27  Nov'27  Dec'27  Jan'28
+  {t:2200, g:1700, gr:400, b:400 },
+  {t:2200, g:1700, gr:400, b:400 },
+  {t:2200, g:1700, gr:400, b:400 },
+  {t:2200, g:1700, gr:400, b:400 },
+  {t:2500, g:1900, gr:450, b:450 },
+  {t:2200, g:1700, gr:400, b:400 },
+  // Feb'28  Mar'28  Apr'28  May'28  Jun'28  Jul'28
+  {t:2200, g:1700, gr:400, b:400 },
+  {t:2500, g:1900, gr:450, b:450 },
+  {t:2200, g:1700, gr:400, b:400 },
+  {t:2200, g:1700, gr:400, b:400 },
+  {t:2500, g:1900, gr:450, b:450 },
+  {t:2200, g:1700, gr:400, b:400 },
+];
+
+// Reorder events: {month (0-based), sku, units, cost, deposit_month, balance_month}
+const reorders = [
+  {depositAt:2, balanceAt:4, sku:'terra', units:7500, cost:27170},  // R1 Terra
+  {depositAt:2, balanceAt:4, sku:'gray',  units:2000, cost:5700 },  // R1 Gray
+  {depositAt:2, balanceAt:4, sku:'black', units:2000, cost:5700 },  // R1 Black
+  {depositAt:2, balanceAt:4, sku:'glass', units:5000, cost:18500},  // R1 Glass
+  {depositAt:4, balanceAt:7, sku:'terra', units:7500, cost:31125},  // R2 Terra
+  {depositAt:4, balanceAt:7, sku:'glass', units:5000, cost:20750},  // R2 Glass
+  {depositAt:7, balanceAt:10,sku:'terra', units:7500, cost:31125},  // R3 Terra
+  {depositAt:7, balanceAt:10,sku:'glass', units:5000, cost:20750},  // R3 Glass
+  {depositAt:9, balanceAt:12,sku:'gray',  units:2000, cost:5700 },  // R2 Gray
+  {depositAt:9, balanceAt:12,sku:'black', units:2000, cost:5700 },  // R2 Black
+  {depositAt:10,balanceAt:13,sku:'terra', units:7500, cost:31125},  // R4 Terra
+  {depositAt:10,balanceAt:13,sku:'glass', units:5000, cost:20750},  // R4 Glass
+  {depositAt:13,balanceAt:16,sku:'terra', units:7500, cost:31125},  // R5 Terra
+  {depositAt:13,balanceAt:16,sku:'glass', units:5000, cost:20750},  // R5 Glass
+  {depositAt:16,balanceAt:19,sku:'terra', units:7500, cost:31125},  // R6 Terra
+  {depositAt:16,balanceAt:19,sku:'glass', units:5000, cost:20750},  // R6 Glass
+  {depositAt:16,balanceAt:19,sku:'gray',  units:2000, cost:5700 },  // R3 Gray
+  {depositAt:16,balanceAt:19,sku:'black', units:2000, cost:5700 },  // R3 Black
+];
+
+// Restock arrivals: when stock actually arrives
+const arrivals = [
+  {month:5,  sku:'terra', units:7500}, {month:5,  sku:'gray',  units:2000},
+  {month:5,  sku:'black', units:2000}, {month:5,  sku:'glass', units:5000},
+  {month:7,  sku:'terra', units:7500}, {month:7,  sku:'glass', units:5000},
+  {month:10, sku:'terra', units:7500}, {month:10, sku:'glass', units:5000},
+  {month:12, sku:'gray',  units:2000}, {month:12, sku:'black', units:2000},
+  {month:13, sku:'terra', units:7500}, {month:13, sku:'glass', units:5000},
+  {month:16, sku:'terra', units:7500}, {month:16, sku:'glass', units:5000},
+  {month:19, sku:'terra', units:7500}, {month:19, sku:'glass', units:5000},
+  {month:19, sku:'gray',  units:2000}, {month:19, sku:'black', units:2000},
+];
+
+const months = [
+  'Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027',
+  'Feb 2027','Mar 2027','Apr 2027','May 2027','Jun 2027','Jul 2027',
+  'Aug 2027','Sep 2027','Oct 2027','Nov 2027','Dec 2027','Jan 2028',
+  'Feb 2028','Mar 2028','Apr 2028','May 2028','Jun 2028','Jul 2028'
+];
+
+// ── BUILD TABLE DATA ─────────────────────────────────────────────────────────
+function buildData() {
+  let curInv = {...inv};
+  let curCash = cash;
+  const rows = [];
+  let totalRevenue = 0, totalProfit = 0;
+  let paybackMonth = -1;
+  let cumProfit = 0;
+
+  for (let m = 0; m < 24; m++) {
+    // Arrivals first
+    arrivals.filter(a => a.month === m).forEach(a => {
+      curInv[a.sku] = (curInv[a.sku] || 0) + a.units;
+    });
+
+    const plan = salesPlan[m];
+    const sales = {
+      terra: Math.min(plan.t, curInv.terra),
+      glass: Math.min(plan.g, curInv.glass),
+      gray:  Math.min(plan.gr, curInv.gray),
+      black: Math.min(plan.b, curInv.black)
+    };
+
+    // Revenue & profit
+    const rev = sales.terra * SELL.terra + sales.glass * SELL.glass +
+                sales.gray * SELL.gray + sales.black * SELL.black;
+    const profit = sales.terra * PROFIT.terra + sales.glass * PROFIT.glass +
+                   sales.gray * PROFIT.gray + sales.black * PROFIT.black;
+
+    // Cash flow
+    let payments = 0;
+    reorders.forEach(r => {
+      if (r.depositAt === m) payments += r.cost * 0.30;
+      if (r.balanceAt === m) payments += r.cost * 0.70;
+    });
+
+    // Aug/Sep: all profit reinvested to ads
+    const cashIn = (m < 2) ? 0 : profit;
+    curCash = curCash + cashIn - payments;
+
+    // Update inventory
+    curInv.terra -= sales.terra;
+    curInv.glass -= sales.glass;
+    curInv.gray  -= sales.gray;
+    curInv.black -= sales.black;
+
+    totalRevenue += rev;
+    totalProfit += profit;
+    cumProfit += profit;
+
+    if (paybackMonth === -1 && cumProfit >= 90729) paybackMonth = m;
+
+    rows.push({
+      month: months[m],
+      salesT: sales.terra, stockT: Math.max(0, curInv.terra),
+      salesG: sales.glass, stockG: Math.max(0, curInv.glass),
+      salesGr: sales.gray, stockGr: Math.max(0, curInv.gray),
+      salesB: sales.black, stockB: Math.max(0, curInv.black),
+      revenue: rev, profit, cash: curCash,
+      payments, isPeak: m >= 7, isReorder: payments > 0
+    });
+  }
+  return {rows, totalRevenue, totalProfit, paybackMonth};
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+const {rows, totalRevenue, totalProfit, paybackMonth} = buildData();
+
+function fmt(n,dec=0){return '$'+n.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function fmtN(n){return n.toLocaleString();}
+
+// Fill KPIs
+document.getElementById('kpi-rev').textContent = fmt(totalRevenue);
+document.getElementById('kpi-profit').textContent = fmt(totalProfit);
+document.getElementById('kpi-payback').textContent = paybackMonth >= 0 ? months[paybackMonth] : '—';
+document.getElementById('hdr-profit').textContent = fmt(totalProfit);
+
+// Render table
+const tbody = document.getElementById('tableBody');
+rows.forEach((r, i) => {
+  const tr = document.createElement('tr');
+  if (r.isPeak) tr.className = 'peak';
+  if (r.isReorder) tr.classList.add('reorder');
+  if (i >= 4 && i <= 5) tr.className = 'q1';
+
+  const cashClass = r.cash < 5000 ? 'neg' : r.cash < 20000 ? 'warn' : 'pos';
+  const profitClass = r.profit > 20000 ? 'pos' : r.profit > 5000 ? '' : '';
+
+  tr.innerHTML = `
+    <td>${r.month}${r.isReorder ? ' ⚡' : ''}${r.stockT < 500 ? ' ⚠️' : ''}</td>
+    <td>${fmtN(r.salesT)}</td><td>${fmtN(r.stockT)}</td>
+    <td>${fmtN(r.salesG)}</td><td>${fmtN(r.stockG)}</td>
+    <td>${fmtN(r.salesGr)}</td><td>${fmtN(r.stockGr)}</td>
+    <td>${fmtN(r.salesB)}</td><td>${fmtN(r.stockB)}</td>
+    <td>${fmt(r.revenue)}</td>
+    <td class="${profitClass}">${fmt(r.profit)}</td>
+    <td class="${cashClass}">${fmt(r.cash)}</td>`;
+  tbody.appendChild(tr);
+});
+
+// Total row
+const totRow = document.createElement('tr');
+totRow.className = 'tot-row';
+totRow.innerHTML = `<td>24-MONTH TOTAL</td>
+  <td colspan="8" style="text-align:center;">See product breakdown above</td>
+  <td>${fmt(totalRevenue)}</td>
+  <td>${fmt(totalProfit)}</td><td>—</td>`;
+tbody.appendChild(totRow);
+
+// ── CHART ─────────────────────────────────────────────────────────────────
+const labels = rows.map(r => r.month.replace(' 20','\''));
+const revData = rows.map(r => r.revenue);
+const profData = rows.map(r => r.profit);
+
+let currentChart = null;
+function switchChart(type) {
+  document.querySelectorAll('.ct-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  if (currentChart) currentChart.destroy();
+
+  const ctx = document.getElementById('mainChart').getContext('2d');
+  const datasets = [];
+  if (type !== 'profit') datasets.push({
+    label:'Monthly Revenue', data:revData, backgroundColor:'rgba(196,98,45,0.15)',
+    borderColor:'#C4622D', borderWidth:2, fill:true, tension:.4, pointRadius:3
+  });
+  if (type !== 'revenue') datasets.push({
+    label:'Net Profit', data:profData, backgroundColor:'rgba(46,139,87,0.15)',
+    borderColor:'#2E8B57', borderWidth:2, fill:true, tension:.4, pointRadius:3
+  });
+
+  currentChart = new Chart(ctx, {
+    type:'line', data:{labels, datasets},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString('en',{minimumFractionDigits:0,maximumFractionDigits:0})}`}}},
+      scales:{y:{ticks:{callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}
+    }
+  });
+}
+switchChart.toString; // init
+const ctx0 = document.getElementById('mainChart').getContext('2d');
+currentChart = new Chart(ctx0, {
+  type:'line', data:{labels, datasets:[
+    {label:'Revenue', data:revData, backgroundColor:'rgba(196,98,45,0.15)', borderColor:'#C4622D', borderWidth:2, fill:true, tension:.4, pointRadius:3},
+    {label:'Net Profit', data:profData, backgroundColor:'rgba(46,139,87,0.15)', borderColor:'#2E8B57', borderWidth:2, fill:true, tension:.4, pointRadius:3}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString('en',{minimumFractionDigits:0,maximumFractionDigits:0})}`}}},
+    scales:{y:{ticks:{callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}
+  }
+});
+
+function switchChart(type) {
+  document.querySelectorAll('.ct-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.ct-btn[onclick="switchChart('${type}')"]`).classList.add('active');
+  currentChart.destroy();
+  const datasets = [];
+  if (type !== 'profit') datasets.push({label:'Revenue', data:revData, backgroundColor:'rgba(196,98,45,0.15)', borderColor:'#C4622D', borderWidth:2, fill:true, tension:.4, pointRadius:3});
+  if (type !== 'revenue') datasets.push({label:'Net Profit', data:profData, backgroundColor:'rgba(46,139,87,0.15)', borderColor:'#2E8B57', borderWidth:2, fill:true, tension:.4, pointRadius:3});
+  const ctx = document.getElementById('mainChart').getContext('2d');
+  currentChart = new Chart(ctx, {type:'line', data:{labels, datasets},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString('en',{minimumFractionDigits:0,maximumFractionDigits:0})}`}}},
+      scales:{y:{ticks:{callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}
+    }});
+}
+
+function toggleTable(btn) {
+  btn.classList.toggle('open');
+  document.getElementById('mainTable').classList.toggle('open');
+}
+
+// Highlight active nav on scroll
+const sections = [{id:'invest',a:'#invest'},{id:'forecast',a:'#forecast'},{id:'monthly',a:'#monthly'},{id:'chart',a:'#chart'}];
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY + 60;
+  sections.forEach(s => {
+    const el = document.getElementById(s.id);
+    if (el && el.offsetTop <= scrollY) {
+      document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+      const link = document.querySelector(`.nav a[href="${s.a}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+});
+</script>
+</body>
+</html>
