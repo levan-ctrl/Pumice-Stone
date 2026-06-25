@@ -284,6 +284,7 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
       <div class="arow"><span>Gray/Black total</span><span class="val" style="color:var(--gray)">90 days ≈ 3 mo</span></div>
       <div class="arow"><span>Deposit on order date</span><span class="val">30%</span></div>
       <div class="arow"><span>Balance on mfg finish date</span><span class="val">70%</span></div>
+      <div class="arow"><span>Amazon payout delay</span><span class="val">30 days (next month)</span></div>
       <div class="arow"><span>Jan 1, 2027 injection</span><span class="val" style="color:var(--pur)">+$10,000</span></div>
     </div>
   </div>
@@ -424,6 +425,9 @@ function simulate() {
   const rows = [];
   let totRev=0, totP=0, cumP=0, peakP=0, peakPm=-1, peakR=0;
   let payM=-1, f10M=-1;
+  // Amazon holds payment 30 days → profit from month M arrives in month M+1
+  // Aug+Sep (m<2) profit goes to launch ads, never enters cash pipeline
+  let prevPrf = 0;
 
   for (let m=0; m<24; m++) {
     if (m===5) cash += 10000; // Jan 2027 injection
@@ -449,9 +453,11 @@ function simulate() {
 
     const rev=SKUS.reduce((a,s)=>a+sold[s]*PRICE[s],0);
     const prf=SKUS.reduce((a,s)=>a+sold[s]*PRF[s],0);
-    // Aug+Sep (m=0,1): all profit goes to launch ads — cash stays at 0 for those months
-    const cashIn = m < 2 ? 0 : prf;
-    cash+=cashIn; totRev+=rev; totP+=prf; cumP+=prf;
+    // 30-day Amazon payout: receive PREVIOUS month's profit now
+    // Aug+Sep (m<2) profit went to ads, so prevPrf stays 0 for those months
+    cash += prevPrf;
+    prevPrf = (m < 2) ? 0 : prf; // ads months don't feed next month's cash
+    totRev+=rev; totP+=prf; cumP+=prf;
     if(prf>peakP){peakP=prf;peakPm=m;}
     if(rev>peakR) peakR=rev;
     if(payM===-1&&cumP>=90729) payM=m;
