@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Active Businesses — Levan Rurua</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --gold:#D4A843;--grn:#2E8B57;--red:#C0392B;--ora:#E67E22;--pur:#8E44AD;
+  --bg:#F7F3EE;--card:#fff;--bdr:#E0D5C8;
+  --txt:#2A2A2A;--mut:#6B6B6B;--nav:#1C1410;
+  --c-pumice:#C4622D;--c-ppc:#2E6FDB;--c-rg:#8BB500;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:13px;}
+
+nav{position:sticky;top:0;z-index:999;background:var(--nav);display:flex;padding:0 24px;overflow-x:auto;scrollbar-width:none;}
+nav::-webkit-scrollbar{display:none;}
+nav a{color:rgba(255,255,255,.55);text-decoration:none;padding:10px 13px;font-size:11px;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;letter-spacing:.4px;}
+nav a:hover,nav a.act{color:#fff;border-bottom-color:var(--gold);}
+.nav-brand{color:rgba(255,255,255,.35);padding:10px 13px 10px 0;font-size:11px;font-weight:700;letter-spacing:.5px;margin-right:8px;border-right:1px solid rgba(255,255,255,.1);}
+
+.hdr{background:linear-gradient(135deg,#1C1410 0%,#2A2010 55%,#3D2A08 100%);color:#fff;padding:28px;position:relative;overflow:hidden;text-align:center;}
+.hdr::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(212,168,67,.12),transparent 65%);}
+.hdr-inner{position:relative;}
+.hdr h1{font-size:30px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;}
+.hdr h1 span{color:var(--gold);}
+.hdr p{font-size:12px;opacity:.6;margin-bottom:20px;}
+
+/* Business cards (hero) */
+.biz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;max-width:780px;margin:0 auto;}
+@media(max-width:700px){.biz-grid{grid-template-columns:1fr;}}
+.biz-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:20px 18px;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;display:block;color:#fff;}
+.biz-card:first-child{border-radius:12px 0 0 12px;}
+.biz-card:last-child{border-radius:0 12px 12px 0;}
+.biz-card:hover{background:rgba(255,255,255,.13);transform:translateY(-2px);}
+.biz-card .ico{font-size:28px;margin-bottom:8px;}
+.biz-card .bname{font-size:13px;font-weight:800;margin-bottom:4px;letter-spacing:.3px;}
+.biz-card .bsub{font-size:10px;opacity:.55;margin-bottom:12px;}
+.biz-card .bamt{font-size:22px;font-weight:800;}
+.biz-card .blbl{font-size:10px;opacity:.55;margin-top:2px;}
+.biz-card .btn{display:inline-block;margin-top:12px;background:rgba(255,255,255,.12);padding:5px 16px;border-radius:20px;font-size:11px;font-weight:700;transition:background .2s;}
+.biz-card:hover .btn{background:rgba(255,255,255,.22);}
+
+/* KPI section */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px 24px 0;}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr);}}
+.kpi{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;padding:11px 13px;text-align:center;}
+.kpi .v{font-size:18px;font-weight:800;margin:3px 0 2px;}
+.kpi .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);font-weight:600;}
+.kpi .s{font-size:10px;color:var(--mut);}
+
+.sec{padding:14px 24px 0;}
+.sec-hd{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--mut);font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:7px;}
+
+/* Summary table */
+.sum-wrap{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;overflow:hidden;margin-bottom:14px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+th{background:var(--nav);color:#fff;padding:8px 12px;text-align:right;font-size:10px;font-weight:600;white-space:nowrap;}
+th:first-child{text-align:left;}
+td{padding:8px 12px;border-bottom:1px solid var(--bdr);text-align:right;}
+td:first-child{text-align:left;font-weight:700;}
+tr:last-child td{border:none;}
+tr.sub td{background:#F9F6F2;}
+tr.hi td{background:#1C1410;color:#fff;font-weight:800;font-size:12px;}
+
+/* Chart */
+.chart-wrap{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;padding:14px;margin-bottom:14px;}
+.chart-wrap h3{font-size:12px;font-weight:700;margin-bottom:10px;}
+.cw{position:relative;height:280px;}
+
+/* Badges */
+.chip{background:var(--nav);color:var(--gold);font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;}
+.alrt{border-radius:8px;padding:9px 13px;font-size:11.5px;display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;}
+.alrt.grn{background:#EEF8F2;border:1.5px solid #A8D5B8;}
+.alrt.ora{background:#FEF3E8;border:1.5px solid #F5C896;}
+
+.foot{background:var(--nav);color:rgba(255,255,255,.4);text-align:center;padding:10px;font-size:10px;margin-top:8px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">ACTIVE BUSINESSES</span>
+  <a href="home.html" class="act">🏠 Overview</a>
+  <a href="index.html">🪨 Pumice Stone</a>
+  <a href="ppc.html">📊 PPC Services</a>
+  <a href="rolling-grips.html">💪 Rolling Grips</a>
+</nav>
+
+<!-- HERO -->
+<div class="hdr">
+  <div class="hdr-inner">
+    <h1>Levan Rurua — <span>Active Businesses</span></h1>
+    <p>36-Month Portfolio Overview · Aug 2026 – Jul 2029 · Phuket, Thailand</p>
+    <div class="biz-grid">
+      <a class="biz-card" href="index.html" style="border-left-color:var(--c-pumice)">
+        <div class="ico">🪨</div>
+        <div class="bname" style="color:#F2A87E">Pumice Stone</div>
+        <div class="bsub">Sifri Art · Amazon FBA · 3 SKUs</div>
+        <div class="bamt" id="h-pumice-rev">—</div>
+        <div class="blbl">36-Mo Revenue</div>
+        <div class="btn">Open Dashboard →</div>
+      </a>
+      <a class="biz-card" href="ppc.html" style="border-color:rgba(111,163,224,.3)">
+        <div class="ico">📊</div>
+        <div class="bname" style="color:#6FA3E0">PPC Services</div>
+        <div class="bsub">4 Clients · Amazon PPC Management</div>
+        <div class="bamt" id="h-ppc-rev">—</div>
+        <div class="blbl">36-Mo Revenue (w/ Omni)</div>
+        <div class="btn">Open Dashboard →</div>
+      </a>
+      <a class="biz-card" href="rolling-grips.html" style="border-right-color:var(--c-rg)">
+        <div class="ico">💪</div>
+        <div class="bname" style="color:#C8FF00">Rolling Grips</div>
+        <div class="bsub">Kickstarter Launch · Amazon FBA</div>
+        <div class="bamt" id="h-rg-rev">—</div>
+        <div class="blbl">36-Mo Revenue</div>
+        <div class="btn">Open Dashboard →</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="kpis" id="kpiRow"></div>
+
+<div class="sec" style="padding-bottom:4px">
+  <div class="sec-hd">36-Month Portfolio Summary <span class="chip">All Businesses Combined</span></div>
+
+  <div class="alrt ora">
+    <span>📌</span>
+    <div><strong>Note:</strong> Pumice Stone and Rolling Grips revenues are simulated projections. PPC revenue is contracted (confirmed clients). Rolling Grips includes Kickstarter + Amazon phase. Life expenses ($3.5K→$4.5K→$5.5K/mo) shown as deduction.</div>
+  </div>
+</div>
+
+<!-- SUMMARY TABLE -->
+<div class="sec" style="padding-bottom:12px">
+  <div class="sum-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left">Business / Category</th>
+          <th>2026 (5 mo)</th>
+          <th>2027 (12 mo)</th>
+          <th>2028 (12 mo)</th>
+          <th>2029 (7 mo)</th>
+          <th>36-Mo Total</th>
+        </tr>
+      </thead>
+      <tbody id="sumBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- COMBINED CHART -->
+<div class="sec" style="padding-bottom:14px">
+  <div class="chart-wrap">
+    <h3>Monthly Net Profit — All Businesses Combined (excl. life expenses)</h3>
+    <div class="cw"><canvas id="combinedChart"></canvas></div>
+  </div>
+  <div class="chart-wrap">
+    <h3>Monthly Cash Position — Life Expenses vs PPC Income</h3>
+    <div class="cw"><canvas id="lifeChart"></canvas></div>
+  </div>
+</div>
+
+<div class="foot">Active Businesses Dashboard · Levan Rurua · Aug 2026 – Jul 2029</div>
+
+<script>
+const MFL=['Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Feb 2027','Mar 2027','Apr 2027','May 2027','Jun 2027','Jul 2027','Aug 2027','Sep 2027','Oct 2027','Nov 2027','Dec 2027','Jan 2028','Feb 2028','Mar 2028','Apr 2028','May 2028','Jun 2028','Jul 2028','Aug 2028','Sep 2028','Oct 2028','Nov 2028','Dec 2028','Jan 2029','Feb 2029','Mar 2029','Apr 2029','May 2029','Jun 2029','Jul 2029'];
+
+const $f = v => '$'+Math.round(Math.abs(v)).toLocaleString();
+const $fs = v => (v<0?'−':'')+$f(v);
+
+// ── PUMICE STONE (simplified projection) ──────────────────────────
+// Based on simulation: $6/unit terra, $4/unit gray+black, ramps to 3500+700+700
+function pumiceMonthProfit(m){
+  const terra = Math.min(3500, m<1?0:Math.round(100*Math.pow(1.3,m-1)));
+  const gb    = Math.min(350,  Math.round(20*Math.pow(1.3,m)));
+  return terra*6 + gb*4 + gb*4;
+}
+function pumiceMonthRev(m){
+  const terra = Math.min(3500, m<1?0:Math.round(100*Math.pow(1.3,m-1)));
+  const gb    = Math.min(350,  Math.round(20*Math.pow(1.3,m)));
+  return terra*9.935 + gb*6.685 + gb*6.685;
+}
+
+// ── PPC SERVICES ──────────────────────────────────────────────────
+function ppcRev(m){
+  const coopers=2000,goMental=1000;
+  const blossom=m===0?700:m===1?800:1000;
+  const omni=3000;
+  return {confirmed:coopers+goMental+blossom, withOmni:coopers+goMental+blossom+omni};
+}
+
+// ── LIFE EXPENSES ─────────────────────────────────────────────────
+function lifeExp(m){ return m<5?3500:m<17?4500:5500; }
+
+// ── ROLLING GRIPS (simplified projection) ─────────────────────────
+const RG_LAUNCH=5, RG_PRF_G=37, RG_PRF_S=44, RG_PEAK=10000, RG_SCALE=22;
+function rgMonthProfit(m){
+  if(m<RG_LAUNCH) return 0;
+  const sold=Math.min(RG_PEAK, Math.round(100*Math.pow(1.5,m-RG_LAUNCH)));
+  return sold*(m>=RG_SCALE?RG_PRF_S:RG_PRF_G);
+}
+function rgMonthRev(m){
+  if(m<RG_LAUNCH) return 0;
+  return Math.min(RG_PEAK, Math.round(100*Math.pow(1.5,m-RG_LAUNCH)))*92;
+}
+
+// ── COMPUTE MONTHLY DATA ───────────────────────────────────────────
+const months=Array.from({length:36},(_,i)=>i);
+const pumiceRev=months.map(pumiceMonthRev);
+const pumicePrf=months.map(pumiceMonthProfit);
+const ppcRevConf=months.map(m=>ppcRev(m).confirmed);
+const ppcRevOmni=months.map(m=>ppcRev(m).withOmni);
+const rgRev=months.map(rgMonthRev);
+const rgPrf=months.map(rgMonthProfit);
+const expenses=months.map(lifeExp);
+const totalRevConf=months.map(m=>pumiceRev[m]+ppcRevConf[m]+rgRev[m]);
+const totalPrfConf=months.map(m=>pumicePrf[m]+ppcRevConf[m]+rgPrf[m]-lifeExp(m));
+const totalPrfOmni=months.map(m=>pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]-lifeExp(m));
+
+// ── PERIOD SUMS ───────────────────────────────────────────────────
+const periods=[[0,5],[5,17],[17,29],[29,36]]; // 2026(5mo), 2027(12mo), 2028(12mo), 2029(7mo)
+function sumPeriod(arr,p){return arr.slice(p[0],p[1]).reduce((a,v)=>a+v,0);}
+
+const pumRevPer =periods.map(p=>sumPeriod(pumiceRev,p));
+const pumPrfPer =periods.map(p=>sumPeriod(pumicePrf,p));
+const ppcRevPer =periods.map(p=>sumPeriod(ppcRevOmni,p));
+const rgRevPer  =periods.map(p=>sumPeriod(rgRev,p));
+const rgPrfPer  =periods.map(p=>sumPeriod(rgPrf,p));
+const expPer    =periods.map(p=>sumPeriod(expenses,p));
+const totRevPer =periods.map((_,i)=>pumRevPer[i]+ppcRevPer[i]+rgRevPer[i]);
+const netPer    =periods.map((_,i)=>pumPrfPer[i]+ppcRevPer[i]+rgPrfPer[i]-expPer[i]);
+
+const sum36=a=>a.reduce((s,v)=>s+v,0);
+const totPumRev=sum36(pumiceRev), totPumPrf=sum36(pumicePrf);
+const totPpcRev=sum36(ppcRevOmni);
+const totRgRev=sum36(rgRev), totRgPrf=sum36(rgPrf);
+const totExp=sum36(expenses);
+const totNet=totPumPrf+totPpcRev+totRgPrf-totExp;
+
+// ── HERO KPIs ─────────────────────────────────────────────────────
+document.getElementById('h-pumice-rev').textContent='$'+Math.round(totPumRev/1000)+'K';
+document.getElementById('h-ppc-rev').textContent='$'+Math.round(totPpcRev/1000)+'K';
+document.getElementById('h-rg-rev').textContent='$'+Math.round(totRgRev/1000)+'K';
+
+const kpis=[
+  {l:'Total 36-Mo Revenue',    v:$f(totPumRev+totPpcRev+totRgRev),  s:'All 3 businesses',          c:'var(--gold)'},
+  {l:'Life Expenses 36-Mo',    v:$f(totExp),                          s:'$3.5K→$4.5K→$5.5K/mo',    c:'var(--red)'},
+  {l:'36-Mo Net (all biz)',     v:$fs(totNet),                         s:'after expenses',           c:totNet>0?'var(--grn)':'var(--red)'},
+  {l:'Peak Monthly (Combined)', v:$f(Math.max(...totalPrfOmni)),       s:MFL[totalPrfOmni.indexOf(Math.max(...totalPrfOmni))], c:'var(--grn)'},
+  {l:'Break-Even Month',       v:(()=>{let c=0;for(let m=0;m<36;m++){c+=totalPrfOmni[m];if(c>0)return MFL[m];}return '36+mo';})(), s:'cumulative net turns positive', c:'var(--pur)'},
+];
+const kr=document.getElementById('kpiRow');
+kpis.forEach(k=>{
+  const d=document.createElement('div'); d.className='kpi';
+  d.innerHTML=`<div class="l">${k.l}</div><div class="v" style="color:${k.c}">${k.v}</div><div class="s">${k.s}</div>`;
+  kr.appendChild(d);
+});
+
+// ── SUMMARY TABLE ─────────────────────────────────────────────────
+const tbody=document.getElementById('sumBody');
+const rows=[
+  {label:'🪨 Pumice Stone Revenue',  rev:pumRevPer,  tot:totPumRev,  c:'var(--c-pumice)', sub:false},
+  {label:'  └ Net Profit',          rev:pumPrfPer,  tot:totPumPrf,  c:'var(--grn)',sub:true},
+  {label:'📊 PPC Services (w/ Omni)',rev:ppcRevPer,  tot:totPpcRev,  c:'var(--c-ppc)',sub:false},
+  {label:'💪 Rolling Grips Revenue', rev:rgRevPer,   tot:totRgRev,   c:'var(--c-rg)', sub:false},
+  {label:'  └ Net Profit',          rev:rgPrfPer,   tot:totRgPrf,   c:'var(--grn)',sub:true},
+  {label:'🏠 Life Expenses',         rev:expPer.map(v=>-v), tot:-totExp, c:'var(--red)',sub:false},
+  {label:'💰 TOTAL NET',             rev:netPer,     tot:totNet,     c:totNet>0?'var(--grn)':'var(--red)',sub:false,hi:true},
+];
+rows.forEach(r=>{
+  const tr=document.createElement('tr');
+  if(r.hi) tr.className='hi';
+  else if(r.sub) tr.className='sub';
+  const cells=r.rev.map(v=>`<td style="color:${v<0?'var(--red)':r.c}">${v<0?'−':'+'}${$f(v)}</td>`).join('');
+  const totCell=`<td style="font-weight:800;color:${r.tot<0?'var(--red)':r.c}">${r.tot<0?'−':'+'}${$f(r.tot)}</td>`;
+  tr.innerHTML=`<td style="${r.hi?'color:var(--gold)':''}font-weight:${r.hi?800:r.sub?500:700}">${r.label}</td>${cells}${totCell}`;
+  tbody.appendChild(tr);
+});
+
+// ── CHARTS ────────────────────────────────────────────────────────
+new Chart(document.getElementById('combinedChart').getContext('2d'),{
+  type:'bar',
+  data:{labels:MFL, datasets:[
+    {label:'Pumice Net Profit',     data:pumicePrf,    backgroundColor:'rgba(196,98,45,.55)', stack:'s'},
+    {label:'PPC Revenue (w/ Omni)', data:ppcRevOmni,   backgroundColor:'rgba(46,111,219,.55)',stack:'s'},
+    {label:'Rolling Grips Profit',  data:rgPrf,        backgroundColor:'rgba(139,181,0,.55)', stack:'s'},
+    {label:'Life Expenses',         data:expenses.map(v=>-v), backgroundColor:'rgba(192,57,43,.35)',stack:'s'},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#888',font:{size:11}}}},
+    scales:{x:{stacked:true,ticks:{color:'#888',font:{size:9},maxRotation:45},grid:{color:'#EDE8E0'}},
+            y:{stacked:true,ticks:{color:'#888',callback:v=>'$'+(v/1000).toFixed(0)+'K'},grid:{color:'#EDE8E0'}}}}
+});
+
+new Chart(document.getElementById('lifeChart').getContext('2d'),{
+  type:'line',
+  data:{labels:MFL, datasets:[
+    {label:'PPC Revenue (w/ Omni)', data:ppcRevOmni,backgroundColor:'rgba(46,111,219,.12)',borderColor:'#2E6FDB',fill:true,tension:.3,pointRadius:2},
+    {label:'PPC Confirmed (no Omni)',data:ppcRevConf,borderColor:'rgba(46,111,219,.4)',fill:false,tension:.3,pointRadius:0,borderDash:[4,3]},
+    {label:'Life Expenses',         data:expenses,   backgroundColor:'rgba(192,57,43,.08)',borderColor:'#C0392B',fill:true,tension:.0,pointRadius:2},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#888',font:{size:11}}}},
+    scales:{x:{ticks:{color:'#888',font:{size:9},maxRotation:45},grid:{color:'#EDE8E0'}},
+            y:{ticks:{color:'#888',callback:v=>'$'+v.toLocaleString()},grid:{color:'#EDE8E0'}}}}
+});
+</script>
+</body>
+</html>

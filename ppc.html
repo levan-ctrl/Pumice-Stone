@@ -87,8 +87,10 @@ tr.tot td{background:#1C2A4A!important;color:#fff!important;font-weight:700;}
 
 <nav>
   <span class="nav-brand">ACTIVE BUSINESSES</span>
+  <a href="home.html">🏠 Overview</a>
   <a href="index.html">🪨 Pumice Stone</a>
   <a href="ppc.html" class="act">📊 PPC Services</a>
+  <a href="rolling-grips.html">💪 Rolling Grips</a>
 </nav>
 
 <div class="hdr">
@@ -173,7 +175,9 @@ tr.tot td{background:#1C2A4A!important;color:#fff!important;font-weight:700;}
             <th style="background:#7A5E10">Omni ✦</th>
             <th style="background:#1C2A4A">Confirmed</th>
             <th style="background:#3A2A10">With Omni</th>
-            <th style="background:#0A2A1A">Cumulative ✓</th>
+            <th style="background:#4A1A1A">Life Expenses</th>
+            <th style="background:#0A2A1A">Net (Confirmed)</th>
+            <th style="background:#0A3A1A">Net (w/ Omni)</th>
           </tr>
         </thead>
         <tbody id="tblBody"></tbody>
@@ -187,48 +191,63 @@ tr.tot td{background:#1C2A4A!important;color:#fff!important;font-weight:700;}
 <script>
 const MFL=['Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Feb 2027','Mar 2027','Apr 2027','May 2027','Jun 2027','Jul 2027','Aug 2027','Sep 2027','Oct 2027','Nov 2027','Dec 2027','Jan 2028','Feb 2028','Mar 2028','Apr 2028','May 2028','Jun 2028','Jul 2028','Aug 2028','Sep 2028','Oct 2028','Nov 2028','Dec 2028','Jan 2029','Feb 2029','Mar 2029','Apr 2029','May 2029','Jun 2029','Jul 2029'];
 
+function lifeExp(m){
+  if(m<5)  return 3500; // Aug–Dec 2026
+  if(m<17) return 4500; // Jan–Dec 2027
+  return 5500;           // Jan 2028+
+}
+
 function rev(m){
   const coopers  = 2000;
   const goMental = 1000;
   const blossom  = m===0 ? 700 : m===1 ? 800 : 1000;
   const omni     = 3000;
   const confirmed = coopers + goMental + blossom;
-  return {coopers, goMental, blossom, omni, confirmed, withOmni: confirmed + omni};
+  const exp = lifeExp(m);
+  return {coopers, goMental, blossom, omni, confirmed,
+          withOmni: confirmed + omni, exp,
+          netConf: confirmed - exp, netOmni: confirmed + omni - exp};
 }
 
-const $f = v => '$'+Math.round(v).toLocaleString();
+const $f  = v => '$'+Math.round(v).toLocaleString();
+const $fc = v => (v<0?'−$':'$')+Math.abs(Math.round(v)).toLocaleString();
 
 // Accumulate totals
-let cumConf=0, cumOmni=0;
-let totC=0, totG=0, totB=0, totO=0;
-const mConf=[], mOmni=[], mCoop=[], mGom=[], mBls=[];
+let cumConf=0, cumOmni=0, cumExp=0;
+let totC=0, totG=0, totB=0, totO=0, totExp=0;
+const mConf=[], mOmni=[], mCoop=[], mGom=[], mBls=[], mExp=[];
 
 for(let m=0;m<36;m++){
   const r=rev(m);
   cumConf  += r.confirmed;
   cumOmni  += r.withOmni;
+  cumExp   += r.exp;
   totC     += r.coopers;
   totG     += r.goMental;
   totB     += r.blossom;
   totO     += r.omni;
+  totExp   += r.exp;
   mConf.push(r.confirmed);
   mOmni.push(r.omni);
   mCoop.push(r.coopers);
   mGom.push(r.goMental);
   mBls.push(r.blossom);
+  mExp.push(r.exp);
 }
 
 // Header
 document.getElementById('hMRR').textContent  = $f(rev(35).confirmed);
 document.getElementById('hTotal').textContent = $f(cumConf);
 
+const netConf36 = cumConf - cumExp;
+const netOmni36 = cumOmni - cumExp;
 // KPI cards
 const kpis=[
-  {l:'Active Clients',     v:'3',              s:'+ 1 potential (Omni)',         c:'#2E6FDB'},
-  {l:'Confirmed MRR',      v:$f(rev(35).confirmed), s:'from Month 3 onwards',    c:'var(--grn)'},
-  {l:'MRR with Omni',      v:$f(rev(35).withOmni),  s:'if Omni closes',          c:'var(--gold)'},
-  {l:'36-Mo (Confirmed)',  v:$f(cumConf),       s:'Aug 2026 – Jul 2029',          c:'var(--grn)'},
-  {l:'36-Mo (With Omni)',  v:$f(cumOmni),       s:'adds $108K from Omni',         c:'var(--gold)'},
+  {l:'Active Clients',        v:'3',                    s:'+ 1 potential (Omni)',              c:'#2E6FDB'},
+  {l:'Life Expenses 36-Mo',   v:$f(cumExp),             s:'$3.5K→$4.5K→$5.5K/mo',            c:'var(--red)'},
+  {l:'36-Mo Revenue (Conf.)', v:$f(cumConf),            s:'Aug 2026 – Jul 2029',               c:'var(--grn)'},
+  {l:'Net 36-Mo (Confirmed)', v:$fc(netConf36),         s: netConf36<0?'Need Omni or new client':'Surplus after expenses', c: netConf36<0?'var(--red)':'var(--grn)'},
+  {l:'Net 36-Mo (With Omni)', v:$fc(netOmni36),         s:'Omni covers all expenses + profit', c:'var(--gold)'},
 ];
 const kr=document.getElementById('kpiRow');
 kpis.forEach(k=>{
@@ -240,10 +259,9 @@ kpis.forEach(k=>{
 
 // Table
 const tbody=document.getElementById('tblBody');
-let runConf=0;
 for(let m=0;m<36;m++){
   const r=rev(m);
-  runConf+=r.confirmed;
+  const nc=r.netConf, no=r.netOmni;
   const tr=document.createElement('tr');
   tr.innerHTML=`
     <td>${MFL[m]}</td>
@@ -253,7 +271,9 @@ for(let m=0;m<36;m++){
     <td style="color:#9A7420;font-weight:600">${$f(r.omni)}</td>
     <td style="font-weight:700">${$f(r.confirmed)}</td>
     <td style="color:var(--gold);font-weight:700">${$f(r.withOmni)}</td>
-    <td class="cum">${$f(runConf)}</td>
+    <td style="color:var(--red);font-weight:600">−${$f(r.exp)}</td>
+    <td style="font-weight:700;color:${nc>=0?'var(--grn)':'var(--red)'}">${$fc(nc)}</td>
+    <td style="font-weight:700;color:${no>=0?'var(--gold)':'var(--red)'}">${$fc(no)}</td>
   `;
   tbody.appendChild(tr);
 }
@@ -268,7 +288,9 @@ tot.innerHTML=`
   <td style="color:var(--gold)">${$f(totO)}</td>
   <td>${$f(cumConf)}</td>
   <td style="color:var(--gold)">${$f(cumOmni)}</td>
-  <td style="color:#5EC8A0">${$f(cumConf)}</td>
+  <td style="color:#E08080">−${$f(totExp)}</td>
+  <td style="color:${netConf36>=0?'#5EC8A0':'#E08080'}">${$fc(netConf36)}</td>
+  <td style="color:var(--gold)">${$fc(netOmni36)}</td>
 `;
 tbody.appendChild(tot);
 
