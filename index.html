@@ -413,6 +413,7 @@ const BAL_M  = {terra:2, gray:2, black:2};
 const STONE  = 1.72; // pre-stocked stone only cost
 const SKUS   = ['terra','gray','black'];
 const MIN_Q  = {terra:2000, gray:1500, black:1500};
+const BUFFER_MOS = 6; // target months of stock to hold after each reorder arrives
 
 const MFL = ['Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Feb 2027','Mar 2027','Apr 2027','May 2027','Jun 2027','Jul 2027','Aug 2027','Sep 2027','Oct 2027','Nov 2027','Dec 2027','Jan 2028','Feb 2028','Mar 2028','Apr 2028','May 2028','Jun 2028','Jul 2028'];
 const MSH = MFL.map(s=>s.replace(' 20','\''));
@@ -460,8 +461,6 @@ function simulate() {
     cash += prevPrf;
 
     // Place reorders BEFORE sales so throttle logic can see newly-placed arrivals
-    // BUFFER_MOS: target months of stock to have on hand after each reorder arrives
-    const BUFFER_MOS = 6;
     let depOut=0;
     SKUS.forEach(sku=>{
       const lead=LEAD[sku];
@@ -478,11 +477,11 @@ function simulate() {
       while(projStock()<0 && att<6){
         att++;
         const isPS=sku==='terra'&&!psUsed;
-        let qty;
-        if(isPS){qty=2000;psUsed=true;}
+        let qty, cpu;
+        if(isPS){qty=2000;psUsed=true;cpu=STONE;}
         else{
           const deficit=-projStock();
-          // Order enough to cover deficit + 6 months of demand after arrival (buffer goal)
+          // Try 6-month buffer order first; fall back to minimum if deposit unaffordable
           let bufDem=0;
           for(let i=lead;i<lead+BUFFER_MOS;i++){
             const fm=m+i; if(fm>=24) break;
@@ -490,9 +489,14 @@ function simulate() {
           }
           qty=Math.max(MIN_Q[sku], deficit+bufDem);
           qty=Math.ceil(qty/500)*500;
+          cpu=qty>=5000?BULK_COG[sku]:COG[sku];
+          // If 6-month buffer deposit exceeds available cash, fall back to minimum viable order
+          if(cash < qty*cpu*0.30){
+            const fd=dem(Math.min(m+lead,23))[sku];
+            qty=Math.max(MIN_Q[sku], Math.ceil((deficit+fd)/500)*500);
+            cpu=qty>=5000?BULK_COG[sku]:COG[sku];
+          }
         }
-        // Bulk discount: >= 5,000 units gets lower cost per unit
-        const cpu=isPS?STONE:(qty>=5000?BULK_COG[sku]:COG[sku]);
         const total=qty*cpu, dep=total*0.30;
         if(cash<dep) break;
         cash-=dep; depOut+=dep;
