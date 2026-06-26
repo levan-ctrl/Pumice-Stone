@@ -143,10 +143,10 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
 <div class="hdr">
   <div class="hdr-l">
     <h1>Sifri Art <span>Pumice Stone</span></h1>
-    <p>Self-Funded · Aug 2026 – Jul 2028 · 3 Product Lines · 7,000 Starting Units</p>
+    <p>Self-Funded · Aug 2026 – Jul 2029 · 3 Product Lines · 7,000 Starting Units</p>
   </div>
   <div class="hdr-r">
-    <div class="lbl">24-Month Net Profit</div>
+    <div class="lbl">36-Month Net Profit</div>
     <div class="big" id="hProfit">—</div>
     <div class="lbl">on $100,729 total capital · <span style="color:var(--tl)" id="hROI">—</span></div>
   </div>
@@ -154,8 +154,8 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
 
 <div class="kpis">
   <div class="kpi"><div class="l">Total Capital</div><div class="v" style="color:var(--terra)">$100,729</div><div class="s">$90,729 spent + $10K Jan 2027</div></div>
-  <div class="kpi"><div class="l">24-Mo Revenue</div><div class="v" style="color:var(--gold)" id="kRev">—</div><div class="s">Aug 2026–Jul 2028</div></div>
-  <div class="kpi"><div class="l">24-Mo Net Profit</div><div class="v" style="color:var(--grn)" id="kProfit">—</div><div class="s" id="kMargin">—</div></div>
+  <div class="kpi"><div class="l">36-Mo Revenue</div><div class="v" style="color:var(--gold)" id="kRev">—</div><div class="s">Aug 2026–Jul 2029</div></div>
+  <div class="kpi"><div class="l">36-Mo Net Profit</div><div class="v" style="color:var(--grn)" id="kProfit">—</div><div class="s" id="kMargin">—</div></div>
   <div class="kpi"><div class="l">Peak Month Profit</div><div class="v" style="color:var(--terra)" id="kPeak">—</div><div class="s" id="kPeakM">—</div></div>
   <div class="kpi"><div class="l">Payback Month</div><div class="v" style="color:var(--pur)" id="kPayback">—</div><div class="s">investment recovered</div></div>
 </div>
@@ -370,7 +370,7 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
 <div class="sec" id="monthly" style="padding-top:10px;padding-bottom:4px;">
   <div class="tbl-wrap">
     <button class="tbl-toggle" id="tblBtn" onclick="toggleTbl()">
-      <span>📋 Full 24-Month Breakdown — Units Sold, Stock, Revenue, Profit, Cash</span>
+      <span>📋 Full 36-Month Breakdown — Units Sold, Stock, Revenue, Profit, Cash</span>
       <span class="arr">▼</span>
     </button>
     <div class="tbl-inner" id="tblInner">
@@ -415,19 +415,18 @@ const SKUS   = ['terra','gray','black'];
 const MIN_Q  = {terra:2000, gray:1500, black:1500};
 const BUFFER_MOS = 6; // target months of stock to hold after each reorder arrives
 
-const MFL = ['Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Feb 2027','Mar 2027','Apr 2027','May 2027','Jun 2027','Jul 2027','Aug 2027','Sep 2027','Oct 2027','Nov 2027','Dec 2027','Jan 2028','Feb 2028','Mar 2028','Apr 2028','May 2028','Jun 2028','Jul 2028'];
+const MFL = ['Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Feb 2027','Mar 2027','Apr 2027','May 2027','Jun 2027','Jul 2027','Aug 2027','Sep 2027','Oct 2027','Nov 2027','Dec 2027','Jan 2028','Feb 2028','Mar 2028','Apr 2028','May 2028','Jun 2028','Jul 2028','Aug 2028','Sep 2028','Oct 2028','Nov 2028','Dec 2028','Jan 2029','Feb 2029','Mar 2029','Apr 2029','May 2029','Jun 2029','Jul 2029'];
 const MSH = MFL.map(s=>s.replace(' 20','\''));
 
-// Terra starts Sep (m=1): 100→150→225→...→3500 cap (target = 3,500/mo)
-// Gray/Black start Aug (m=0): 20→30→45→...→350 cap
+// Terra: 1.3× monthly growth starting Sep (m=1), capped at 3,500/mo (~Dec 2027)
+// Gray/Black: 1.3× monthly growth starting Aug (m=0), capped at 350/mo
 // First 2 months (m=0,1 = Aug+Sep): all profit → launch ads → zero cash retained
-// GROWTH PHASE: all profits reinvested into ads until Terra hits 3,500/mo (Jun 2027 = m=10)
 const TERRA_TARGET = 3500;
 function dem(m) {
   return {
-    terra: m < 1 ? 0 : Math.min(TERRA_TARGET, Math.round(100 * Math.pow(1.5, m-1))),
-    gray:  Math.min(350, Math.round(20 * Math.pow(1.5, m))),
-    black: Math.min(350, Math.round(20 * Math.pow(1.5, m)))
+    terra: m < 1 ? 0 : Math.min(TERRA_TARGET, Math.round(100 * Math.pow(1.3, m-1))),
+    gray:  Math.min(350, Math.round(20  * Math.pow(1.3, m))),
+    black: Math.min(350, Math.round(20  * Math.pow(1.3, m)))
   };
 }
 
@@ -444,21 +443,21 @@ function simulate() {
   // Aug+Sep (m<2) profit goes to launch ads, never enters cash pipeline
   let prevPrf = 0;
 
-  for (let m=0; m<24; m++) {
+  for (let m=0; m<36; m++) {
     const inj = m===5 ? 10000 : 0;
     if (inj) cash += inj;
 
     // Arrivals
     orders.filter(o=>o.arrM===m).forEach(o=>{ inv[o.sku]+=o.units; });
 
-    // Balance payments
+    // 30-day Amazon payout FIRST — Amazon pays before supplier balance is due
+    cash += prevPrf;
+
+    // Balance payments (after receiving Amazon payout so cash never dips negative)
     let balOut=0;
     orders.filter(o=>o.balM===m&&!o.bPaid).forEach(o=>{
       const a=o.total*0.70; cash-=a; balOut+=a; o.bPaid=true;
     });
-
-    // 30-day Amazon payout: receive PREVIOUS month's profit
-    cash += prevPrf;
 
     // Place reorders BEFORE sales so throttle logic can see newly-placed arrivals
     // projTrigger: look lead+2 months ahead → fires orders earlier than strictly needed
@@ -469,7 +468,7 @@ function simulate() {
       const projWindow=(w)=>{
         let p=inv[sku];
         for(let i=1;i<=w;i++){
-          const fm=m+i; if(fm>=24) break;
+          const fm=m+i; if(fm>=36) break;
           p-=dem(fm)[sku];
           orders.filter(o=>o.sku===sku&&o.arrM===fm).forEach(o=>p+=o.units);
         }
@@ -486,7 +485,7 @@ function simulate() {
           // Try 6-month buffer order first; fall back to minimum if deposit unaffordable
           let bufDem=0;
           for(let i=lead;i<lead+BUFFER_MOS;i++){
-            const fm=m+i; if(fm>=24) break;
+            const fm=m+i; if(fm>=36) break;
             bufDem+=dem(fm)[sku];
           }
           qty=Math.max(MIN_Q[sku], deficit+bufDem);
@@ -503,7 +502,7 @@ function simulate() {
         // Balance check: project cash at balance month using growing demand profits
         let projBal=cash-dep;
         for(let bi=1;bi<=BAL_M[sku];bi++){
-          const bfm=m+bi; if(bfm>=24) break;
+          const bfm=m+bi; if(bfm>=36) break;
           const bPrf=SKUS.reduce((a,s)=>a+dem(bfm)[s]*PRF[s],0);
           projBal+=(bfm<2)?0:bPrf;
           orders.filter(o=>o.balM===bfm&&!o.bPaid).forEach(o=>projBal-=o.total*0.70);
@@ -566,7 +565,7 @@ document.getElementById('kProfit').textContent=$f(totP);
 document.getElementById('kMargin').textContent=((totP/totRev)*100).toFixed(1)+'% margin';
 document.getElementById('kPeak').textContent=$f(peakP);
 document.getElementById('kPeakM').textContent=peakPm>=0?'from '+MSH[peakPm]:'—';
-document.getElementById('kPayback').textContent=payM>=0?MFL[payM]:'beyond 24 mo';
+document.getElementById('kPayback').textContent=payM>=0?MFL[payM]:'beyond 36 mo';
 
 // ── MAIN CHART ────────────────────────────────────────────────────────────────
 let mc=null;
@@ -651,8 +650,8 @@ reorders.forEach(o=>{
   tr.className=o.hasRO?'rr':'';
   const skuC=o.sku==='terra'?'#7A3010':o.sku==='gray'?'#3A6060':'#2A2A2A';
   const skuL=o.sku==='terra'?'🟫 Terracotta':o.sku==='gray'?'⬜ Gray':'⬛ Black';
-  const balLabel=o.balM<24?MFL[o.balM]:'after period';
-  const arrLabel=o.arrM<24?MFL[o.arrM]:'after period';
+  const balLabel=o.balM<36?MFL[o.balM]:'after period';
+  const arrLabel=o.arrM<36?MFL[o.arrM]:'after period';
   const psTag=o.isPS?'<span style="font-size:9px;background:#8E44AD;color:#fff;padding:1px 5px;border-radius:6px;font-weight:700">stone-only</span>':'';
   totalRC+=o.total;
   tr.innerHTML=`
@@ -668,7 +667,7 @@ reorders.forEach(o=>{
   rcBody.appendChild(tr);
 });
 const tot=document.createElement('tr');
-tot.innerHTML=`<td class="tot" style="background:#1C1410;color:#fff;font-weight:700" colspan="3">TOTAL (${reorders.length} orders)</td><td class="tot" style="background:#1C1410;color:#fff;font-weight:700;text-align:right">${$f(totalRC)}</td><td colspan="5" class="tot" style="background:#1C1410;color:rgba(255,255,255,.5);font-size:10px">total inventory investment across 24 months</td>`;
+tot.innerHTML=`<td class="tot" style="background:#1C1410;color:#fff;font-weight:700" colspan="3">TOTAL (${reorders.length} orders)</td><td class="tot" style="background:#1C1410;color:#fff;font-weight:700;text-align:right">${$f(totalRC)}</td><td colspan="5" class="tot" style="background:#1C1410;color:rgba(255,255,255,.5);font-size:10px">total inventory investment across 36 months</td>`;
 rcBody.appendChild(tot);
 
 // ── MONTHLY TABLE ─────────────────────────────────────────────────────────────
@@ -679,7 +678,8 @@ const tbody=document.getElementById('tblBody');
 
 // Growth phase banner
 const bannerGrow = document.createElement('tr');
-bannerGrow.innerHTML=`<td colspan="12" style="background:rgba(142,68,173,.08);border-left:3px solid var(--pur);padding:5px 10px;font-size:11px;font-weight:700;color:var(--pur);">🚀 GROWTH PHASE (Aug 2026 – May 2027) — All profits reinvested into advertising · Target: ${Nf(TERRA_TARGET)} Terra sales/mo</td>`;
+const growthEndLabel = targetHitM > 0 ? MFL[targetHitM-1] : MFL[0];
+bannerGrow.innerHTML=`<td colspan="12" style="background:rgba(142,68,173,.08);border-left:3px solid var(--pur);padding:5px 10px;font-size:11px;font-weight:700;color:var(--pur);">🚀 GROWTH PHASE (Aug 2026 – ${growthEndLabel}) — All profits reinvested into advertising · Target: ${Nf(TERRA_TARGET)} Terra sales/mo</td>`;
 tbody.appendChild(bannerGrow);
 
 rows.forEach(r=>{
@@ -711,7 +711,7 @@ rows.forEach(r=>{
   orders.filter(o=>o.orderM===r.m).forEach(o=>
     cashLines.push(`−${$f(o.deposit)} <span style="font-size:9px;font-weight:500;opacity:.75">${skuAbbr[o.sku]}30% ${Nf(o.units)}u${o.isPS?' stone':''}</span>`)
   );
-  orders.filter(o=>o.balM===r.m&&o.balM<24).forEach(o=>
+  orders.filter(o=>o.balM===r.m&&o.balM<36).forEach(o=>
     cashLines.push(`−${$f(o.total*0.70)} <span style="font-size:9px;font-weight:500;opacity:.75">${skuAbbr[o.sku]}70%</span>`)
   );
   const cashOutCell = cashLines.length > 0
@@ -734,7 +734,7 @@ rows.forEach(r=>{
   tbody.appendChild(tr);
 });
 const totR=document.createElement('tr');
-totR.innerHTML=`<td class="tot" colspan="7">24-MONTH TOTAL</td><td class="tot">${$f(totRev)}</td><td class="tot">${$f(totP)}</td><td class="tot" style="color:var(--red)">—</td><td class="tot" style="color:#C8B8F0">+$10,000</td><td class="tot">—</td>`;
+totR.innerHTML=`<td class="tot" colspan="7">36-MONTH TOTAL</td><td class="tot">${$f(totRev)}</td><td class="tot">${$f(totP)}</td><td class="tot" style="color:var(--red)">—</td><td class="tot" style="color:#C8B8F0">+$10,000</td><td class="tot">—</td>`;
 tbody.appendChild(totR);
 
 function toggleTbl(){
