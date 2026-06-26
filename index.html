@@ -522,6 +522,26 @@ function simulate() {
       black:Math.min(d.black, Math.max(0,inv.black))
     };
     const throttled={terra:false,gray:false,black:false};
+
+    // Forward-looking throttle: if selling full demand now would cause a stockout
+    // in the next 2 months (with no rescue order arriving), sell less now to preserve stock
+    SKUS.forEach(s=>{
+      if(sold[s]===0) return;
+      for(let look=1; look<=2; look++){
+        const fm=m+look; if(fm>=24) return;
+        let proj=inv[s]-sold[s];
+        for(let i=1;i<=look;i++){
+          const im=m+i; if(im>=24) break;
+          proj-=dem(im)[s];
+          orders.filter(o=>o.sku===s&&o.arrM===im).forEach(o=>proj+=o.units);
+        }
+        if(proj<0){
+          sold[s]=Math.max(0,sold[s]+proj); // save the shortfall
+          throttled[s]=true;
+        }
+      }
+    });
+
     const lost={terra:d.terra-sold.terra, gray:d.gray-sold.gray, black:d.black-sold.black};
     SKUS.forEach(s=>inv[s]-=sold[s]);
 
