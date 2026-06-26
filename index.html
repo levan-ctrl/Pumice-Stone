@@ -406,7 +406,8 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
 // Net revenue = COG + net profit (Amazon fees + FBA + ads are never paid out to seller)
 const PRICE  = {terra:11.965, gray:6.265, black:6.265};
 const PRF    = {terra:8.03,  gray:3.58,  black:3.58};
-const COG    = {terra:3.935, gray:2.685, black:2.685};
+const COG    = {terra:3.935, gray:2.685, black:2.685}; // < 5,000 units
+const BULK_COG={terra:3.50,  gray:2.40,  black:2.40};  // >= 5,000 units
 const LEAD   = {terra:4, gray:3, black:3};
 const BAL_M  = {terra:2, gray:2, black:2};
 const STONE  = 1.72; // pre-stocked stone only cost
@@ -477,7 +478,6 @@ function simulate() {
       while(projStock()<0 && att<6){
         att++;
         const isPS=sku==='terra'&&!psUsed;
-        const cpu=isPS?STONE:COG[sku];
         let qty;
         if(isPS){qty=2000;psUsed=true;}
         else{
@@ -491,6 +491,8 @@ function simulate() {
           qty=Math.max(MIN_Q[sku], deficit+bufDem);
           qty=Math.ceil(qty/500)*500;
         }
+        // Bulk discount: >= 5,000 units gets lower cost per unit
+        const cpu=isPS?STONE:(qty>=5000?BULK_COG[sku]:COG[sku]);
         const total=qty*cpu, dep=total*0.30;
         if(cash<dep) break;
         cash-=dep; depOut+=dep;
