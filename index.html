@@ -461,12 +461,14 @@ function simulate() {
     cash += prevPrf;
 
     // Place reorders BEFORE sales so throttle logic can see newly-placed arrivals
+    // projTrigger: look lead+2 months ahead → fires orders earlier than strictly needed
+    // projDeficit: look lead months ahead → sizes order to cover by arrival
     let depOut=0;
     SKUS.forEach(sku=>{
       const lead=LEAD[sku];
-      const projStock=()=>{
+      const projWindow=(w)=>{
         let p=inv[sku];
-        for(let i=1;i<=lead;i++){
+        for(let i=1;i<=w;i++){
           const fm=m+i; if(fm>=24) break;
           p-=dem(fm)[sku];
           orders.filter(o=>o.sku===sku&&o.arrM===fm).forEach(o=>p+=o.units);
@@ -474,13 +476,13 @@ function simulate() {
         return p;
       };
       let att=0;
-      while(projStock()<0 && att<6){
+      while(projWindow(lead+2)<0 && att<6){
         att++;
         const isPS=sku==='terra'&&!psUsed;
         let qty, cpu;
         if(isPS){qty=2000;psUsed=true;cpu=STONE;}
         else{
-          const deficit=-projStock();
+          const deficit=Math.max(0,-projWindow(lead)); // size based on arrival window
           // Try 6-month buffer order first; fall back to minimum if deposit unaffordable
           let bufDem=0;
           for(let i=lead;i<lead+BUFFER_MOS;i++){
@@ -490,23 +492,23 @@ function simulate() {
           qty=Math.max(MIN_Q[sku], deficit+bufDem);
           qty=Math.ceil(qty/500)*500;
           cpu=qty>=5000?BULK_COG[sku]:COG[sku];
-          // If 6-month buffer deposit exceeds available cash, fall back to minimum viable order
           if(cash < qty*cpu*0.30){
             const fd=dem(Math.min(m+lead,23))[sku];
-            qty=Math.max(MIN_Q[sku], Math.ceil((deficit+fd)/500)*500);
+            qty=Math.max(MIN_Q[sku], Math.ceil((Math.max(1,deficit)+fd)/500)*500);
             cpu=qty>=5000?BULK_COG[sku]:COG[sku];
           }
         }
         const total=qty*cpu, dep=total*0.30;
         if(cash<dep) break;
-        // Project cash at balance month — refuse order if 70% balance would overdraft
-        const estMoPrf=SKUS.reduce((a,s)=>a+Math.min(dem(m)[s],Math.max(0,inv[s]))*PRF[s],0);
+        // Balance check: project cash at balance month using growing demand profits
         let projBal=cash-dep;
         for(let bi=1;bi<=BAL_M[sku];bi++){
-          projBal+=(m+bi<2)?0:estMoPrf;
-          orders.filter(o=>o.balM===m+bi&&!o.bPaid).forEach(o=>projBal-=o.total*0.70);
+          const bfm=m+bi; if(bfm>=24) break;
+          const bPrf=SKUS.reduce((a,s)=>a+dem(bfm)[s]*PRF[s],0);
+          projBal+=(bfm<2)?0:bPrf;
+          orders.filter(o=>o.balM===bfm&&!o.bPaid).forEach(o=>projBal-=o.total*0.70);
         }
-        if(projBal<total*0.70) break; // balance payment would make cash negative
+        if(projBal<total*0.70) break;
         cash-=dep; depOut+=dep;
         const o={id:oid++,sku,units:qty,total,cpu,deposit:dep,
           balM:m+BAL_M[sku],arrM:m+lead,orderM:m,bPaid:false,isPS};
@@ -522,26 +524,6 @@ function simulate() {
       black:Math.min(d.black, Math.max(0,inv.black))
     };
     const throttled={terra:false,gray:false,black:false};
-
-    // Forward-looking throttle: if selling full demand now would cause a stockout
-    // in the next 2 months (with no rescue order arriving), sell less now to preserve stock
-    SKUS.forEach(s=>{
-      if(sold[s]===0) return;
-      for(let look=1; look<=2; look++){
-        const fm=m+look; if(fm>=24) return;
-        let proj=inv[s]-sold[s];
-        for(let i=1;i<=look;i++){
-          const im=m+i; if(im>=24) break;
-          proj-=dem(im)[s];
-          orders.filter(o=>o.sku===s&&o.arrM===im).forEach(o=>proj+=o.units);
-        }
-        if(proj<0){
-          sold[s]=Math.max(0,sold[s]+proj); // save the shortfall
-          throttled[s]=true;
-        }
-      }
-    });
-
     const lost={terra:d.terra-sold.terra, gray:d.gray-sold.gray, black:d.black-sold.black};
     SKUS.forEach(s=>inv[s]-=sold[s]);
 
