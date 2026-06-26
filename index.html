@@ -499,6 +499,14 @@ function simulate() {
         }
         const total=qty*cpu, dep=total*0.30;
         if(cash<dep) break;
+        // Project cash at balance month — refuse order if 70% balance would overdraft
+        const estMoPrf=SKUS.reduce((a,s)=>a+Math.min(dem(m)[s],Math.max(0,inv[s]))*PRF[s],0);
+        let projBal=cash-dep;
+        for(let bi=1;bi<=BAL_M[sku];bi++){
+          projBal+=(m+bi<2)?0:estMoPrf;
+          orders.filter(o=>o.balM===m+bi&&!o.bPaid).forEach(o=>projBal-=o.total*0.70);
+        }
+        if(projBal<total*0.70) break; // balance payment would make cash negative
         cash-=dep; depOut+=dep;
         const o={id:oid++,sku,units:qty,total,cpu,deposit:dep,
           balM:m+BAL_M[sku],arrM:m+lead,orderM:m,bPaid:false,isPS};
@@ -699,7 +707,7 @@ rows.forEach(r=>{
   const skuAbbr = {terra:'T', gray:'G', black:'B'};
   const cashLines = [];
   orders.filter(o=>o.orderM===r.m).forEach(o=>
-    cashLines.push(`−${$f(o.deposit)} <span style="font-size:9px;font-weight:500;opacity:.75">${skuAbbr[o.sku]}30%${o.isPS?' stone':''}${o.units>=5000?' '+Nf(o.units)+'u':''}</span>`)
+    cashLines.push(`−${$f(o.deposit)} <span style="font-size:9px;font-weight:500;opacity:.75">${skuAbbr[o.sku]}30% ${Nf(o.units)}u${o.isPS?' stone':''}</span>`)
   );
   orders.filter(o=>o.balM===r.m&&o.balM<24).forEach(o=>
     cashLines.push(`−${$f(o.total*0.70)} <span style="font-size:9px;font-weight:500;opacity:.75">${skuAbbr[o.sku]}70%</span>`)
