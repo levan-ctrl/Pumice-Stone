@@ -366,12 +366,11 @@ table.detail tr.yr td{background:#F5E6D5!important;font-weight:700;}
           <thead>
             <tr>
               <th style="text-align:left">Month</th>
-              <th style="background:#5A2D0C">Units Sold</th>
-              <th style="background:#3A5C30">Revenue</th>
+              <th style="background:#5A2D0C">Units</th>
+              <th style="background:#3A5C30">Amazon Payout</th>
               <th style="background:#2E5530">Net Profit</th>
-              <th style="background:#1A3A5C">Inventory</th>
-              <th style="background:#5C3A1A">Cum. Profit</th>
-              <th>Reorder?</th>
+              <th style="background:#5C3A1A">Cumulative Profit</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody id="skTblBody"></tbody>
@@ -424,39 +423,20 @@ const SK_FLOOR=900,SK_PRF=2.90,SK_PRICE=4.00,SK_START_CAL=7; // PRICE=COG+PRF=$4
 const SK_SEA=[1.20,1.00,0.80,0.65,0.50,0.30,0.28,0.30,0.90,1.25,2.10,2.50];
 function skDem(m){ const c=(SK_START_CAL+m)%12; return Math.max(100,Math.round(SK_FLOOR*Math.pow(1.20,m/12)*SK_SEA[c])); }
 
-// ── SUGAR KEEPERS SIMULATION (with inventory) ─────────────────────
+// ── SUGAR KEEPERS — pure demand projection (no inventory sim) ─────
 (function buildSKTable(){
-  let inv=6600, cumPrf=0;
-  const pendingOrders=[];
+  let cumPrf=0;
   const rows=[];
-  const LEAD=3, MIN_ORD=2500;
-
+  // Annual checkpoints: flag reorder in Sep each year (3-month lead → Dec arrival)
+  const reorderMonths=new Set([1,13,25]); // Sep 2026, Sep 2027, Sep 2028
   for(let m=0;m<36;m++){
-    pendingOrders.filter(o=>o.arrM===m).forEach(o=>inv+=o.qty);
     const d=skDem(m);
-    const sold=Math.min(inv,d);
-    inv-=sold;
-    const prf=sold*SK_PRF;
-    const rev=sold*SK_PRICE;
+    const prf=d*SK_PRF;
+    const rev=d*SK_PRICE;
     cumPrf+=prf;
-
-    let projInv=inv;
-    for(let i=1;i<=LEAD;i++){
-      projInv-=skDem(m+i);
-      pendingOrders.filter(o=>o.arrM===m+i).forEach(o=>projInv+=o.qty);
-    }
-    let reorder='';
-    if(projInv<skDem(m+LEAD+1)*2&&!pendingOrders.some(o=>o.arrM>=m&&o.arrM<=m+LEAD)){
-      let qty=0;
-      for(let i=LEAD;i<LEAD+5;i++) qty+=skDem(m+i);
-      qty=Math.max(MIN_ORD,Math.round(qty/500)*500);
-      pendingOrders.push({arrM:m+LEAD,qty});
-      reorder='📦 Order '+qty.toLocaleString()+'u';
-    }
-    rows.push({m,d,sold,inv,prf,rev,cumPrf,reorder,stockout:sold<d&&d>0});
+    const reorder=reorderMonths.has(m)?'📦 Place order now (Dec arrival)':'';
+    rows.push({m,d,sold:d,prf,rev,cumPrf,reorder});
   }
-
-  // Fill SK KPI + chart data into global
   window._skRows=rows;
 })();
 
@@ -599,10 +579,9 @@ skRows.forEach((r,i)=>{
   if(isPeak) tr.className='pk';
   tr.innerHTML=`
     <td>${MFL[r.m]}</td>
-    <td style="font-weight:700;color:#5A2D0C">${Nf(r.sold)}${r.stockout?'⚠️':isPeak?' 🔥':''}</td>
+    <td style="font-weight:700;color:#5A2D0C">${Nf(r.sold)}${isPeak?' 🔥':''}</td>
     <td>${$f(r.rev)}</td>
     <td class="pos">${$f(r.prf)}</td>
-    <td style="color:${r.inv<3000?'var(--red)':'var(--mut)'}">${Nf(r.inv)}</td>
     <td style="color:#5A2D0C;font-weight:700">${$f(r.cumPrf)}</td>
     <td style="font-size:10px;color:var(--ora)">${r.reorder||'—'}</td>
   `;
@@ -610,12 +589,13 @@ skRows.forEach((r,i)=>{
   if(i===11||i===23||i===35){
     const ts=skRows.slice(i-11,i+1);
     const yTr=document.createElement('tr'); yTr.className='yr';
-    yTr.innerHTML=`<td>YEAR ${Math.floor(i/12)+2} TOTAL</td><td>${Nf(ts.reduce((s,r)=>s+r.sold,0))}</td><td>${$f(ts.reduce((s,r)=>s+r.rev,0))}</td><td style="color:var(--grn)">${$f(ts.reduce((s,r)=>s+r.prf,0))}</td><td>—</td><td>—</td><td>—</td>`;
+    const yrNum=Math.floor(i/12)+2;
+    yTr.innerHTML=`<td>YEAR ${yrNum} TOTAL</td><td>${Nf(ts.reduce((s,r)=>s+r.sold,0))} units</td><td>${$f(ts.reduce((s,r)=>s+r.rev,0))}</td><td style="color:var(--grn);font-weight:800">${$f(ts.reduce((s,r)=>s+r.prf,0))}</td><td>—</td><td>—</td>`;
     skTbody.appendChild(yTr);
   }
 });
 const skTot=document.createElement('tr'); skTot.className='tot';
-skTot.innerHTML=`<td colspan="2">TOTAL 36 MO · ${Nf(skRows.reduce((s,r)=>s+r.sold,0))} units</td><td>${$f(skRows.reduce((s,r)=>s+r.rev,0))}</td><td>${$f(skRows.reduce((s,r)=>s+r.prf,0))}</td><td colspan="3"></td>`;
+skTot.innerHTML=`<td colspan="2">TOTAL 36 MO · ${Nf(skRows.reduce((s,r)=>s+r.sold,0))} units</td><td>${$f(skRows.reduce((s,r)=>s+r.rev,0))}</td><td>${$f(skRows.reduce((s,r)=>s+r.prf,0))}</td><td colspan="2"></td>`;
 skTbody.appendChild(skTot);
 </script>
 </body>
