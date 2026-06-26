@@ -440,9 +440,11 @@ function lifeExp(m){ return m<5?3500:m<17?4500:5500; }
 
 // ── ROLLING GRIPS ─────────────────────────────────────────────────
 // KS Dec 2026 (m=4), Amazon launch Mar 2027 (m=7 = 4+3 months for fulfillment+FBA)
-const RG_LAUNCH=7,RG_PRF_G=37,RG_PRF_S=44,RG_PEAK=10000,RG_SCALE=24;
-function rgMonthProfit(m){ if(m<RG_LAUNCH)return 0; const s=Math.min(RG_PEAK,Math.round(100*Math.pow(1.5,m-RG_LAUNCH))); return s*(m>=RG_SCALE?RG_PRF_S:RG_PRF_G); }
-function rgMonthRev(m){ if(m<RG_LAUNCH)return 0; return Math.min(RG_PEAK,Math.round(100*Math.pow(1.5,m-RG_LAUNCH)))*92; }
+const RG_LAUNCH=8,RG_PRF_G=37,RG_PRF_S=44,RG_PEAK=10000,RG_SCALE=24;
+const RG_RAMP=1.3; // slowed from 1.5× — cash-flow safe growth to 10K/mo
+function rgDem(m){ return m<RG_LAUNCH?0:Math.min(RG_PEAK,Math.round(100*Math.pow(RG_RAMP,m-RG_LAUNCH))); }
+function rgMonthProfit(m){ const s=rgDem(m); return s*(m>=RG_SCALE?RG_PRF_S:RG_PRF_G); }
+function rgMonthRev(m){ return rgDem(m)*92; }
 
 // ── SUGAR KEEPERS ─────────────────────────────────────────────────
 const SK_FLOOR=900,SK_PRF=2.90,SK_PRICE=4.00,SK_START_CAL=7; // PRICE=COG+PRF=$4/unit; FLOOR calibrated to $45K/$55K/$65K annual payouts
@@ -475,6 +477,8 @@ const ppcRevConf=months.map(m=>ppcRev(m).confirmed);
 const ppcRevOmni=months.map(m=>ppcRev(m).withOmni);
 const rgRev=months.map(rgMonthRev);
 const rgPrf=months.map(rgMonthProfit);
+// KS campaign net income: $70K raised at 5% fee = $66,500, arrives Dec 2026 (m=4)
+const ksIncome=new Array(36).fill(0); ksIncome[4]=66500;
 const skRows=window._skRows;
 const skRev=skRows.map(r=>r.rev);
 const skPrf=skRows.map(r=>r.prf);
@@ -616,33 +620,42 @@ function buildReorderFlows(){
     });
   }
 
-  // ── ROLLING GRIPS: first BOM order + demand-driven subsequent runs ─
+  // ── ROLLING GRIPS: KS-funded first order, then cash-aware at 1.3× ramp ─
+  // First deposit at m=4 (Dec 2026, funded by KS $66.5K); balance m=6; arrives m=8
+  fl[4]+=25057*0.30; // $7,517 deposit
+  fl[6]+=25057*0.70; // $17,540 balance
   {
-    const UNIT_COG=16.717, LEAD=4, BAL=2;
-    // First order: deposit m=1, balance m=3, 1000 units arrive m=5
-    fl[1]+=25057*0.30; fl[3]+=25057*0.70;
-    let inv=0;
-    const ords=[];
-    for(let m=5;m<36;m++){
-      ords.filter(o=>o.aM===m).forEach(o=>inv+=o.q);
-      if(m<RG_LAUNCH){continue;}
-      const d=Math.min(RG_PEAK,Math.round(100*Math.pow(1.5,m-RG_LAUNCH)));
-      inv=Math.max(0,inv-d);
-      if(m===5) inv+=1000; // first batch already paid
-      let proj=inv;
-      for(let i=1;i<=LEAD;i++){
-        proj-=Math.min(RG_PEAK,Math.round(100*Math.pow(1.5,m+i-RG_LAUNCH)));
-        ords.filter(o=>o.aM===m+i).forEach(o=>proj+=o.q);
+    const UNIT_COG=16.717, LEAD=4, BAL=2, MIN_BAL=10000;
+    let rgInv=0;
+    const ords=[{q:1000,aM:8}]; // first 1000 units, paid above
+    let cumBal=0; // track running cash to enforce $10K floor
+
+    for(let m=0;m<36;m++){
+      ords.filter(o=>o.aM===m).forEach(o=>rgInv+=o.q);
+      // current month income (before RG orders)
+      const inc=pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]+skPrf[m]+ksIncome[m];
+      if(m>=RG_LAUNCH){
+        rgInv=Math.max(0,rgInv-rgDem(m));
+        let proj=rgInv;
+        for(let i=1;i<=LEAD;i++){
+          proj-=rgDem(m+i);
+          ords.filter(o=>o.aM===m+i).forEach(o=>proj+=o.q);
+        }
+        if(proj<0&&!ords.some(o=>o.aM>m&&o.aM<=m+LEAD)){
+          let qty=0;
+          for(let i=LEAD;i<LEAD+3;i++) qty+=rgDem(m+i);
+          qty=Math.max(1000,Math.round(qty/500)*500);
+          const t=qty*UNIT_COG;
+          const dep=t*0.30;
+          // Only place order if cash stays ≥ $10K
+          if(cumBal+inc-expenses[m]-fl[m]-dep>=MIN_BAL){
+            fl[m]+=dep;
+            if(m+BAL<36) fl[m+BAL]+=t*0.70;
+            ords.push({q:qty,aM:m+LEAD});
+          }
+        }
       }
-      if(proj<0&&!ords.some(o=>o.aM>m&&o.aM<=m+LEAD)){
-        let q=0;
-        for(let i=LEAD;i<LEAD+3;i++) q+=Math.min(RG_PEAK,Math.round(100*Math.pow(1.5,m+i-RG_LAUNCH)));
-        q=Math.max(1000,Math.round(q/500)*500);
-        const t=q*UNIT_COG;
-        if(m<36)    fl[m]   +=t*0.30;
-        if(m+BAL<36)fl[m+BAL]+=t*0.70;
-        ords.push({q,aM:m+LEAD});
-      }
+      cumBal+=inc-expenses[m]-fl[m];
     }
   }
 
@@ -658,8 +671,9 @@ const reorderPay=buildReorderFlows();
     const pumice = pumicePrf[m];
     const ppc    = ppcRevOmni[m];
     const rg     = rgPrf[m];
+    const ks     = ksIncome[m];
     const sk     = skPrf[m];
-    const total  = pumice+ppc+rg+sk;
+    const total  = pumice+ppc+rg+ks+sk;
     const exp    = expenses[m];
     const reord  = reorderPay[m];
     const net    = total-exp-reord;
@@ -668,24 +682,27 @@ const reorderPay=buildReorderFlows();
     const tr=document.createElement('tr');
     const netColor=net>=0?'var(--grn)':'var(--red)';
     const cumColor=cumNet>=0?'var(--grn)':'var(--red)';
+    const isBelowFloor=cumNet<10000;
     const isYrEnd=(m===4||m===16||m===28);
     if(isYrEnd) tr.style.borderTop='2px solid #C8A870';
+    if(isBelowFloor) tr.style.background='rgba(192,57,43,.08)';
+    const rgLabel=ks>0?`+${$f(rg+ks)}<span style="font-size:9px;color:#C8FF00"> +$${(ks/1000).toFixed(0)}K KS</span>`:(rg>0?'+'+$f(rg):'—');
     tr.innerHTML=`
       <td style="color:var(--mut);font-size:10.5px">${MFL[m]}</td>
       <td style="color:var(--c-pumice)">${pumice>0?'+'+$f(pumice):'—'}</td>
       <td style="color:var(--c-ppc)">+${$f(ppc)}</td>
-      <td style="color:var(--c-rg)">${rg>0?'+'+$f(rg):'—'}</td>
+      <td style="color:var(--c-rg)">${rgLabel}</td>
       <td style="color:var(--c-sk)">+${$f(sk)}</td>
       <td style="font-weight:700">+${$f(total)}</td>
       <td style="color:var(--red)">−${$f(exp)}</td>
       <td style="color:#E08080;font-weight:600">${reord>0?'−'+$f(reord):'—'}</td>
       <td style="font-weight:800;color:${netColor}">${net>=0?'+':'−'}${$f(Math.abs(net))}</td>
-      <td style="font-weight:700;color:${cumColor}">${cumNet>=0?'+':'−'}${$f(Math.abs(cumNet))}</td>
+      <td style="font-weight:700;color:${isBelowFloor?'var(--red)':cumColor}">${cumNet>=0?'+':'−'}${$f(Math.abs(cumNet))}${isBelowFloor?' ⚠️':''}</td>
     `;
     tbody.appendChild(tr);
   });
   // Total row
-  const totInc  =months.reduce((s,m)=>s+pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]+skPrf[m],0);
+  const totInc  =months.reduce((s,m)=>s+pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]+skPrf[m]+ksIncome[m],0);
   const totExp  =months.reduce((s,m)=>s+expenses[m],0);
   const totReord=months.reduce((s,m)=>s+reorderPay[m],0);
   const totNet  =totInc-totExp-totReord;
@@ -694,7 +711,7 @@ const reorderPay=buildReorderFlows();
     <td>TOTAL 36 MO</td>
     <td>+${$f(months.reduce((s,m)=>s+pumicePrf[m],0))}</td>
     <td>+${$f(months.reduce((s,m)=>s+ppcRevOmni[m],0))}</td>
-    <td>+${$f(months.reduce((s,m)=>s+rgPrf[m],0))}</td>
+    <td>+${$f(months.reduce((s,m)=>s+rgPrf[m]+ksIncome[m],0))}</td>
     <td>+${$f(months.reduce((s,m)=>s+skPrf[m],0))}</td>
     <td>+${$f(totInc)}</td>
     <td style="color:#E08080">−${$f(totExp)}</td>
