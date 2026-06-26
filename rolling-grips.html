@@ -299,10 +299,12 @@ const MIN_ORD     = 1000;
 const BUFFER      = 5;      // target months of stock
 const PEAK        = 10000;  // units/month cap
 const LAUNCH_M    = 7;      // KS Dec 2026 (m=4), Amazon launch Mar 2027 (m=7)
+const RAMP        = 1.3;    // monthly growth multiplier (slowed from 1.5× for positive cash)
+const MIN_CASH    = 10000;  // never let cash fall below this floor
 
 function dem(m){
   if(m < LAUNCH_M) return 0;
-  return Math.min(PEAK, Math.round(100 * Math.pow(1.5, m - LAUNCH_M)));
+  return Math.min(PEAK, Math.round(100 * Math.pow(RAMP, m - LAUNCH_M)));
 }
 
 function phase(m){
@@ -361,7 +363,7 @@ function simulate(){
     if(m===1 && !firstOrdDone){
       const total = MIN_ORD*MFG_UNIT + MOLD_COST; // 25,057
       const dep   = total*0.30;
-      if(cash>=dep){
+      if(cash-dep >= MIN_CASH){
         cash-=dep; depOut+=dep;
         orders.push({id:oid++,units:MIN_ORD,total,balM:m+BAL_M,arrM:m+LEAD,bPaid:false,label:'1st+molds'});
         firstOrdDone=true;
@@ -381,32 +383,23 @@ function simulate(){
         }
         let qty=Math.max(MIN_ORD, Math.ceil((deficit+bufDem)/500)*500);
 
-        // Affordability: deposit + balance check
-        const cpuUnit = MFG_UNIT;
-        const total   = qty*cpuUnit;
-        const dep     = total*0.30;
-
-        // Check deposit
-        if(cash<dep){
-          qty=Math.max(MIN_ORD, Math.floor(cash/(cpuUnit*0.30)/500)*500);
-          if(qty<MIN_ORD) break;
-        }
-
-        // Check balance with projected income
-        let projAtBal=cash-(qty*cpuUnit*0.30);
+        // ── Affordability: enforce MIN_CASH on BOTH deposit and balance ──
+        // Project what cash will be at balance time (without this order's dep/bal)
+        let baseAtBal=cash;
         for(let bi=1;bi<=BAL_M;bi++){
           const bfm=m+bi; if(bfm>=36) break;
-          const inc=dem(bfm)*(bfm>=SCALE_M?PRF_S:PRF_G);
-          projAtBal+=inc;
-          orders.filter(o=>o.balM===bfm&&!o.bPaid).forEach(o=>projAtBal-=o.total*0.70);
+          baseAtBal+=dem(bfm)*(bfm>=SCALE_M?PRF_S:PRF_G);
+          orders.filter(o=>o.balM===bfm&&!o.bPaid).forEach(o=>baseAtBal-=o.total*0.70);
         }
-        if(projAtBal < qty*cpuUnit*0.70){
-          qty=Math.max(MIN_ORD, Math.floor(cash/(cpuUnit*0.30)/500)*500);
-          if(qty<MIN_ORD) break;
-        }
+        // Max qty where cash-after-full-payment (dep+bal) stays ≥ MIN_CASH
+        const maxFull=Math.max(0,Math.floor((baseAtBal-MIN_CASH)/MFG_UNIT/500)*500);
+        // Max qty where deposit alone stays ≥ MIN_CASH
+        const maxDep =Math.max(0,Math.floor((cash-MIN_CASH)/(MFG_UNIT*0.30)/500)*500);
+        qty=Math.min(qty, maxFull, maxDep);
+        if(qty<MIN_ORD) break;
 
         const finalTotal=qty*MFG_UNIT, finalDep=finalTotal*0.30;
-        if(cash<finalDep) break;
+        if(cash-finalDep<MIN_CASH) break;
         cash-=finalDep; depOut+=finalDep;
         orders.push({id:oid++,units:qty,total:finalTotal,balM:m+BAL_M,arrM:m+LEAD,bPaid:false});
       }
@@ -454,7 +447,7 @@ const kpis=[
   {l:'Final Cash (Jul 2029)',   v:$f(finalCash),      s:finalCash>0?'Positive ✅':'Check ⚠️', c:finalCash>0?'var(--grn)':'var(--red)'},
   {l:'Final Inventory',         v:Nf(finalInv)+' u',  s:'units in stock Jul 2029',            c:'#2E6FDB'},
   {l:'Stock-Outs',              v:stockouts,           s:stockouts===0?'None ✅':'Months w/ missed sales', c:stockouts===0?'var(--grn)':'var(--red)'},
-  {l:'Path to 10K/mo',         v:rows.find(r=>r.sold>=10000)?MFL[rows.findIndex(r=>r.sold>=10000)]:'28+ mo', s:'at 1.5× monthly growth',c:'var(--ora)'},
+  {l:'Path to 10K/mo',         v:rows.find(r=>r.sold>=10000)?MFL[rows.findIndex(r=>r.sold>=10000)]:'36+ mo', s:'at 1.3× monthly growth (cash-safe)',c:'var(--ora)'},
   {l:'50K Stock Achieved',      v:rows.find(r=>r.inv>=50000)?MFL[rows.findIndex(r=>r.inv>=50000)]:'36+ mo', s:'consistently',c:'var(--ora)'},
 ];
 const kr=document.getElementById('kpiRow');
@@ -543,7 +536,7 @@ let totRevT=0,totPrfT=0,totBalT=0,totDepT=0;
 rows.forEach(r=>{
   totRevT+=r.revenue; totPrfT+=r.prf; totBalT+=r.balOut; totDepT+=r.depOut;
   const [ph,cls]=phase(r.m);
-  const cashCls=r.cash<0?'neg':'pos';
+  const cashCls=r.cash<MIN_CASH?'neg':'pos';
   const tr=document.createElement('tr');
   tr.className=cls+(r.stockout?' stk':'');
   tr.innerHTML=`
