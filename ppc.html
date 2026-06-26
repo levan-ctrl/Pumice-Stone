@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PPC Services — Active Businesses</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --coop:#8B4513;--coop-l:#FFF3EE;
+  --gom:#2E6FDB;--gom-l:#EEF3FF;
+  --bls:#C2185B;--bls-l:#FEE8F0;
+  --omni:#D4A843;--omni-l:#FEF9EE;
+  --gold:#D4A843;--grn:#2E8B57;--red:#C0392B;--mut-c:#6B6B6B;
+  --bg:#F7F3EE;--card:#fff;--bdr:#E0D5C8;
+  --txt:#2A2A2A;--mut:#6B6B6B;--nav:#1C2A4A;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:13px;}
+
+nav{position:sticky;top:0;z-index:999;background:var(--nav);display:flex;padding:0 24px;overflow-x:auto;scrollbar-width:none;}
+nav::-webkit-scrollbar{display:none;}
+nav a{color:rgba(255,255,255,.55);text-decoration:none;padding:10px 13px;font-size:11px;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;letter-spacing:.4px;}
+nav a:hover,nav a.act{color:#fff;border-bottom-color:#6FA3E0;}
+.nav-brand{color:rgba(255,255,255,.35);padding:10px 13px 10px 0;font-size:11px;font-weight:700;letter-spacing:.5px;margin-right:8px;border-right:1px solid rgba(255,255,255,.1);}
+
+.hdr{background:linear-gradient(135deg,#0D1B2A 0%,#1B3A5C 55%,#2E6FDB 100%);color:#fff;padding:22px 28px;display:flex;justify-content:space-between;align-items:flex-end;position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(111,163,224,.18),transparent 60%);}
+.hdr-l{position:relative;}
+.hdr-l h1{font-size:22px;font-weight:800;letter-spacing:-.3px;}
+.hdr-l h1 span{color:#6FA3E0;}
+.hdr-l p{font-size:11px;opacity:.65;margin-top:3px;}
+.hdr-r{text-align:right;position:relative;}
+.hdr-r .big{font-size:27px;font-weight:800;color:var(--gold);}
+.hdr-r .lbl{font-size:10.5px;opacity:.65;}
+
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px 24px 0;}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:600px){.kpis{grid-template-columns:repeat(2,1fr);}}
+.kpi{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;padding:11px 13px;text-align:center;}
+.kpi .v{font-size:18px;font-weight:800;margin:3px 0 2px;}
+.kpi .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);font-weight:600;}
+.kpi .s{font-size:10px;color:var(--mut);}
+
+.sec{padding:14px 24px 0;}
+.sec-hd{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--mut);font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.chip{background:#2E6FDB;color:#fff;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;}
+.chip.pot{background:var(--gold);}
+
+.clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-bottom:4px;}
+.cc{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;padding:14px 16px;border-left:4px solid;}
+.cc.potential{border-left-style:dashed;opacity:.92;}
+.cc .cn{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.cc .rate{font-size:21px;font-weight:800;margin:6px 0 4px;}
+.cc .detail{font-size:11px;color:var(--mut);line-height:1.55;}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-top:8px;text-transform:uppercase;letter-spacing:.4px;}
+.badge.active{background:#EEF8F2;color:var(--grn);border:1px solid #A8D5B8;}
+.badge.pot{background:var(--omni-l);color:#9A7420;border:1px solid #E8D08A;}
+
+.chart-wrap{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;padding:14px;}
+.chart-wrap h3{font-size:12px;font-weight:700;color:var(--txt);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+.cw{position:relative;height:240px;}
+.leg{display:flex;gap:12px;font-size:10.5px;flex-wrap:wrap;}
+.leg-i{display:flex;align-items:center;gap:5px;}
+.leg-dot{width:10px;height:10px;border-radius:2px;}
+
+.tbl-wrap{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;overflow:hidden;margin-bottom:22px;}
+.tbl-toggle{width:100%;padding:11px 15px;background:var(--nav);color:#fff;font-size:11.5px;font-weight:700;cursor:pointer;border:none;text-align:left;display:flex;justify-content:space-between;align-items:center;}
+.arr{transition:transform .25s;}
+.tbl-toggle.op .arr{transform:rotate(180deg);}
+.tbl-inner{display:none;overflow-x:auto;}
+.tbl-inner.op{display:block;}
+table{width:100%;border-collapse:collapse;font-size:11px;}
+th{background:#1C2A4A;color:#fff;padding:6px 8px;text-align:center;font-size:10px;font-weight:600;white-space:nowrap;}
+th:first-child{text-align:left;min-width:90px;}
+td{padding:5px 7px;border-bottom:1px solid var(--bdr);text-align:center;white-space:nowrap;}
+td:first-child{text-align:left;font-weight:600;font-size:10.5px;color:var(--mut);}
+tr:hover td{background:#F7F3EE;}
+tr.tot td{background:#1C2A4A!important;color:#fff!important;font-weight:700;}
+.pos{color:var(--grn);font-weight:700;}
+.cum{color:#2E6FDB;font-weight:700;}
+
+.foot{background:var(--nav);color:rgba(255,255,255,.4);text-align:center;padding:10px;font-size:10px;margin-top:8px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">ACTIVE BUSINESSES</span>
+  <a href="index.html">🪨 Pumice Stone</a>
+  <a href="ppc.html" class="act">📊 PPC Services</a>
+</nav>
+
+<div class="hdr">
+  <div class="hdr-l">
+    <h1>PPC <span>Services</span></h1>
+    <p>Client Revenue Forecast · Aug 2026 – Jul 2029 · 36 Months</p>
+  </div>
+  <div class="hdr-r">
+    <div class="lbl">Confirmed MRR (Month 3+)</div>
+    <div class="big" id="hMRR">—</div>
+    <div class="lbl">36-Mo Confirmed · <span style="color:var(--gold)" id="hTotal">—</span></div>
+  </div>
+</div>
+
+<div class="kpis" id="kpiRow"></div>
+
+<div class="sec">
+  <div class="sec-hd">Clients <span class="chip">3 Active</span><span class="chip pot">1 Potential</span></div>
+  <div class="clients-grid">
+
+    <div class="cc" style="border-color:var(--coop)">
+      <div class="cn" style="color:var(--coop)">Cooper's Cask Coffee</div>
+      <div class="rate" style="color:var(--coop)">$2,000<span style="font-size:13px;font-weight:400;color:var(--mut)">/mo</span></div>
+      <div class="detail">Fixed retainer · No ramp<br>Active from Aug 2026 · 36-Mo: $72,000</div>
+      <span class="badge active">Active</span>
+    </div>
+
+    <div class="cc" style="border-color:var(--gom)">
+      <div class="cn" style="color:var(--gom)">Go Mental</div>
+      <div class="rate" style="color:var(--gom)">$1,000<span style="font-size:13px;font-weight:400;color:var(--mut)">/mo</span></div>
+      <div class="detail">Fixed retainer · No ramp<br>Started Jul 25, 2026 · 36-Mo: $36,000</div>
+      <span class="badge active">Active</span>
+    </div>
+
+    <div class="cc" style="border-color:var(--bls)">
+      <div class="cn" style="color:var(--bls)">Blossom Care</div>
+      <div class="rate" style="color:var(--bls)">$700 → $800 → $1,000<span style="font-size:11px;font-weight:400;color:var(--mut)">/mo</span></div>
+      <div class="detail">Month 1: $700 · Month 2: $800 · Month 3+: $1,000<br>Started Aug 11, 2026 · 36-Mo: $35,500</div>
+      <span class="badge active">Active</span>
+    </div>
+
+    <div class="cc potential" style="border-color:var(--omni)">
+      <div class="cn" style="color:#9A7420">Omni</div>
+      <div class="rate" style="color:var(--gold)">$3,000<span style="font-size:13px;font-weight:400;color:var(--mut)">/mo</span></div>
+      <div class="detail">Fixed retainer · No ramp<br>Potential start: Aug 11, 2026 · 36-Mo: $108,000</div>
+      <span class="badge pot">Potential</span>
+    </div>
+
+  </div>
+</div>
+
+<div class="sec" style="padding-bottom:12px">
+  <div class="sec-hd">36-Month Revenue Forecast</div>
+  <div class="chart-wrap">
+    <h3>
+      Monthly Client Revenue
+      <div class="leg">
+        <div class="leg-i"><div class="leg-dot" style="background:var(--coop)"></div>Cooper's Cask</div>
+        <div class="leg-i"><div class="leg-dot" style="background:var(--gom)"></div>Go Mental</div>
+        <div class="leg-i"><div class="leg-dot" style="background:var(--bls)"></div>Blossom Care</div>
+        <div class="leg-i"><div class="leg-dot" style="background:var(--omni);opacity:.6"></div>Omni (potential)</div>
+      </div>
+    </h3>
+    <div class="cw"><canvas id="revChart"></canvas></div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="tbl-wrap">
+    <button class="tbl-toggle op" onclick="this.classList.toggle('op');document.getElementById('tblInner').classList.toggle('op')">
+      <span>📋 Full 36-Month Breakdown — Monthly & Cumulative Revenue by Client</span>
+      <span class="arr">▼</span>
+    </button>
+    <div class="tbl-inner op" id="tblInner">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left">Month</th>
+            <th style="background:#6B3010">Cooper's Cask</th>
+            <th style="background:#1A3A7A">Go Mental</th>
+            <th style="background:#7A0040">Blossom Care</th>
+            <th style="background:#7A5E10">Omni ✦</th>
+            <th style="background:#1C2A4A">Confirmed</th>
+            <th style="background:#3A2A10">With Omni</th>
+            <th style="background:#0A2A1A">Cumulative ✓</th>
+          </tr>
+        </thead>
+        <tbody id="tblBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="foot">Active Businesses Dashboard · PPC Services · Aug 2026 – Jul 2029</div>
+
+<script>
+const MFL=['Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Feb 2027','Mar 2027','Apr 2027','May 2027','Jun 2027','Jul 2027','Aug 2027','Sep 2027','Oct 2027','Nov 2027','Dec 2027','Jan 2028','Feb 2028','Mar 2028','Apr 2028','May 2028','Jun 2028','Jul 2028','Aug 2028','Sep 2028','Oct 2028','Nov 2028','Dec 2028','Jan 2029','Feb 2029','Mar 2029','Apr 2029','May 2029','Jun 2029','Jul 2029'];
+
+function rev(m){
+  const coopers  = 2000;
+  const goMental = 1000;
+  const blossom  = m===0 ? 700 : m===1 ? 800 : 1000;
+  const omni     = 3000;
+  const confirmed = coopers + goMental + blossom;
+  return {coopers, goMental, blossom, omni, confirmed, withOmni: confirmed + omni};
+}
+
+const $f = v => '$'+Math.round(v).toLocaleString();
+
+// Accumulate totals
+let cumConf=0, cumOmni=0;
+let totC=0, totG=0, totB=0, totO=0;
+const mConf=[], mOmni=[], mCoop=[], mGom=[], mBls=[];
+
+for(let m=0;m<36;m++){
+  const r=rev(m);
+  cumConf  += r.confirmed;
+  cumOmni  += r.withOmni;
+  totC     += r.coopers;
+  totG     += r.goMental;
+  totB     += r.blossom;
+  totO     += r.omni;
+  mConf.push(r.confirmed);
+  mOmni.push(r.omni);
+  mCoop.push(r.coopers);
+  mGom.push(r.goMental);
+  mBls.push(r.blossom);
+}
+
+// Header
+document.getElementById('hMRR').textContent  = $f(rev(35).confirmed);
+document.getElementById('hTotal').textContent = $f(cumConf);
+
+// KPI cards
+const kpis=[
+  {l:'Active Clients',     v:'3',              s:'+ 1 potential (Omni)',         c:'#2E6FDB'},
+  {l:'Confirmed MRR',      v:$f(rev(35).confirmed), s:'from Month 3 onwards',    c:'var(--grn)'},
+  {l:'MRR with Omni',      v:$f(rev(35).withOmni),  s:'if Omni closes',          c:'var(--gold)'},
+  {l:'36-Mo (Confirmed)',  v:$f(cumConf),       s:'Aug 2026 – Jul 2029',          c:'var(--grn)'},
+  {l:'36-Mo (With Omni)',  v:$f(cumOmni),       s:'adds $108K from Omni',         c:'var(--gold)'},
+];
+const kr=document.getElementById('kpiRow');
+kpis.forEach(k=>{
+  const d=document.createElement('div');
+  d.className='kpi';
+  d.innerHTML=`<div class="l">${k.l}</div><div class="v" style="color:${k.c}">${k.v}</div><div class="s">${k.s}</div>`;
+  kr.appendChild(d);
+});
+
+// Table
+const tbody=document.getElementById('tblBody');
+let runConf=0;
+for(let m=0;m<36;m++){
+  const r=rev(m);
+  runConf+=r.confirmed;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td>${MFL[m]}</td>
+    <td style="color:var(--coop);font-weight:600">${$f(r.coopers)}</td>
+    <td style="color:var(--gom);font-weight:600">${$f(r.goMental)}</td>
+    <td style="color:var(--bls);font-weight:600">${$f(r.blossom)}</td>
+    <td style="color:#9A7420;font-weight:600">${$f(r.omni)}</td>
+    <td style="font-weight:700">${$f(r.confirmed)}</td>
+    <td style="color:var(--gold);font-weight:700">${$f(r.withOmni)}</td>
+    <td class="cum">${$f(runConf)}</td>
+  `;
+  tbody.appendChild(tr);
+}
+// Totals row
+const tot=document.createElement('tr');
+tot.className='tot';
+tot.innerHTML=`
+  <td>TOTAL 36 MO</td>
+  <td style="color:#C89060">${$f(totC)}</td>
+  <td style="color:#6FA3E0">${$f(totG)}</td>
+  <td style="color:#E080A8">${$f(totB)}</td>
+  <td style="color:var(--gold)">${$f(totO)}</td>
+  <td>${$f(cumConf)}</td>
+  <td style="color:var(--gold)">${$f(cumOmni)}</td>
+  <td style="color:#5EC8A0">${$f(cumConf)}</td>
+`;
+tbody.appendChild(tot);
+
+// Chart
+const ctx=document.getElementById('revChart').getContext('2d');
+new Chart(ctx,{
+  type:'bar',
+  data:{
+    labels:MFL,
+    datasets:[
+      {label:"Cooper's Cask", data:mCoop, backgroundColor:'rgba(139,69,19,.75)', stack:'s'},
+      {label:'Go Mental',     data:mGom,  backgroundColor:'rgba(46,111,219,.75)', stack:'s'},
+      {label:'Blossom Care',  data:mBls,  backgroundColor:'rgba(194,24,91,.75)',  stack:'s'},
+      {label:'Omni (potential)', data:mOmni, backgroundColor:'rgba(212,168,67,.30)', borderColor:'rgba(212,168,67,.6)', borderWidth:1, borderDash:[4,3], stack:'s'},
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${$f(c.parsed.y)}`}}
+    },
+    scales:{
+      x:{stacked:true, ticks:{color:'#888',font:{size:9},maxRotation:45}, grid:{color:'#EDE8E0'}},
+      y:{stacked:true, ticks:{color:'#888',callback:v=>'$'+v.toLocaleString()}, grid:{color:'#EDE8E0'}}
+    }
+  }
+});
+</script>
+</body>
+</html>
