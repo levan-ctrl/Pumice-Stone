@@ -280,20 +280,20 @@ const MFL=['Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Fe
 // ── CONSTANTS ──────────────────────────────────────────────────────
 const PRF        = 2.90;   // net profit per unit (after all Amazon fees, PPC, refunds)
 const COG        = 1.10;   // supplier cost per unit
-const AVG_PRICE  = 12.50;  // average selling price
+const AVG_PRICE  = 4.00;   // Amazon payout/unit = COG + net profit (retail ~$12, Amazon keeps the rest)
 const START_INV  = 6600;   // ~1,000 current + 5,500 incoming + 100 bear/cat/spoon
-const FLOOR      = 1500;   // monthly floor guaranteed
+const FLOOR      = 900;    // calibrated: $45K/$55K/$65K annual payout at 20% YoY growth
 
 // Calendar month for Aug 2026 = index 7 (0=Jan)
 const START_CAL  = 7;
 
-// Seasonal multipliers (Jan=0 through Dec=11)
-const SEA = [0.55, 0.50, 0.55, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 1.25, 2.10, 2.50];
+// Jan peaks then steadily falls Feb→Aug (summer floor ~$1500 rev), Sep picks up, Nov-Dec peak
+const SEA = [1.20, 1.00, 0.80, 0.65, 0.50, 0.30, 0.28, 0.30, 0.90, 1.25, 2.10, 2.50];
 
 function demUnits(m){
   const calM = (START_CAL + m) % 12;
   const trend = FLOOR * Math.pow(1.20, m/12);
-  return Math.max(FLOOR, Math.round(trend * SEA[calM]));
+  return Math.max(100, Math.round(trend * SEA[calM]));
 }
 
 // ── SIMULATION ─────────────────────────────────────────────────────

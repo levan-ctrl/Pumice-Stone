@@ -10,7 +10,8 @@
   --gold:#D4A843;--grn:#2E8B57;--red:#C0392B;--ora:#E67E22;--pur:#8E44AD;
   --bg:#F7F3EE;--card:#fff;--bdr:#E0D5C8;
   --txt:#2A2A2A;--mut:#6B6B6B;--nav:#1C1410;
-  --c-pumice:#C4622D;--c-ppc:#2E6FDB;--c-rg:#8BB500;
+  --c-pumice:#C4622D;--c-ppc:#2E6FDB;--c-rg:#8BB500;--c-sk:#C87722;
+  --amber:#C87722;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:13px;}
@@ -21,30 +22,29 @@ nav a{color:rgba(255,255,255,.55);text-decoration:none;padding:10px 13px;font-si
 nav a:hover,nav a.act{color:#fff;border-bottom-color:var(--gold);}
 .nav-brand{color:rgba(255,255,255,.35);padding:10px 13px 10px 0;font-size:11px;font-weight:700;letter-spacing:.5px;margin-right:8px;border-right:1px solid rgba(255,255,255,.1);}
 
+/* ── HERO ── */
 .hdr{background:linear-gradient(135deg,#1C1410 0%,#2A2010 55%,#3D2A08 100%);color:#fff;padding:28px;position:relative;overflow:hidden;text-align:center;}
 .hdr::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(212,168,67,.12),transparent 65%);}
 .hdr-inner{position:relative;}
-.hdr h1{font-size:30px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;}
+.hdr h1{font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;}
 .hdr h1 span{color:var(--gold);}
 .hdr p{font-size:12px;opacity:.6;margin-bottom:20px;}
-
-/* Business cards (hero) */
 .biz-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;max-width:1000px;margin:0 auto;}
 @media(max-width:800px){.biz-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:480px){.biz-grid{grid-template-columns:1fr;}}
-.biz-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:20px 18px;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;display:block;color:#fff;}
+.biz-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:18px 15px;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;display:block;color:#fff;}
 .biz-card:first-child{border-radius:12px 0 0 12px;}
 .biz-card:last-child{border-radius:0 12px 12px 0;}
 .biz-card:hover{background:rgba(255,255,255,.13);transform:translateY(-2px);}
-.biz-card .ico{font-size:28px;margin-bottom:8px;}
-.biz-card .bname{font-size:13px;font-weight:800;margin-bottom:4px;letter-spacing:.3px;}
-.biz-card .bsub{font-size:10px;opacity:.55;margin-bottom:12px;}
-.biz-card .bamt{font-size:22px;font-weight:800;}
-.biz-card .blbl{font-size:10px;opacity:.55;margin-top:2px;}
-.biz-card .btn{display:inline-block;margin-top:12px;background:rgba(255,255,255,.12);padding:5px 16px;border-radius:20px;font-size:11px;font-weight:700;transition:background .2s;}
+.biz-card .ico{font-size:26px;margin-bottom:7px;}
+.biz-card .bname{font-size:12.5px;font-weight:800;margin-bottom:3px;}
+.biz-card .bsub{font-size:10px;opacity:.5;margin-bottom:10px;}
+.biz-card .bamt{font-size:20px;font-weight:800;}
+.biz-card .blbl{font-size:10px;opacity:.5;margin-top:2px;}
+.biz-card .btn{display:inline-block;margin-top:10px;background:rgba(255,255,255,.12);padding:4px 14px;border-radius:20px;font-size:10.5px;font-weight:700;transition:background .2s;}
 .biz-card:hover .btn{background:rgba(255,255,255,.22);}
 
-/* KPI section */
+/* ── KPIs ── */
 .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px 24px 0;}
 @media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr);}}
 .kpi{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;padding:11px 13px;text-align:center;}
@@ -52,30 +52,86 @@ nav a:hover,nav a.act{color:#fff;border-bottom-color:var(--gold);}
 .kpi .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);font-weight:600;}
 .kpi .s{font-size:10px;color:var(--mut);}
 
+/* ── LAYOUT ── */
 .sec{padding:14px 24px 0;}
-.sec-hd{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--mut);font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:7px;}
-
-/* Summary table */
-.sum-wrap{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;overflow:hidden;margin-bottom:14px;}
-table{width:100%;border-collapse:collapse;font-size:11.5px;}
-th{background:var(--nav);color:#fff;padding:8px 12px;text-align:right;font-size:10px;font-weight:600;white-space:nowrap;}
-th:first-child{text-align:left;}
-td{padding:8px 12px;border-bottom:1px solid var(--bdr);text-align:right;}
-td:first-child{text-align:left;font-weight:700;}
-tr:last-child td{border:none;}
-tr.sub td{background:#F9F6F2;}
-tr.hi td{background:#1C1410;color:#fff;font-weight:800;font-size:12px;}
-
-/* Chart */
-.chart-wrap{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;padding:14px;margin-bottom:14px;}
-.chart-wrap h3{font-size:12px;font-weight:700;margin-bottom:10px;}
-.cw{position:relative;height:280px;}
-
-/* Badges */
+.sec-hd{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--mut);font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
 .chip{background:var(--nav);color:var(--gold);font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;}
+.chip.grn{background:var(--grn);color:#fff;}
+.chip.ora{background:var(--ora);color:#fff;}
 .alrt{border-radius:8px;padding:9px 13px;font-size:11.5px;display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;}
 .alrt.grn{background:#EEF8F2;border:1.5px solid #A8D5B8;}
 .alrt.ora{background:#FEF3E8;border:1.5px solid #F5C896;}
+
+/* ── SUMMARY TABLE ── */
+.sum-wrap{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;overflow:hidden;margin-bottom:14px;}
+table.sum{width:100%;border-collapse:collapse;font-size:11.5px;}
+table.sum th{background:var(--nav);color:#fff;padding:8px 12px;text-align:right;font-size:10px;font-weight:600;white-space:nowrap;}
+table.sum th:first-child{text-align:left;}
+table.sum td{padding:8px 12px;border-bottom:1px solid var(--bdr);text-align:right;}
+table.sum td:first-child{text-align:left;font-weight:700;}
+table.sum tr:last-child td{border:none;}
+table.sum tr.sub td{background:#F9F6F2;font-weight:500;}
+table.sum tr.hi td{background:#1C1410;color:#fff;font-weight:800;font-size:12px;}
+
+/* ── CHARTS ── */
+.chart-wrap{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;padding:14px;margin-bottom:14px;}
+.chart-wrap h3{font-size:12px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:5px;}
+.cw{position:relative;height:260px;}
+.cw-sm{position:relative;height:210px;}
+.two-c{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+@media(max-width:700px){.two-c{grid-template-columns:1fr;}}
+
+/* ── SECTION DIVIDER ── */
+.biz-section{border-top:3px solid var(--bdr);margin-top:6px;padding-top:4px;}
+.biz-section-hdr{display:flex;align-items:center;gap:10px;padding:14px 24px 0;}
+.biz-section-hdr .ico{font-size:22px;}
+.biz-section-hdr h2{font-size:14px;font-weight:800;}
+.biz-section-hdr .sub{font-size:11px;color:var(--mut);margin-top:1px;}
+.biz-section-hdr .tag{margin-left:auto;font-size:10px;background:var(--bg);border:1.5px solid var(--bdr);border-radius:6px;padding:3px 10px;color:var(--mut);font-weight:600;}
+
+/* ── SK ASIN CARDS ── */
+.asin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:8px;margin-bottom:12px;}
+.ac{background:var(--card);border:1.5px solid var(--bdr);border-radius:8px;padding:10px 13px;border-left:3px solid var(--amber);}
+.ac .name{font-size:11px;font-weight:700;margin-bottom:3px;color:#5A2D0C;}
+.ac .asin-id{font-size:9.5px;color:var(--mut);margin-bottom:6px;}
+.ac .row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-bottom:1px solid var(--bg);}
+.ac .row:last-child{border:none;}
+.ac .row span:last-child{font-weight:700;}
+
+/* ── SK INVENTORY ── */
+.inv-callout{background:linear-gradient(135deg,#FEF3E8,#FDEBD0);border:2px solid var(--amber);border-radius:10px;padding:13px 16px;margin-bottom:10px;}
+.inv-callout h3{font-size:12px;font-weight:800;color:#5A2D0C;margin-bottom:8px;}
+.inv-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:7px;}
+.inv-item{background:#fff;border:1px solid var(--bdr);border-radius:7px;padding:7px 10px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;}
+.inv-item .qty{font-size:17px;font-weight:800;color:#5A2D0C;}
+
+/* ── SK Y1 STATS ── */
+.y1-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+@media(max-width:700px){.y1-grid{grid-template-columns:repeat(2,1fr);}}
+.y1c{background:var(--card);border:1.5px solid var(--bdr);border-radius:8px;padding:10px 13px;border-left:3px solid var(--amber);}
+.y1c .n{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;}
+.y1c .v{font-size:16px;font-weight:800;}
+.y1c .s{font-size:10px;color:var(--mut);margin-top:2px;}
+
+/* ── MONTHLY TABLE ── */
+.tbl-wrap{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;overflow:hidden;margin-bottom:22px;}
+.tbl-toggle{width:100%;padding:11px 15px;background:var(--nav);color:#fff;font-size:11.5px;font-weight:700;cursor:pointer;border:none;text-align:left;display:flex;justify-content:space-between;align-items:center;}
+.arr{transition:transform .25s;}
+.tbl-toggle.op .arr{transform:rotate(180deg);}
+.tbl-inner{display:none;overflow-x:auto;}
+.tbl-inner.op{display:block;}
+table.detail{width:100%;border-collapse:collapse;font-size:11px;}
+table.detail th{background:var(--nav);color:#fff;padding:6px 9px;text-align:center;font-size:10px;font-weight:600;white-space:nowrap;}
+table.detail th:first-child{text-align:left;min-width:85px;}
+table.detail td{padding:5px 8px;border-bottom:1px solid var(--bdr);text-align:center;white-space:nowrap;}
+table.detail td:first-child{text-align:left;font-weight:600;font-size:10.5px;color:var(--mut);}
+table.detail tr:hover td{background:#FAF0E6;}
+table.detail tr.pk td{background:#FFF3E8!important;}
+table.detail tr.tot td{background:var(--nav)!important;color:#fff!important;font-weight:700;}
+table.detail tr.yr td{background:#F5E6D5!important;font-weight:700;}
+
+.pos{color:var(--grn);font-weight:700;}
+.neg{color:var(--red);font-weight:700;}
 
 .foot{background:var(--nav);color:rgba(255,255,255,.4);text-align:center;padding:10px;font-size:10px;margin-top:8px;}
 </style>
@@ -88,7 +144,7 @@ tr.hi td{background:#1C1410;color:#fff;font-weight:800;font-size:12px;}
   <a href="index.html">🪨 Pumice Stone</a>
   <a href="ppc.html">📊 PPC Services</a>
   <a href="rolling-grips.html">💪 Rolling Grips</a>
-  <a href="sugar-keepers.html">🍬 Sugar Keepers</a>
+  <a href="#sk-section">🍬 Sugar Keepers</a>
 </nav>
 
 <!-- HERO -->
@@ -97,21 +153,21 @@ tr.hi td{background:#1C1410;color:#fff;font-weight:800;font-size:12px;}
     <h1>Levan Rurua — <span>Active Businesses</span></h1>
     <p>36-Month Portfolio Overview · Aug 2026 – Jul 2029 · Phuket, Thailand</p>
     <div class="biz-grid">
-      <a class="biz-card" href="index.html" style="border-left-color:var(--c-pumice)">
+      <a class="biz-card" href="index.html">
         <div class="ico">🪨</div>
         <div class="bname" style="color:#F2A87E">Pumice Stone</div>
         <div class="bsub">Sifri Art · Amazon FBA · 3 SKUs</div>
         <div class="bamt" id="h-pumice-rev">—</div>
         <div class="blbl">36-Mo Revenue</div>
-        <div class="btn">Open Dashboard →</div>
+        <div class="btn">Full Dashboard →</div>
       </a>
-      <a class="biz-card" href="ppc.html" style="border-color:rgba(111,163,224,.3)">
+      <a class="biz-card" href="ppc.html">
         <div class="ico">📊</div>
         <div class="bname" style="color:#6FA3E0">PPC Services</div>
         <div class="bsub">4 Clients · Amazon PPC Management</div>
         <div class="bamt" id="h-ppc-rev">—</div>
         <div class="blbl">36-Mo Revenue (w/ Omni)</div>
-        <div class="btn">Open Dashboard →</div>
+        <div class="btn">Full Dashboard →</div>
       </a>
       <a class="biz-card" href="rolling-grips.html">
         <div class="ico">💪</div>
@@ -119,15 +175,15 @@ tr.hi td{background:#1C1410;color:#fff;font-weight:800;font-size:12px;}
         <div class="bsub">Kickstarter Launch · Amazon FBA</div>
         <div class="bamt" id="h-rg-rev">—</div>
         <div class="blbl">36-Mo Revenue</div>
-        <div class="btn">Open Dashboard →</div>
+        <div class="btn">Full Dashboard →</div>
       </a>
-      <a class="biz-card" href="sugar-keepers.html" style="border-right-color:#C87722">
+      <a class="biz-card" href="#sk-section">
         <div class="ico">🍬</div>
         <div class="bname" style="color:#F5C896">Sugar Keepers</div>
         <div class="bsub">Sifri Art · 7 ASINs · Bear Flagship</div>
         <div class="bamt" id="h-sk-rev">—</div>
         <div class="blbl">36-Mo Net Profit (forecast)</div>
-        <div class="btn">Open Dashboard →</div>
+        <div class="btn">View Below ↓</div>
       </a>
     </div>
   </div>
@@ -135,19 +191,18 @@ tr.hi td{background:#1C1410;color:#fff;font-weight:800;font-size:12px;}
 
 <div class="kpis" id="kpiRow"></div>
 
+<!-- PORTFOLIO SUMMARY -->
 <div class="sec" style="padding-bottom:4px">
   <div class="sec-hd">36-Month Portfolio Summary <span class="chip">All Businesses Combined</span></div>
-
   <div class="alrt ora">
     <span>📌</span>
-    <div><strong>Note:</strong> Pumice Stone, Rolling Grips, and Sugar Keepers are simulated projections. Sugar Keepers based on real Year 1 SellerBoard data ($27,475 net profit) with 20% YoY growth. PPC revenue is contracted. Rolling Grips includes Kickstarter + Amazon phase. Life expenses ($3.5K→$4.5K→$5.5K/mo) deducted from net.</div>
+    <div><strong>Note:</strong> Pumice Stone, Rolling Grips, and Sugar Keepers are simulated projections. Sugar Keepers based on real Year 1 SellerBoard data ($27,475 net profit) with 20% YoY growth. PPC revenue is contracted. Life expenses ($3.5K→$4.5K→$5.5K/mo) deducted from net.</div>
   </div>
 </div>
 
-<!-- SUMMARY TABLE -->
 <div class="sec" style="padding-bottom:12px">
   <div class="sum-wrap">
-    <table>
+    <table class="sum">
       <thead>
         <tr>
           <th style="text-align:left">Business / Category</th>
@@ -163,37 +218,187 @@ tr.hi td{background:#1C1410;color:#fff;font-weight:800;font-size:12px;}
   </div>
 </div>
 
-<!-- COMBINED CHART -->
 <div class="sec" style="padding-bottom:14px">
   <div class="chart-wrap">
-    <h3>Monthly Net Profit — All Businesses Combined (excl. life expenses)</h3>
+    <h3>Monthly Net Profit — All Businesses Combined</h3>
     <div class="cw"><canvas id="combinedChart"></canvas></div>
   </div>
   <div class="chart-wrap">
-    <h3>Monthly Cash Position — Life Expenses vs PPC Income</h3>
+    <h3>Monthly PPC Income vs Life Expenses</h3>
     <div class="cw"><canvas id="lifeChart"></canvas></div>
   </div>
 </div>
 
-<div class="foot">Active Businesses Dashboard · Levan Rurua · Aug 2026 – Jul 2029</div>
+<!-- ══════════════════════════════════════════════════════════
+     SUGAR KEEPERS SECTION
+     ══════════════════════════════════════════════════════════ -->
+<div class="biz-section" id="sk-section">
+  <div class="biz-section-hdr">
+    <span class="ico">🍬</span>
+    <div>
+      <h2 style="color:#5A2D0C">Sifri Art — Brown Sugar Keepers</h2>
+      <div class="sub">7 ASINs · Bear Flagship · 20% YoY Growth · $2.90 Net Profit/Unit</div>
+    </div>
+    <div class="tag">Real SellerBoard Data · Jul 2025–Jun 2026</div>
+  </div>
+
+  <!-- Year 1 actual -->
+  <div class="sec" style="padding-bottom:10px">
+    <div class="sec-hd">Year 1 Actuals (SellerBoard) <span class="chip">Real Numbers</span></div>
+    <div class="y1-grid">
+      <div class="y1c"><div class="n">Units Sold</div><div class="v">10,771</div><div class="s">7,264 Bear · 3,507 variants</div></div>
+      <div class="y1c"><div class="n">Total Revenue</div><div class="v">$131,090</div><div class="s">~$12.17 avg selling price</div></div>
+      <div class="y1c"><div class="n">Net Profit Y1</div><div class="v" style="color:var(--grn)">$27,475</div><div class="s">20.96% margin · 21.68% real ACOS</div></div>
+      <div class="y1c"><div class="n">Peak Month</div><div class="v">Dec 2025</div><div class="s">~2,500+ units · Holiday season</div></div>
+    </div>
+  </div>
+
+  <!-- ASIN breakdown -->
+  <div class="sec" style="padding-bottom:10px">
+    <div class="sec-hd">ASIN Breakdown (Year 1)</div>
+    <div class="asin-grid">
+      <div class="ac">
+        <div class="name">🐻 Bear — Main ASIN</div>
+        <div class="asin-id">B0DH293GN5</div>
+        <div class="row"><span>Units</span><span>7,264</span></div>
+        <div class="row"><span>Price</span><span>$12.89</span></div>
+        <div class="row"><span>Net profit</span><span style="color:var(--grn)">~$18,000</span></div>
+        <div class="row"><span>ACOS</span><span>25.16%</span></div>
+        <div class="row"><span>Sessions</span><span>48,193</span></div>
+      </div>
+      <div class="ac">
+        <div class="name">❤️ Heart</div>
+        <div class="asin-id">B0FDX99BSX</div>
+        <div class="row"><span>Units</span><span>1,762</span></div>
+        <div class="row"><span>Price</span><span>~$9.49</span></div>
+        <div class="row"><span>Net profit</span><span style="color:var(--grn)">$4,172</span></div>
+        <div class="row"><span>Margin</span><span>24.95%</span></div>
+      </div>
+      <div class="ac">
+        <div class="name">🐱 Cat & Spoon</div>
+        <div class="asin-id">B0FNS1R2KY</div>
+        <div class="row"><span>Units</span><span>518</span></div>
+        <div class="row"><span>Price</span><span>$18.55</span></div>
+        <div class="row"><span>Net profit</span><span style="color:var(--grn)">$4,370</span></div>
+        <div class="row"><span>Margin</span><span>48.27%</span></div>
+      </div>
+      <div class="ac">
+        <div class="name">🐕 Dog & Spoon</div>
+        <div class="asin-id">B0FNRZL9MX</div>
+        <div class="row"><span>Units</span><span>314</span></div>
+        <div class="row"><span>Price</span><span>~$15.99</span></div>
+        <div class="row"><span>Net profit</span><span style="color:var(--grn)">$2,333</span></div>
+        <div class="row"><span>Margin</span><span>46.48%</span></div>
+      </div>
+      <div class="ac">
+        <div class="name">🐝 Bee & Spoon</div>
+        <div class="asin-id">B0FNS2DKC6</div>
+        <div class="row"><span>Units</span><span>218</span></div>
+        <div class="row"><span>Price</span><span>~$13.58</span></div>
+        <div class="row"><span>Net profit</span><span style="color:var(--grn)">$574</span></div>
+        <div class="row"><span>Margin</span><span>19.38%</span></div>
+      </div>
+      <div class="ac">
+        <div class="name">🦉 Owl & Spoon</div>
+        <div class="asin-id">B0FP987XW1</div>
+        <div class="row"><span>Units</span><span>124</span></div>
+        <div class="row"><span>Price</span><span>$17.89</span></div>
+        <div class="row"><span>Net profit</span><span style="color:var(--grn)">$390</span></div>
+        <div class="row"><span>Margin</span><span>22.10%</span></div>
+      </div>
+      <div class="ac">
+        <div class="name">🐱 Cat (Solo)</div>
+        <div class="asin-id">B0GN9CRXV2</div>
+        <div class="row"><span>Units</span><span>64</span></div>
+        <div class="row"><span>Price</span><span>$12.89</span></div>
+        <div class="row"><span>Net profit</span><span style="color:var(--grn)">$441</span></div>
+        <div class="row"><span>Margin</span><span>53.45%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inventory callout -->
+  <div class="sec" style="padding-bottom:10px">
+    <div class="sec-hd">Incoming Shipment — Jul 8, 2026 <span class="chip" style="background:#8B4513">5,600 Units</span></div>
+    <div class="inv-callout">
+      <h3>📦 Arriving ~Jul 8 (ordered Mar 20 · ~3.5 month lead)</h3>
+      <div class="inv-items">
+        <div class="inv-item"><span>🐻 Bear (old pkg)</span><div class="qty">3,000</div></div>
+        <div class="inv-item"><span>🐻❤️ Bear + Heart</span><div class="qty">500</div></div>
+        <div class="inv-item"><span>❤️ Heart (old pkg)</span><div class="qty">1,000</div></div>
+        <div class="inv-item"><span>❤️🥄 Heart + Spoon</span><div class="qty">500</div></div>
+        <div class="inv-item"><span>🐕🥄 Dog + Spoon</span><div class="qty">450</div></div>
+        <div class="inv-item"><span>🐻🐕🥄 Bear/Dog/Spoon</span><div class="qty">50</div></div>
+        <div class="inv-item"><span>🐻🐱🥄 Bear/Cat/Spoon</span><div class="qty">100</div></div>
+        <div class="inv-item"><span><strong>TOTAL NEW UNITS</strong></span><div class="qty" style="color:var(--grn)">5,600</div></div>
+      </div>
+    </div>
+    <div class="alrt grn">
+      <span>✅</span>
+      <div>5,600 new + ~1,000 current stock = <strong>~6,600 units</strong> available from Aug 2026. At 1,500/mo baseline = 4.4 months coverage before holiday peak. Next reorder target: <strong>Oct 2026</strong> (arrives Jan 2027).</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="sec" style="padding-bottom:10px">
+    <div class="sec-hd">36-Month Forecast</div>
+    <div class="two-c">
+      <div class="chart-wrap">
+        <h3>Monthly Units Sold <span style="font-size:10px;color:var(--mut);font-weight:400">20% YoY · seasonal</span></h3>
+        <div class="cw-sm"><canvas id="skUnitsChart"></canvas></div>
+      </div>
+      <div class="chart-wrap">
+        <h3>Monthly Net Profit</h3>
+        <div class="cw-sm"><canvas id="skPrfChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monthly table -->
+  <div class="sec">
+    <div class="tbl-wrap">
+      <button class="tbl-toggle" onclick="this.classList.toggle('op');document.getElementById('skTblInner').classList.toggle('op')">
+        <span>🍬 Brown Sugar Keepers — Full 36-Month Table (click to expand)</span>
+        <span class="arr">▼</span>
+      </button>
+      <div class="tbl-inner" id="skTblInner">
+        <table class="detail">
+          <thead>
+            <tr>
+              <th style="text-align:left">Month</th>
+              <th style="background:#5A2D0C">Units Sold</th>
+              <th style="background:#3A5C30">Revenue</th>
+              <th style="background:#2E5530">Net Profit</th>
+              <th style="background:#1A3A5C">Inventory</th>
+              <th style="background:#5C3A1A">Cum. Profit</th>
+              <th>Reorder?</th>
+            </tr>
+          </thead>
+          <tbody id="skTblBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">Active Businesses Dashboard · Levan Rurua · Aug 2026 – Jul 2029 · Sugar Keepers data: SellerBoard Jul 2025–Jun 2026</div>
 
 <script>
 const MFL=['Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Feb 2027','Mar 2027','Apr 2027','May 2027','Jun 2027','Jul 2027','Aug 2027','Sep 2027','Oct 2027','Nov 2027','Dec 2027','Jan 2028','Feb 2028','Mar 2028','Apr 2028','May 2028','Jun 2028','Jul 2028','Aug 2028','Sep 2028','Oct 2028','Nov 2028','Dec 2028','Jan 2029','Feb 2029','Mar 2029','Apr 2029','May 2029','Jun 2029','Jul 2029'];
-
-const $f = v => '$'+Math.round(Math.abs(v)).toLocaleString();
+const $f  = v => '$'+Math.round(Math.abs(v)).toLocaleString();
 const $fs = v => (v<0?'−':'')+$f(v);
+const Nf  = v => Math.round(v).toLocaleString();
 
-// ── PUMICE STONE (simplified projection) ──────────────────────────
-// Based on simulation: $6/unit terra, $4/unit gray+black, ramps to 3500+700+700
+// ── PUMICE STONE ──────────────────────────────────────────────────
 function pumiceMonthProfit(m){
-  const terra = Math.min(3500, m<1?0:Math.round(100*Math.pow(1.3,m-1)));
-  const gb    = Math.min(350,  Math.round(20*Math.pow(1.3,m)));
-  return terra*6 + gb*4 + gb*4;
+  const terra=Math.min(3500,m<1?0:Math.round(100*Math.pow(1.3,m-1)));
+  const gb=Math.min(350,Math.round(20*Math.pow(1.3,m)));
+  return terra*6+gb*4+gb*4;
 }
 function pumiceMonthRev(m){
-  const terra = Math.min(3500, m<1?0:Math.round(100*Math.pow(1.3,m-1)));
-  const gb    = Math.min(350,  Math.round(20*Math.pow(1.3,m)));
-  return terra*9.935 + gb*6.685 + gb*6.685;
+  const terra=Math.min(3500,m<1?0:Math.round(100*Math.pow(1.3,m-1)));
+  const gb=Math.min(350,Math.round(20*Math.pow(1.3,m)));
+  return terra*9.935+gb*6.685+gb*6.685;
 }
 
 // ── PPC SERVICES ──────────────────────────────────────────────────
@@ -207,24 +412,53 @@ function ppcRev(m){
 // ── LIFE EXPENSES ─────────────────────────────────────────────────
 function lifeExp(m){ return m<5?3500:m<17?4500:5500; }
 
-// ── ROLLING GRIPS (simplified projection) ─────────────────────────
-const RG_LAUNCH=5, RG_PRF_G=37, RG_PRF_S=44, RG_PEAK=10000, RG_SCALE=22;
-function rgMonthProfit(m){
-  if(m<RG_LAUNCH) return 0;
-  const sold=Math.min(RG_PEAK, Math.round(100*Math.pow(1.5,m-RG_LAUNCH)));
-  return sold*(m>=RG_SCALE?RG_PRF_S:RG_PRF_G);
-}
-function rgMonthRev(m){
-  if(m<RG_LAUNCH) return 0;
-  return Math.min(RG_PEAK, Math.round(100*Math.pow(1.5,m-RG_LAUNCH)))*92;
-}
+// ── ROLLING GRIPS ─────────────────────────────────────────────────
+// KS Dec 2026 (m=4), Amazon launch Mar 2027 (m=7 = 4+3 months for fulfillment+FBA)
+const RG_LAUNCH=7,RG_PRF_G=37,RG_PRF_S=44,RG_PEAK=10000,RG_SCALE=24;
+function rgMonthProfit(m){ if(m<RG_LAUNCH)return 0; const s=Math.min(RG_PEAK,Math.round(100*Math.pow(1.5,m-RG_LAUNCH))); return s*(m>=RG_SCALE?RG_PRF_S:RG_PRF_G); }
+function rgMonthRev(m){ if(m<RG_LAUNCH)return 0; return Math.min(RG_PEAK,Math.round(100*Math.pow(1.5,m-RG_LAUNCH)))*92; }
 
-// ── SUGAR KEEPERS ($2.90/unit · 20% YoY · seasonal) ──────────────
-const SK_FLOOR=1500, SK_PRF=2.90, SK_PRICE=12.50, SK_START_CAL=7;
-const SK_SEA=[0.55,0.50,0.55,0.65,0.70,0.75,0.80,0.85,0.90,1.25,2.10,2.50];
-function skDem(m){ const c=(SK_START_CAL+m)%12; return Math.max(SK_FLOOR,Math.round(SK_FLOOR*Math.pow(1.20,m/12)*SK_SEA[c])); }
-function skMonthRev(m){ return skDem(m)*SK_PRICE; }
-function skMonthProfit(m){ return skDem(m)*SK_PRF; }
+// ── SUGAR KEEPERS ─────────────────────────────────────────────────
+const SK_FLOOR=900,SK_PRF=2.90,SK_PRICE=4.00,SK_START_CAL=7; // PRICE=COG+PRF=$4/unit; FLOOR calibrated to $45K/$55K/$65K annual payouts
+// Jan peaks then falls Feb→Aug; Jun/Jul/Aug ≤$1500 revenue; Sep picks up; Nov-Dec peak
+const SK_SEA=[1.20,1.00,0.80,0.65,0.50,0.30,0.28,0.30,0.90,1.25,2.10,2.50];
+function skDem(m){ const c=(SK_START_CAL+m)%12; return Math.max(100,Math.round(SK_FLOOR*Math.pow(1.20,m/12)*SK_SEA[c])); }
+
+// ── SUGAR KEEPERS SIMULATION (with inventory) ─────────────────────
+(function buildSKTable(){
+  let inv=6600, cumPrf=0;
+  const pendingOrders=[];
+  const rows=[];
+  const LEAD=3, MIN_ORD=2500;
+
+  for(let m=0;m<36;m++){
+    pendingOrders.filter(o=>o.arrM===m).forEach(o=>inv+=o.qty);
+    const d=skDem(m);
+    const sold=Math.min(inv,d);
+    inv-=sold;
+    const prf=sold*SK_PRF;
+    const rev=sold*SK_PRICE;
+    cumPrf+=prf;
+
+    let projInv=inv;
+    for(let i=1;i<=LEAD;i++){
+      projInv-=skDem(m+i);
+      pendingOrders.filter(o=>o.arrM===m+i).forEach(o=>projInv+=o.qty);
+    }
+    let reorder='';
+    if(projInv<skDem(m+LEAD+1)*2&&!pendingOrders.some(o=>o.arrM>=m&&o.arrM<=m+LEAD)){
+      let qty=0;
+      for(let i=LEAD;i<LEAD+5;i++) qty+=skDem(m+i);
+      qty=Math.max(MIN_ORD,Math.round(qty/500)*500);
+      pendingOrders.push({arrM:m+LEAD,qty});
+      reorder='📦 Order '+qty.toLocaleString()+'u';
+    }
+    rows.push({m,d,sold,inv,prf,rev,cumPrf,reorder,stockout:sold<d&&d>0});
+  }
+
+  // Fill SK KPI + chart data into global
+  window._skRows=rows;
+})();
 
 // ── COMPUTE MONTHLY DATA ───────────────────────────────────────────
 const months=Array.from({length:36},(_,i)=>i);
@@ -234,45 +468,46 @@ const ppcRevConf=months.map(m=>ppcRev(m).confirmed);
 const ppcRevOmni=months.map(m=>ppcRev(m).withOmni);
 const rgRev=months.map(rgMonthRev);
 const rgPrf=months.map(rgMonthProfit);
-const skRev=months.map(skMonthRev);
-const skPrf=months.map(skMonthProfit);
+const skRows=window._skRows;
+const skRev=skRows.map(r=>r.rev);
+const skPrf=skRows.map(r=>r.prf);
 const expenses=months.map(lifeExp);
 const totalPrfOmni=months.map(m=>pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]+skPrf[m]-lifeExp(m));
 
-// ── PERIOD SUMS ───────────────────────────────────────────────────
 const periods=[[0,5],[5,17],[17,29],[29,36]];
 function sumPeriod(arr,p){return arr.slice(p[0],p[1]).reduce((a,v)=>a+v,0);}
 
-const pumRevPer =periods.map(p=>sumPeriod(pumiceRev,p));
-const pumPrfPer =periods.map(p=>sumPeriod(pumicePrf,p));
-const ppcRevPer =periods.map(p=>sumPeriod(ppcRevOmni,p));
-const rgRevPer  =periods.map(p=>sumPeriod(rgRev,p));
-const rgPrfPer  =periods.map(p=>sumPeriod(rgPrf,p));
-const skRevPer  =periods.map(p=>sumPeriod(skRev,p));
-const skPrfPer  =periods.map(p=>sumPeriod(skPrf,p));
-const expPer    =periods.map(p=>sumPeriod(expenses,p));
-const netPer    =periods.map((_,i)=>pumPrfPer[i]+ppcRevPer[i]+rgPrfPer[i]+skPrfPer[i]-expPer[i]);
+const pumRevPer=periods.map(p=>sumPeriod(pumiceRev,p));
+const pumPrfPer=periods.map(p=>sumPeriod(pumicePrf,p));
+const ppcRevPer=periods.map(p=>sumPeriod(ppcRevOmni,p));
+const rgRevPer =periods.map(p=>sumPeriod(rgRev,p));
+const rgPrfPer =periods.map(p=>sumPeriod(rgPrf,p));
+const skRevPer =periods.map(p=>sumPeriod(skRev,p));
+const skPrfPer =periods.map(p=>sumPeriod(skPrf,p));
+const expPer   =periods.map(p=>sumPeriod(expenses,p));
+const netPer   =periods.map((_,i)=>pumPrfPer[i]+ppcRevPer[i]+rgPrfPer[i]+skPrfPer[i]-expPer[i]);
 
 const sum36=a=>a.reduce((s,v)=>s+v,0);
 const totPumRev=sum36(pumiceRev), totPumPrf=sum36(pumicePrf);
 const totPpcRev=sum36(ppcRevOmni);
-const totRgRev=sum36(rgRev), totRgPrf=sum36(rgPrf);
-const totSkRev=sum36(skRev), totSkPrf=sum36(skPrf);
+const totRgRev=sum36(rgRev),  totRgPrf=sum36(rgPrf);
+const totSkRev=sum36(skRev),  totSkPrf=sum36(skPrf);
 const totExp=sum36(expenses);
 const totNet=totPumPrf+totPpcRev+totRgPrf+totSkPrf-totExp;
 
-// ── HERO KPIs ─────────────────────────────────────────────────────
+// ── HERO ──────────────────────────────────────────────────────────
 document.getElementById('h-pumice-rev').textContent='$'+Math.round(totPumRev/1000)+'K';
 document.getElementById('h-ppc-rev').textContent='$'+Math.round(totPpcRev/1000)+'K';
 document.getElementById('h-rg-rev').textContent='$'+Math.round(totRgRev/1000)+'K';
 document.getElementById('h-sk-rev').textContent='$'+Math.round(totSkPrf/1000)+'K';
 
+// ── PORTFOLIO KPIs ─────────────────────────────────────────────────
 const kpis=[
-  {l:'Total 36-Mo Revenue',    v:$f(totPumRev+totPpcRev+totRgRev+totSkRev),s:'All 4 businesses',        c:'var(--gold)'},
-  {l:'Life Expenses 36-Mo',    v:$f(totExp),                                  s:'$3.5K→$4.5K→$5.5K/mo', c:'var(--red)'},
-  {l:'36-Mo Net (all biz)',     v:$fs(totNet),                                 s:'after expenses',         c:totNet>0?'var(--grn)':'var(--red)'},
-  {l:'Peak Monthly (Combined)', v:$f(Math.max(...totalPrfOmni)),               s:MFL[totalPrfOmni.indexOf(Math.max(...totalPrfOmni))],c:'var(--grn)'},
-  {l:'Break-Even Month',       v:(()=>{let c=0;for(let m=0;m<36;m++){c+=totalPrfOmni[m];if(c>0)return MFL[m];}return '36+mo';})(),s:'cumulative net positive',c:'var(--pur)'},
+  {l:'Total 36-Mo Revenue',     v:$f(totPumRev+totPpcRev+totRgRev+totSkRev), s:'All 4 businesses',          c:'var(--gold)'},
+  {l:'Life Expenses 36-Mo',     v:$f(totExp),                                  s:'$3.5K→$4.5K→$5.5K/mo',    c:'var(--red)'},
+  {l:'36-Mo Net (all biz)',      v:$fs(totNet),                                 s:'after expenses',            c:totNet>0?'var(--grn)':'var(--red)'},
+  {l:'Peak Monthly (Combined)',  v:$f(Math.max(...totalPrfOmni)),               s:MFL[totalPrfOmni.indexOf(Math.max(...totalPrfOmni))], c:'var(--grn)'},
+  {l:'Break-Even Month',        v:(()=>{let c=0;for(let m=0;m<36;m++){c+=totalPrfOmni[m];if(c>0)return MFL[m];}return '36+mo';})(), s:'cumulative net turns positive', c:'var(--pur)'},
 ];
 const kr=document.getElementById('kpiRow');
 kpis.forEach(k=>{
@@ -283,36 +518,35 @@ kpis.forEach(k=>{
 
 // ── SUMMARY TABLE ─────────────────────────────────────────────────
 const tbody=document.getElementById('sumBody');
-const rows=[
-  {label:'🪨 Pumice Stone Revenue',  rev:pumRevPer,  tot:totPumRev,  c:'var(--c-pumice)', sub:false},
-  {label:'  └ Net Profit',          rev:pumPrfPer,  tot:totPumPrf,  c:'var(--grn)',sub:true},
-  {label:'📊 PPC Services (w/ Omni)',rev:ppcRevPer,  tot:totPpcRev,  c:'var(--c-ppc)',sub:false},
-  {label:'💪 Rolling Grips Revenue', rev:rgRevPer,   tot:totRgRev,   c:'var(--c-rg)', sub:false},
-  {label:'  └ Net Profit',          rev:rgPrfPer,   tot:totRgPrf,   c:'var(--grn)',sub:true},
-  {label:'🍬 Sugar Keepers Revenue', rev:skRevPer,   tot:totSkRev,   c:'#C87722',    sub:false},
-  {label:'  └ Net Profit',          rev:skPrfPer,   tot:totSkPrf,   c:'var(--grn)', sub:true},
-  {label:'🏠 Life Expenses',         rev:expPer.map(v=>-v),tot:-totExp,c:'var(--red)',sub:false},
-  {label:'💰 TOTAL NET',             rev:netPer,     tot:totNet,     c:totNet>0?'var(--grn)':'var(--red)',sub:false,hi:true},
+const tableRows=[
+  {label:'🪨 Pumice Stone Revenue',  rev:pumRevPer, tot:totPumRev, c:'var(--c-pumice)', sub:false},
+  {label:'  └ Net Profit',           rev:pumPrfPer, tot:totPumPrf, c:'var(--grn)',       sub:true},
+  {label:'📊 PPC Services (w/ Omni)',rev:ppcRevPer, tot:totPpcRev, c:'var(--c-ppc)',     sub:false},
+  {label:'💪 Rolling Grips Revenue', rev:rgRevPer,  tot:totRgRev,  c:'var(--c-rg)',      sub:false},
+  {label:'  └ Net Profit',           rev:rgPrfPer,  tot:totRgPrf,  c:'var(--grn)',       sub:true},
+  {label:'🍬 Sugar Keepers Revenue', rev:skRevPer,  tot:totSkRev,  c:'var(--c-sk)',      sub:false},
+  {label:'  └ Net Profit',           rev:skPrfPer,  tot:totSkPrf,  c:'var(--grn)',       sub:true},
+  {label:'🏠 Life Expenses',          rev:expPer.map(v=>-v), tot:-totExp, c:'var(--red)', sub:false},
+  {label:'💰 TOTAL NET',              rev:netPer,    tot:totNet,    c:totNet>0?'var(--grn)':'var(--red)', sub:false, hi:true},
 ];
-rows.forEach(r=>{
+tableRows.forEach(r=>{
   const tr=document.createElement('tr');
-  if(r.hi) tr.className='hi';
-  else if(r.sub) tr.className='sub';
+  if(r.hi) tr.className='hi'; else if(r.sub) tr.className='sub';
   const cells=r.rev.map(v=>`<td style="color:${v<0?'var(--red)':r.c}">${v<0?'−':'+'}${$f(v)}</td>`).join('');
   const totCell=`<td style="font-weight:800;color:${r.tot<0?'var(--red)':r.c}">${r.tot<0?'−':'+'}${$f(r.tot)}</td>`;
-  tr.innerHTML=`<td style="${r.hi?'color:var(--gold)':''}font-weight:${r.hi?800:r.sub?500:700}">${r.label}</td>${cells}${totCell}`;
+  tr.innerHTML=`<td style="${r.hi?'color:var(--gold);':''}">${r.label}</td>${cells}${totCell}`;
   tbody.appendChild(tr);
 });
 
-// ── CHARTS ────────────────────────────────────────────────────────
+// ── PORTFOLIO CHARTS ──────────────────────────────────────────────
 new Chart(document.getElementById('combinedChart').getContext('2d'),{
   type:'bar',
   data:{labels:MFL, datasets:[
-    {label:'Pumice Net Profit',     data:pumicePrf,    backgroundColor:'rgba(196,98,45,.55)', stack:'s'},
-    {label:'PPC Revenue (w/ Omni)', data:ppcRevOmni,   backgroundColor:'rgba(46,111,219,.55)',stack:'s'},
-    {label:'Rolling Grips Profit',  data:rgPrf,        backgroundColor:'rgba(139,181,0,.55)', stack:'s'},
-    {label:'Sugar Keepers Profit',  data:skPrf,        backgroundColor:'rgba(200,119,34,.55)', stack:'s'},
-    {label:'Life Expenses',         data:expenses.map(v=>-v), backgroundColor:'rgba(192,57,43,.35)',stack:'s'},
+    {label:'Pumice Net Profit',     data:pumicePrf,          backgroundColor:'rgba(196,98,45,.55)',  stack:'s'},
+    {label:'PPC Revenue (w/ Omni)', data:ppcRevOmni,         backgroundColor:'rgba(46,111,219,.55)', stack:'s'},
+    {label:'Rolling Grips Profit',  data:rgPrf,              backgroundColor:'rgba(139,181,0,.55)',  stack:'s'},
+    {label:'Sugar Keepers Profit',  data:skPrf,              backgroundColor:'rgba(200,119,34,.55)', stack:'s'},
+    {label:'Life Expenses',         data:expenses.map(v=>-v),backgroundColor:'rgba(192,57,43,.35)',  stack:'s'},
   ]},
   options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{labels:{color:'#888',font:{size:11}}}},
@@ -323,15 +557,66 @@ new Chart(document.getElementById('combinedChart').getContext('2d'),{
 new Chart(document.getElementById('lifeChart').getContext('2d'),{
   type:'line',
   data:{labels:MFL, datasets:[
-    {label:'PPC Revenue (w/ Omni)', data:ppcRevOmni,backgroundColor:'rgba(46,111,219,.12)',borderColor:'#2E6FDB',fill:true,tension:.3,pointRadius:2},
-    {label:'PPC Confirmed (no Omni)',data:ppcRevConf,borderColor:'rgba(46,111,219,.4)',fill:false,tension:.3,pointRadius:0,borderDash:[4,3]},
-    {label:'Life Expenses',         data:expenses,   backgroundColor:'rgba(192,57,43,.08)',borderColor:'#C0392B',fill:true,tension:.0,pointRadius:2},
+    {label:'PPC Revenue (w/ Omni)', data:ppcRevOmni,   backgroundColor:'rgba(46,111,219,.12)',borderColor:'#2E6FDB',fill:true,tension:.3,pointRadius:2},
+    {label:'PPC Confirmed only',    data:ppcRevConf,   borderColor:'rgba(46,111,219,.4)',fill:false,tension:.3,pointRadius:0,borderDash:[4,3]},
+    {label:'Life Expenses',         data:expenses,     backgroundColor:'rgba(192,57,43,.08)',borderColor:'#C0392B',fill:true,tension:.0,pointRadius:2},
   ]},
   options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{labels:{color:'#888',font:{size:11}}}},
     scales:{x:{ticks:{color:'#888',font:{size:9},maxRotation:45},grid:{color:'#EDE8E0'}},
             y:{ticks:{color:'#888',callback:v=>'$'+v.toLocaleString()},grid:{color:'#EDE8E0'}}}}
 });
+
+// ── SK CHARTS ─────────────────────────────────────────────────────
+new Chart(document.getElementById('skUnitsChart').getContext('2d'),{
+  type:'bar',
+  data:{labels:MFL, datasets:[
+    {label:'Demand',data:skRows.map(r=>r.d),backgroundColor:'rgba(139,69,19,.15)',borderColor:'rgba(139,69,19,.35)',borderWidth:1},
+    {label:'Sold', data:skRows.map(r=>r.sold),backgroundColor:'rgba(200,119,34,.65)',borderColor:'rgba(139,69,19,.8)',borderWidth:1},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#888',font:{size:10}}}},
+    scales:{x:{ticks:{color:'#888',font:{size:8},maxRotation:45},grid:{color:'#EDE8E0'}},
+            y:{ticks:{color:'#888',callback:v=>Nf(v)},grid:{color:'#EDE8E0'}}}}
+});
+
+new Chart(document.getElementById('skPrfChart').getContext('2d'),{
+  type:'bar',
+  data:{labels:MFL, datasets:[
+    {label:'Net Profit',data:skRows.map(r=>r.prf),backgroundColor:'rgba(46,139,87,.65)',borderColor:'rgba(46,139,87,.9)',borderWidth:1},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#888',font:{size:10}}}},
+    scales:{x:{ticks:{color:'#888',font:{size:8},maxRotation:45},grid:{color:'#EDE8E0'}},
+            y:{ticks:{color:'#888',callback:v=>'$'+(v/1000).toFixed(1)+'K'},grid:{color:'#EDE8E0'}}}}
+});
+
+// ── SK MONTHLY TABLE ───────────────────────────────────────────────
+const skTbody=document.getElementById('skTblBody');
+skRows.forEach((r,i)=>{
+  const isPeak=r.sold>2000;
+  const tr=document.createElement('tr');
+  if(isPeak) tr.className='pk';
+  tr.innerHTML=`
+    <td>${MFL[r.m]}</td>
+    <td style="font-weight:700;color:#5A2D0C">${Nf(r.sold)}${r.stockout?'⚠️':isPeak?' 🔥':''}</td>
+    <td>${$f(r.rev)}</td>
+    <td class="pos">${$f(r.prf)}</td>
+    <td style="color:${r.inv<3000?'var(--red)':'var(--mut)'}">${Nf(r.inv)}</td>
+    <td style="color:#5A2D0C;font-weight:700">${$f(r.cumPrf)}</td>
+    <td style="font-size:10px;color:var(--ora)">${r.reorder||'—'}</td>
+  `;
+  skTbody.appendChild(tr);
+  if(i===11||i===23||i===35){
+    const ts=skRows.slice(i-11,i+1);
+    const yTr=document.createElement('tr'); yTr.className='yr';
+    yTr.innerHTML=`<td>YEAR ${Math.floor(i/12)+2} TOTAL</td><td>${Nf(ts.reduce((s,r)=>s+r.sold,0))}</td><td>${$f(ts.reduce((s,r)=>s+r.rev,0))}</td><td style="color:var(--grn)">${$f(ts.reduce((s,r)=>s+r.prf,0))}</td><td>—</td><td>—</td><td>—</td>`;
+    skTbody.appendChild(yTr);
+  }
+});
+const skTot=document.createElement('tr'); skTot.className='tot';
+skTot.innerHTML=`<td colspan="2">TOTAL 36 MO · ${Nf(skRows.reduce((s,r)=>s+r.sold,0))} units</td><td>${$f(skRows.reduce((s,r)=>s+r.rev,0))}</td><td>${$f(skRows.reduce((s,r)=>s+r.prf,0))}</td><td colspan="3"></td>`;
+skTbody.appendChild(skTot);
 </script>
 </body>
 </html>
