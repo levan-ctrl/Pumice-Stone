@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sifri Art — Brown Sugar Keepers</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --sk:#8B4513;--sk-l:#F5E6D5;--sk-d:#5A2D0C;
+  --gold:#D4A843;--grn:#2E8B57;--red:#C0392B;--ora:#E67E22;
+  --bg:#FAF5F0;--card:#fff;--bdr:#E8D5C0;
+  --txt:#2A2A2A;--mut:#7A6A5A;--nav:#2A1505;
+  --amber:#C87722;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:13px;}
+
+nav{position:sticky;top:0;z-index:999;background:var(--nav);display:flex;padding:0 24px;overflow-x:auto;scrollbar-width:none;}
+nav::-webkit-scrollbar{display:none;}
+nav a{color:rgba(255,255,255,.55);text-decoration:none;padding:10px 13px;font-size:11px;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;letter-spacing:.4px;}
+nav a:hover,nav a.act{color:#fff;border-bottom-color:var(--amber);}
+.nav-brand{color:rgba(255,255,255,.35);padding:10px 13px 10px 0;font-size:11px;font-weight:700;letter-spacing:.5px;margin-right:8px;border-right:1px solid rgba(255,255,255,.1);}
+
+.hdr{background:linear-gradient(135deg,#2A1505 0%,#5A2D0C 55%,#8B4513 100%);color:#fff;padding:22px 28px;display:flex;justify-content:space-between;align-items:flex-end;position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(200,119,34,.2),transparent 60%);}
+.hdr-l{position:relative;}
+.hdr-l h1{font-size:22px;font-weight:800;letter-spacing:-.3px;}
+.hdr-l h1 span{color:#F5C896;}
+.hdr-l p{font-size:11px;opacity:.65;margin-top:3px;}
+.hdr-r{text-align:right;position:relative;}
+.hdr-r .big{font-size:27px;font-weight:800;color:#F5C896;}
+.hdr-r .lbl{font-size:10.5px;opacity:.65;}
+
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px 24px 0;}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr);}}
+.kpi{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;padding:11px 13px;text-align:center;}
+.kpi .v{font-size:18px;font-weight:800;margin:3px 0 2px;}
+.kpi .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);font-weight:600;}
+.kpi .s{font-size:10px;color:var(--mut);}
+
+.sec{padding:14px 24px 0;}
+.sec-hd{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--mut);font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.chip{background:var(--nav);color:var(--amber);font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;}
+.chip.grn{background:var(--grn);color:#fff;}
+.chip.red{background:var(--red);color:#fff;}
+
+/* Year 1 summary */
+.y1-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+@media(max-width:700px){.y1-grid{grid-template-columns:repeat(2,1fr);}}
+.y1c{background:var(--card);border:1.5px solid var(--bdr);border-radius:8px;padding:10px 13px;border-left:3px solid var(--amber);}
+.y1c .n{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;}
+.y1c .v{font-size:16px;font-weight:800;}
+.y1c .s{font-size:10px;color:var(--mut);margin-top:2px;}
+
+/* ASIN table */
+.asin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:14px;}
+.ac{background:var(--card);border:1.5px solid var(--bdr);border-radius:8px;padding:10px 13px;}
+.ac .name{font-size:11px;font-weight:700;margin-bottom:4px;color:var(--sk-d);}
+.ac .asin{font-size:9.5px;color:var(--mut);margin-bottom:7px;}
+.ac .row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;}
+.ac .row span:last-child{font-weight:700;}
+
+/* Inventory callout */
+.inv-callout{background:linear-gradient(135deg,#FEF3E8,#FDEBD0);border:2px solid var(--amber);border-radius:10px;padding:14px 18px;margin-bottom:12px;}
+.inv-callout h3{font-size:12px;font-weight:800;color:var(--sk-d);margin-bottom:8px;}
+.inv-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;}
+.inv-item{background:#fff;border:1px solid var(--bdr);border-radius:7px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;}
+.inv-item .qty{font-size:18px;font-weight:800;color:var(--sk-d);}
+
+/* Charts */
+.chart-wrap{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;padding:14px;margin-bottom:10px;}
+.chart-wrap h3{font-size:12px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;}
+.cw{position:relative;height:250px;}
+.two-c{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:700px){.two-c{grid-template-columns:1fr;}}
+
+/* Table */
+.tbl-wrap{background:var(--card);border:1.5px solid var(--bdr);border-radius:9px;overflow:hidden;margin-bottom:22px;}
+.tbl-toggle{width:100%;padding:11px 15px;background:var(--nav);color:#fff;font-size:11.5px;font-weight:700;cursor:pointer;border:none;text-align:left;display:flex;justify-content:space-between;align-items:center;}
+.arr{transition:transform .25s;}
+.tbl-toggle.op .arr{transform:rotate(180deg);}
+.tbl-inner{display:none;overflow-x:auto;}
+.tbl-inner.op{display:block;}
+table{width:100%;border-collapse:collapse;font-size:11px;}
+th{background:var(--nav);color:#fff;padding:6px 9px;text-align:center;font-size:10px;font-weight:600;white-space:nowrap;}
+th:first-child{text-align:left;min-width:85px;}
+td{padding:5px 8px;border-bottom:1px solid var(--bdr);text-align:center;white-space:nowrap;}
+td:first-child{text-align:left;font-weight:600;font-size:10.5px;color:var(--mut);}
+tr:hover td{background:#FAF0E6;}
+tr.pk td{background:#FFF3E8!important;}
+tr.tot td{background:var(--nav)!important;color:#fff!important;font-weight:700;}
+tr.yr td{background:#F5E6D5!important;font-weight:700;}
+.pos{color:var(--grn);font-weight:700;}
+.neg{color:var(--red);font-weight:700;}
+
+/* Alrt */
+.alrt{border-radius:8px;padding:9px 13px;font-size:11.5px;display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;}
+.alrt.grn{background:#EEF8F2;border:1.5px solid #A8D5B8;}
+.alrt.ora{background:#FEF3E8;border:1.5px solid #F5C896;}
+
+.foot{background:var(--nav);color:rgba(255,255,255,.4);text-align:center;padding:10px;font-size:10px;margin-top:8px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">ACTIVE BUSINESSES</span>
+  <a href="home.html">🏠 Overview</a>
+  <a href="index.html">🪨 Pumice Stone</a>
+  <a href="ppc.html">📊 PPC Services</a>
+  <a href="rolling-grips.html">💪 Rolling Grips</a>
+  <a href="sugar-keepers.html" class="act">🍬 Sugar Keepers</a>
+</nav>
+
+<div class="hdr">
+  <div class="hdr-l">
+    <h1>Sifri Art <span>Brown Sugar Keepers</span></h1>
+    <p>Amazon FBA · 7 ASINs · Bear Flagship · 20% YoY Growth · Aug 2026 – Jul 2029</p>
+  </div>
+  <div class="hdr-r">
+    <div class="lbl">36-Mo Forecast Net Profit</div>
+    <div class="big" id="hProfit">—</div>
+    <div class="lbl">$2.90/unit · 20% YoY growth · 1,500/mo floor</div>
+  </div>
+</div>
+
+<div class="kpis" id="kpiRow"></div>
+
+<!-- YEAR 1 REAL DATA -->
+<div class="sec" style="padding-bottom:12px">
+  <div class="sec-hd">Year 1 Actual (SellerBoard: Jul 2025 – Jun 2026) <span class="chip">Real Data</span></div>
+  <div class="y1-grid">
+    <div class="y1c"><div class="n">Total Units Sold</div><div class="v">10,771</div><div class="s">7,264 Bear · 3,507 variants</div></div>
+    <div class="y1c"><div class="n">Total Sales Revenue</div><div class="v">$131,090</div><div class="s">~$12.17 avg selling price</div></div>
+    <div class="y1c"><div class="n">Net Profit (Year 1)</div><div class="v">$27,475</div><div class="s">Margin 20.96% · Real ACOS 21.68%</div></div>
+    <div class="y1c"><div class="n">Peak Month</div><div class="v">Dec 2025</div><div class="s">~2,500+ units · Holiday season</div></div>
+  </div>
+</div>
+
+<!-- ASIN BREAKDOWN -->
+<div class="sec" style="padding-bottom:12px">
+  <div class="sec-hd">ASIN Performance (Year 1 SellerBoard)</div>
+  <div class="asin-grid">
+    <div class="ac">
+      <div class="name">🐻 Bear (Main)</div>
+      <div class="asin">B0DH293GN5</div>
+      <div class="row"><span>Units sold</span><span>7,264</span></div>
+      <div class="row"><span>Price</span><span>$12.89</span></div>
+      <div class="row"><span>Net profit</span><span style="color:var(--grn)">~$18,000</span></div>
+      <div class="row"><span>ACOS</span><span>25.16%</span></div>
+      <div class="row"><span>Sessions</span><span>48,193</span></div>
+    </div>
+    <div class="ac">
+      <div class="name">❤️ Heart</div>
+      <div class="asin">B0FDX99BSX</div>
+      <div class="row"><span>Units sold</span><span>1,762</span></div>
+      <div class="row"><span>Price</span><span>~$9.49</span></div>
+      <div class="row"><span>Net profit</span><span style="color:var(--grn)">$4,172</span></div>
+      <div class="row"><span>Margin</span><span>24.95%</span></div>
+    </div>
+    <div class="ac">
+      <div class="name">🐱 Cat & Spoon</div>
+      <div class="asin">B0FNS1R2KY</div>
+      <div class="row"><span>Units sold</span><span>518</span></div>
+      <div class="row"><span>Price</span><span>$18.55</span></div>
+      <div class="row"><span>Revenue</span><span>$9,053</span></div>
+      <div class="row"><span>Net profit</span><span style="color:var(--grn)">$4,370</span></div>
+      <div class="row"><span>Margin</span><span>48.27%</span></div>
+    </div>
+    <div class="ac">
+      <div class="name">🐕 Dog & Spoon</div>
+      <div class="asin">B0FNRZL9MX</div>
+      <div class="row"><span>Units sold</span><span>314</span></div>
+      <div class="row"><span>Price</span><span>~$15.99</span></div>
+      <div class="row"><span>Net profit</span><span style="color:var(--grn)">$2,333</span></div>
+      <div class="row"><span>Margin</span><span>46.48%</span></div>
+    </div>
+    <div class="ac">
+      <div class="name">🐝 Bee & Spoon</div>
+      <div class="asin">B0FNS2DKC6</div>
+      <div class="row"><span>Units sold</span><span>218</span></div>
+      <div class="row"><span>Price</span><span>~$13.58</span></div>
+      <div class="row"><span>Net profit</span><span style="color:var(--grn)">$574</span></div>
+      <div class="row"><span>Margin</span><span>19.38%</span></div>
+    </div>
+    <div class="ac">
+      <div class="name">🦉 Owl & Spoon</div>
+      <div class="asin">B0FP987XW1</div>
+      <div class="row"><span>Units sold</span><span>124</span></div>
+      <div class="row"><span>Price</span><span>$17.89</span></div>
+      <div class="row"><span>Revenue</span><span>$1,763</span></div>
+      <div class="row"><span>Net profit</span><span style="color:var(--grn)">$390</span></div>
+      <div class="row"><span>Margin</span><span>22.10%</span></div>
+    </div>
+    <div class="ac">
+      <div class="name">🐱 Cat (Solo)</div>
+      <div class="asin">B0GN9CRXV2</div>
+      <div class="row"><span>Units sold</span><span>64</span></div>
+      <div class="row"><span>Price</span><span>$12.89</span></div>
+      <div class="row"><span>Net profit</span><span style="color:var(--grn)">$441</span></div>
+      <div class="row"><span>Margin</span><span>53.45%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- INVENTORY -->
+<div class="sec" style="padding-bottom:12px">
+  <div class="sec-hd">Incoming Shipment — Jul 8, 2026 <span class="chip">5,500 Units</span></div>
+  <div class="inv-callout">
+    <h3>📦 Order Arriving ~Jul 8 (from March 20 order · ~3.5 month lead time)</h3>
+    <div class="inv-items">
+      <div class="inv-item"><span>🐻 Bear (old pkg)</span><div class="qty">3,000</div></div>
+      <div class="inv-item"><span>🐻❤️ Bear + Heart combo</span><div class="qty">500</div></div>
+      <div class="inv-item"><span>❤️ Heart (old pkg)</span><div class="qty">1,000</div></div>
+      <div class="inv-item"><span>❤️🥄 Heart + Spoon</span><div class="qty">500</div></div>
+      <div class="inv-item"><span>🐕🥄 Dog + Spoon</span><div class="qty">450</div></div>
+      <div class="inv-item"><span>🐻🐕🥄 Bear/Dog/Spoon</span><div class="qty">50</div></div>
+      <div class="inv-item"><span><strong>TOTAL</strong></span><div class="qty" style="color:var(--grn)">5,500</div></div>
+      <div class="inv-item"><span>🐻🐱🥄 Bear/Cat/Spoon</span><div class="qty">+100</div></div>
+    </div>
+  </div>
+
+  <div class="alrt grn">
+    <span>✅</span>
+    <div><strong>Stock coverage:</strong> 5,600 new units + ~1,000 current stock = 6,600 units total arriving Aug 2026. At 1,500/month baseline that's <strong>4.4 months coverage</strong> before the holiday peak. Next reorder should target <strong>Oct 2026</strong> (arriving Jan 2027) to cover Q1 2027.</div>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div class="sec" style="padding-bottom:12px">
+  <div class="sec-hd">Revenue & Profit Forecast</div>
+  <div class="chart-wrap" style="margin-bottom:10px">
+    <h3>Monthly Units Sold — Forecast (Aug 2026 – Jul 2029) <span style="font-size:10px;color:var(--mut);font-weight:400">20% YoY growth · seasonal peaks · 1,500/mo floor</span></h3>
+    <div class="cw"><canvas id="unitsChart"></canvas></div>
+  </div>
+  <div class="two-c">
+    <div class="chart-wrap">
+      <h3>Monthly Net Profit</h3>
+      <div class="cw"><canvas id="profitChart"></canvas></div>
+    </div>
+    <div class="chart-wrap">
+      <h3>Inventory Level</h3>
+      <div class="cw"><canvas id="invChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- 36-MONTH TABLE -->
+<div class="sec">
+  <div class="tbl-wrap">
+    <button class="tbl-toggle op" onclick="this.classList.toggle('op');document.getElementById('tblInner').classList.toggle('op')">
+      <span>🍬 Full 36-Month Breakdown — Brown Sugar Keepers</span>
+      <span class="arr">▼</span>
+    </button>
+    <div class="tbl-inner op" id="tblInner">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left">Month</th>
+            <th style="background:#5A2D0C">Units Sold</th>
+            <th style="background:#3A5C30">Revenue</th>
+            <th style="background:#2E5530">Net Profit</th>
+            <th style="background:#1A3A5C">Inventory</th>
+            <th style="background:#5C3A1A">Cum. Profit</th>
+            <th>Reorder?</th>
+          </tr>
+        </thead>
+        <tbody id="tblBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="foot">Active Businesses Dashboard · Sifri Art Brown Sugar Keepers · Aug 2026 – Jul 2029 · SellerBoard Data: Jul 2025 – Jun 2026</div>
+
+<script>
+const MFL=['Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Feb 2027','Mar 2027','Apr 2027','May 2027','Jun 2027','Jul 2027','Aug 2027','Sep 2027','Oct 2027','Nov 2027','Dec 2027','Jan 2028','Feb 2028','Mar 2028','Apr 2028','May 2028','Jun 2028','Jul 2028','Aug 2028','Sep 2028','Oct 2028','Nov 2028','Dec 2028','Jan 2029','Feb 2029','Mar 2029','Apr 2029','May 2029','Jun 2029','Jul 2029'];
+
+// ── CONSTANTS ──────────────────────────────────────────────────────
+const PRF        = 2.90;   // net profit per unit (after all Amazon fees, PPC, refunds)
+const COG        = 1.10;   // supplier cost per unit
+const AVG_PRICE  = 12.50;  // average selling price
+const START_INV  = 6600;   // ~1,000 current + 5,500 incoming + 100 bear/cat/spoon
+const FLOOR      = 1500;   // monthly floor guaranteed
+
+// Calendar month for Aug 2026 = index 7 (0=Jan)
+const START_CAL  = 7;
+
+// Seasonal multipliers (Jan=0 through Dec=11)
+const SEA = [0.55, 0.50, 0.55, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 1.25, 2.10, 2.50];
+
+function demUnits(m){
+  const calM = (START_CAL + m) % 12;
+  const trend = FLOOR * Math.pow(1.20, m/12);
+  return Math.max(FLOOR, Math.round(trend * SEA[calM]));
+}
+
+// ── SIMULATION ─────────────────────────────────────────────────────
+const rows = [];
+let inv = START_INV, cumPrf = 0;
+const LEAD = 3; // months lead time for reorders
+const MIN_ORD = 2500;
+
+const pendingOrders = [];
+
+for(let m=0; m<36; m++){
+  // Incoming orders
+  pendingOrders.filter(o=>o.arrM===m).forEach(o=>inv+=o.qty);
+
+  const d  = demUnits(m);
+  const sold = Math.min(inv, d);
+  inv -= sold;
+  const prf = sold * PRF;
+  const rev = sold * AVG_PRICE;
+  cumPrf += prf;
+
+  // Reorder logic: if inventory < 3 months of projected demand ahead, place order
+  let projInv = inv;
+  for(let i=1; i<=LEAD; i++){
+    projInv -= demUnits(m+i);
+    pendingOrders.filter(o=>o.arrM===m+i).forEach(o=>projInv+=o.qty);
+  }
+  let reorder = '';
+  if(projInv < demUnits(m+LEAD+1) * 2 && !pendingOrders.some(o=>o.arrM>=m&&o.arrM<=m+LEAD)){
+    // Calc order qty: cover 5 months post-arrival
+    let qty = 0;
+    for(let i=LEAD;i<LEAD+5;i++) qty+=demUnits(m+i);
+    qty = Math.max(MIN_ORD, Math.round(qty/500)*500);
+    pendingOrders.push({arrM:m+LEAD, qty});
+    reorder = '📦 Order '+qty.toLocaleString()+'u';
+  }
+
+  rows.push({m, d, sold, inv, prf, rev, cumPrf, reorder, stockout:sold<d&&d>0});
+}
+
+const $f  = v => '$'+Math.round(v).toLocaleString();
+const Nf  = v => Math.round(v).toLocaleString();
+
+// ── KPIs ──────────────────────────────────────────────────────────
+const totSold   = rows.reduce((s,r)=>s+r.sold,0);
+const totRev    = rows.reduce((s,r)=>s+r.rev,0);
+const totPrf    = rows.reduce((s,r)=>s+r.prf,0);
+const peakM     = rows.reduce((a,r,i)=>r.sold>rows[a].sold?i:a,0);
+const stockouts = rows.filter(r=>r.stockout).length;
+const y1Units   = rows.slice(0,12).reduce((s,r)=>s+r.sold,0);
+const y2Units   = rows.slice(12,24).reduce((s,r)=>s+r.sold,0);
+
+document.getElementById('hProfit').textContent=$f(totPrf);
+
+const kpis=[
+  {l:'Year 1 Actual Net Profit',  v:'$27,475',       s:'Jul 2025 – Jun 2026 (real)',          c:'var(--amber)'},
+  {l:'Forecast Yr 2 Net Profit',  v:$f(rows.slice(0,12).reduce((s,r)=>s+r.prf,0)), s:'Aug 2026 – Jul 2027', c:'var(--grn)'},
+  {l:'Forecast Yr 3 Net Profit',  v:$f(rows.slice(12,24).reduce((s,r)=>s+r.prf,0)), s:'Aug 2027 – Jul 2028', c:'var(--grn)'},
+  {l:'Forecast Yr 4 Net Profit',  v:$f(rows.slice(24,36).reduce((s,r)=>s+r.prf,0)), s:'Aug 2028 – Jul 2029', c:'var(--grn)'},
+  {l:'36-Mo Net Profit Total',    v:$f(totPrf),      s:'forecast period only',               c:'var(--sk)'},
+  {l:'36-Mo Units Sold',          v:Nf(totSold),     s:'forecast Aug 2026–Jul 2029',          c:'var(--txt)'},
+  {l:'Peak Month',                v:MFL[peakM],      s:Nf(rows[peakM].sold)+' units sold',   c:'var(--amber)'},
+  {l:'Peak Net Profit',           v:$f(rows[peakM].prf), s:'in '+MFL[peakM],                 c:'var(--grn)'},
+  {l:'Stock-Outs',                v:stockouts,       s:stockouts===0?'None ✅':'Months missed',c:stockouts===0?'var(--grn)':'var(--red)'},
+  {l:'Incoming Inventory',        v:'6,600u',        s:'~Jul 8: 5,500 + 100 + ~1K on hand',  c:'#2E6FDB'},
+];
+const kr=document.getElementById('kpiRow');
+kpis.slice(0,5).forEach(k=>{
+  const d=document.createElement('div'); d.className='kpi';
+  d.innerHTML=`<div class="l">${k.l}</div><div class="v" style="color:${k.c}">${k.v}</div><div class="s">${k.s}</div>`;
+  kr.appendChild(d);
+});
+const kr2=document.createElement('div'); kr2.className='kpis'; kr2.style.paddingTop='8px';
+kpis.slice(5).forEach(k=>{
+  const d=document.createElement('div'); d.className='kpi';
+  d.innerHTML=`<div class="l">${k.l}</div><div class="v" style="color:${k.c}">${k.v}</div><div class="s">${k.s}</div>`;
+  kr2.appendChild(d);
+});
+kr.parentNode.insertBefore(kr2, kr.nextSibling);
+
+// ── CHARTS ─────────────────────────────────────────────────────────
+const soldData = rows.map(r=>r.sold);
+const demData  = rows.map(r=>r.d);
+const prfData  = rows.map(r=>r.prf);
+const invData  = rows.map(r=>r.inv);
+
+new Chart(document.getElementById('unitsChart').getContext('2d'),{
+  type:'bar',
+  data:{labels:MFL, datasets:[
+    {label:'Demand',data:demData,backgroundColor:'rgba(139,69,19,.15)',borderColor:'rgba(139,69,19,.4)',borderWidth:1},
+    {label:'Sold',data:soldData,backgroundColor:'rgba(200,119,34,.65)',borderColor:'rgba(139,69,19,.8)',borderWidth:1},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#888',font:{size:11}}}},
+    scales:{x:{ticks:{color:'#888',font:{size:9},maxRotation:45},grid:{color:'#EDE8E0'}},
+            y:{ticks:{color:'#888',callback:v=>Nf(v)},grid:{color:'#EDE8E0'},title:{display:true,text:'Units',color:'#888',font:{size:10}}}}}
+});
+
+new Chart(document.getElementById('profitChart').getContext('2d'),{
+  type:'bar',
+  data:{labels:MFL, datasets:[
+    {label:'Monthly Net Profit',data:prfData,
+     backgroundColor:prfData.map(()=>'rgba(46,139,87,.65)'),
+     borderColor:prfData.map(()=>'rgba(46,139,87,.9)'),borderWidth:1},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#888',font:{size:11}}}},
+    scales:{x:{ticks:{color:'#888',font:{size:9},maxRotation:45},grid:{color:'#EDE8E0'}},
+            y:{ticks:{color:'#888',callback:v=>'$'+(v/1000).toFixed(1)+'K'},grid:{color:'#EDE8E0'}}}}
+});
+
+new Chart(document.getElementById('invChart').getContext('2d'),{
+  type:'line',
+  data:{labels:MFL, datasets:[
+    {label:'Inventory (units)',data:invData,borderColor:'rgba(139,69,19,.8)',backgroundColor:'rgba(200,119,34,.1)',fill:true,tension:.3,pointRadius:2},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#888',font:{size:11}}}},
+    scales:{x:{ticks:{color:'#888',font:{size:9},maxRotation:45},grid:{color:'#EDE8E0'}},
+            y:{ticks:{color:'#888',callback:v=>Nf(v)+'u'},grid:{color:'#EDE8E0'}}}}
+});
+
+// ── TABLE ──────────────────────────────────────────────────────────
+const tbody = document.getElementById('tblBody');
+let totRevT=0, totPrfT=0, totSoldT=0;
+rows.forEach((r,i)=>{
+  totRevT+=r.rev; totPrfT+=r.prf; totSoldT+=r.sold;
+  const isPeak = r.sold > 2000;
+  const isYrEnd = (i===11||i===23||i===35);
+  const tr = document.createElement('tr');
+  if(isPeak) tr.className='pk';
+  tr.innerHTML=`
+    <td>${MFL[r.m]}</td>
+    <td style="font-weight:700;color:var(--sk-d)">${Nf(r.sold)}${r.stockout?'⚠️':isPeak?' 🔥':''}</td>
+    <td>${$f(r.rev)}</td>
+    <td class="pos">${$f(r.prf)}</td>
+    <td style="color:${r.inv<FLOOR*2?'var(--red)':'var(--mut)'}">${Nf(r.inv)}</td>
+    <td style="color:var(--sk-d);font-weight:700">${$f(r.cumPrf)}</td>
+    <td style="font-size:10px;color:var(--ora)">${r.reorder||'—'}</td>
+  `;
+  tbody.appendChild(tr);
+  if(isYrEnd){
+    const yr = Math.floor(i/12)+2;
+    const ts = rows.slice(i-11, i+1);
+    const yTr=document.createElement('tr'); yTr.className='yr';
+    yTr.innerHTML=`<td>YEAR ${yr} TOTAL</td><td>${Nf(ts.reduce((s,r)=>s+r.sold,0))}</td><td>${$f(ts.reduce((s,r)=>s+r.rev,0))}</td><td style="color:var(--grn)">${$f(ts.reduce((s,r)=>s+r.prf,0))}</td><td>—</td><td>—</td><td>—</td>`;
+    tbody.appendChild(yTr);
+  }
+});
+const tot=document.createElement('tr'); tot.className='tot';
+tot.innerHTML=`<td colspan="2">TOTAL 36 MO · ${Nf(totSoldT)} units</td><td>${$f(totRevT)}</td><td>${$f(totPrfT)}</td><td colspan="3"></td>`;
+tbody.appendChild(tot);
+</script>
+</body>
+</html>

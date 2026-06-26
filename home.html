@@ -29,8 +29,9 @@ nav a:hover,nav a.act{color:#fff;border-bottom-color:var(--gold);}
 .hdr p{font-size:12px;opacity:.6;margin-bottom:20px;}
 
 /* Business cards (hero) */
-.biz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;max-width:780px;margin:0 auto;}
-@media(max-width:700px){.biz-grid{grid-template-columns:1fr;}}
+.biz-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;max-width:1000px;margin:0 auto;}
+@media(max-width:800px){.biz-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.biz-grid{grid-template-columns:1fr;}}
 .biz-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:20px 18px;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;display:block;color:#fff;}
 .biz-card:first-child{border-radius:12px 0 0 12px;}
 .biz-card:last-child{border-radius:0 12px 12px 0;}
@@ -87,6 +88,7 @@ tr.hi td{background:#1C1410;color:#fff;font-weight:800;font-size:12px;}
   <a href="index.html">🪨 Pumice Stone</a>
   <a href="ppc.html">📊 PPC Services</a>
   <a href="rolling-grips.html">💪 Rolling Grips</a>
+  <a href="sugar-keepers.html">🍬 Sugar Keepers</a>
 </nav>
 
 <!-- HERO -->
@@ -111,12 +113,20 @@ tr.hi td{background:#1C1410;color:#fff;font-weight:800;font-size:12px;}
         <div class="blbl">36-Mo Revenue (w/ Omni)</div>
         <div class="btn">Open Dashboard →</div>
       </a>
-      <a class="biz-card" href="rolling-grips.html" style="border-right-color:var(--c-rg)">
+      <a class="biz-card" href="rolling-grips.html">
         <div class="ico">💪</div>
         <div class="bname" style="color:#C8FF00">Rolling Grips</div>
         <div class="bsub">Kickstarter Launch · Amazon FBA</div>
         <div class="bamt" id="h-rg-rev">—</div>
         <div class="blbl">36-Mo Revenue</div>
+        <div class="btn">Open Dashboard →</div>
+      </a>
+      <a class="biz-card" href="sugar-keepers.html" style="border-right-color:#C87722">
+        <div class="ico">🍬</div>
+        <div class="bname" style="color:#F5C896">Sugar Keepers</div>
+        <div class="bsub">Sifri Art · 7 ASINs · Bear Flagship</div>
+        <div class="bamt" id="h-sk-rev">—</div>
+        <div class="blbl">36-Mo Net Profit (forecast)</div>
         <div class="btn">Open Dashboard →</div>
       </a>
     </div>
@@ -130,7 +140,7 @@ tr.hi td{background:#1C1410;color:#fff;font-weight:800;font-size:12px;}
 
   <div class="alrt ora">
     <span>📌</span>
-    <div><strong>Note:</strong> Pumice Stone and Rolling Grips revenues are simulated projections. PPC revenue is contracted (confirmed clients). Rolling Grips includes Kickstarter + Amazon phase. Life expenses ($3.5K→$4.5K→$5.5K/mo) shown as deduction.</div>
+    <div><strong>Note:</strong> Pumice Stone, Rolling Grips, and Sugar Keepers are simulated projections. Sugar Keepers based on real Year 1 SellerBoard data ($27,475 net profit) with 20% YoY growth. PPC revenue is contracted. Rolling Grips includes Kickstarter + Amazon phase. Life expenses ($3.5K→$4.5K→$5.5K/mo) deducted from net.</div>
   </div>
 </div>
 
@@ -209,6 +219,13 @@ function rgMonthRev(m){
   return Math.min(RG_PEAK, Math.round(100*Math.pow(1.5,m-RG_LAUNCH)))*92;
 }
 
+// ── SUGAR KEEPERS ($2.90/unit · 20% YoY · seasonal) ──────────────
+const SK_FLOOR=1500, SK_PRF=2.90, SK_PRICE=12.50, SK_START_CAL=7;
+const SK_SEA=[0.55,0.50,0.55,0.65,0.70,0.75,0.80,0.85,0.90,1.25,2.10,2.50];
+function skDem(m){ const c=(SK_START_CAL+m)%12; return Math.max(SK_FLOOR,Math.round(SK_FLOOR*Math.pow(1.20,m/12)*SK_SEA[c])); }
+function skMonthRev(m){ return skDem(m)*SK_PRICE; }
+function skMonthProfit(m){ return skDem(m)*SK_PRF; }
+
 // ── COMPUTE MONTHLY DATA ───────────────────────────────────────────
 const months=Array.from({length:36},(_,i)=>i);
 const pumiceRev=months.map(pumiceMonthRev);
@@ -217,13 +234,13 @@ const ppcRevConf=months.map(m=>ppcRev(m).confirmed);
 const ppcRevOmni=months.map(m=>ppcRev(m).withOmni);
 const rgRev=months.map(rgMonthRev);
 const rgPrf=months.map(rgMonthProfit);
+const skRev=months.map(skMonthRev);
+const skPrf=months.map(skMonthProfit);
 const expenses=months.map(lifeExp);
-const totalRevConf=months.map(m=>pumiceRev[m]+ppcRevConf[m]+rgRev[m]);
-const totalPrfConf=months.map(m=>pumicePrf[m]+ppcRevConf[m]+rgPrf[m]-lifeExp(m));
-const totalPrfOmni=months.map(m=>pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]-lifeExp(m));
+const totalPrfOmni=months.map(m=>pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]+skPrf[m]-lifeExp(m));
 
 // ── PERIOD SUMS ───────────────────────────────────────────────────
-const periods=[[0,5],[5,17],[17,29],[29,36]]; // 2026(5mo), 2027(12mo), 2028(12mo), 2029(7mo)
+const periods=[[0,5],[5,17],[17,29],[29,36]];
 function sumPeriod(arr,p){return arr.slice(p[0],p[1]).reduce((a,v)=>a+v,0);}
 
 const pumRevPer =periods.map(p=>sumPeriod(pumiceRev,p));
@@ -231,28 +248,31 @@ const pumPrfPer =periods.map(p=>sumPeriod(pumicePrf,p));
 const ppcRevPer =periods.map(p=>sumPeriod(ppcRevOmni,p));
 const rgRevPer  =periods.map(p=>sumPeriod(rgRev,p));
 const rgPrfPer  =periods.map(p=>sumPeriod(rgPrf,p));
+const skRevPer  =periods.map(p=>sumPeriod(skRev,p));
+const skPrfPer  =periods.map(p=>sumPeriod(skPrf,p));
 const expPer    =periods.map(p=>sumPeriod(expenses,p));
-const totRevPer =periods.map((_,i)=>pumRevPer[i]+ppcRevPer[i]+rgRevPer[i]);
-const netPer    =periods.map((_,i)=>pumPrfPer[i]+ppcRevPer[i]+rgPrfPer[i]-expPer[i]);
+const netPer    =periods.map((_,i)=>pumPrfPer[i]+ppcRevPer[i]+rgPrfPer[i]+skPrfPer[i]-expPer[i]);
 
 const sum36=a=>a.reduce((s,v)=>s+v,0);
 const totPumRev=sum36(pumiceRev), totPumPrf=sum36(pumicePrf);
 const totPpcRev=sum36(ppcRevOmni);
 const totRgRev=sum36(rgRev), totRgPrf=sum36(rgPrf);
+const totSkRev=sum36(skRev), totSkPrf=sum36(skPrf);
 const totExp=sum36(expenses);
-const totNet=totPumPrf+totPpcRev+totRgPrf-totExp;
+const totNet=totPumPrf+totPpcRev+totRgPrf+totSkPrf-totExp;
 
 // ── HERO KPIs ─────────────────────────────────────────────────────
 document.getElementById('h-pumice-rev').textContent='$'+Math.round(totPumRev/1000)+'K';
 document.getElementById('h-ppc-rev').textContent='$'+Math.round(totPpcRev/1000)+'K';
 document.getElementById('h-rg-rev').textContent='$'+Math.round(totRgRev/1000)+'K';
+document.getElementById('h-sk-rev').textContent='$'+Math.round(totSkPrf/1000)+'K';
 
 const kpis=[
-  {l:'Total 36-Mo Revenue',    v:$f(totPumRev+totPpcRev+totRgRev),  s:'All 3 businesses',          c:'var(--gold)'},
-  {l:'Life Expenses 36-Mo',    v:$f(totExp),                          s:'$3.5K→$4.5K→$5.5K/mo',    c:'var(--red)'},
-  {l:'36-Mo Net (all biz)',     v:$fs(totNet),                         s:'after expenses',           c:totNet>0?'var(--grn)':'var(--red)'},
-  {l:'Peak Monthly (Combined)', v:$f(Math.max(...totalPrfOmni)),       s:MFL[totalPrfOmni.indexOf(Math.max(...totalPrfOmni))], c:'var(--grn)'},
-  {l:'Break-Even Month',       v:(()=>{let c=0;for(let m=0;m<36;m++){c+=totalPrfOmni[m];if(c>0)return MFL[m];}return '36+mo';})(), s:'cumulative net turns positive', c:'var(--pur)'},
+  {l:'Total 36-Mo Revenue',    v:$f(totPumRev+totPpcRev+totRgRev+totSkRev),s:'All 4 businesses',        c:'var(--gold)'},
+  {l:'Life Expenses 36-Mo',    v:$f(totExp),                                  s:'$3.5K→$4.5K→$5.5K/mo', c:'var(--red)'},
+  {l:'36-Mo Net (all biz)',     v:$fs(totNet),                                 s:'after expenses',         c:totNet>0?'var(--grn)':'var(--red)'},
+  {l:'Peak Monthly (Combined)', v:$f(Math.max(...totalPrfOmni)),               s:MFL[totalPrfOmni.indexOf(Math.max(...totalPrfOmni))],c:'var(--grn)'},
+  {l:'Break-Even Month',       v:(()=>{let c=0;for(let m=0;m<36;m++){c+=totalPrfOmni[m];if(c>0)return MFL[m];}return '36+mo';})(),s:'cumulative net positive',c:'var(--pur)'},
 ];
 const kr=document.getElementById('kpiRow');
 kpis.forEach(k=>{
@@ -269,7 +289,9 @@ const rows=[
   {label:'📊 PPC Services (w/ Omni)',rev:ppcRevPer,  tot:totPpcRev,  c:'var(--c-ppc)',sub:false},
   {label:'💪 Rolling Grips Revenue', rev:rgRevPer,   tot:totRgRev,   c:'var(--c-rg)', sub:false},
   {label:'  └ Net Profit',          rev:rgPrfPer,   tot:totRgPrf,   c:'var(--grn)',sub:true},
-  {label:'🏠 Life Expenses',         rev:expPer.map(v=>-v), tot:-totExp, c:'var(--red)',sub:false},
+  {label:'🍬 Sugar Keepers Revenue', rev:skRevPer,   tot:totSkRev,   c:'#C87722',    sub:false},
+  {label:'  └ Net Profit',          rev:skPrfPer,   tot:totSkPrf,   c:'var(--grn)', sub:true},
+  {label:'🏠 Life Expenses',         rev:expPer.map(v=>-v),tot:-totExp,c:'var(--red)',sub:false},
   {label:'💰 TOTAL NET',             rev:netPer,     tot:totNet,     c:totNet>0?'var(--grn)':'var(--red)',sub:false,hi:true},
 ];
 rows.forEach(r=>{
@@ -289,6 +311,7 @@ new Chart(document.getElementById('combinedChart').getContext('2d'),{
     {label:'Pumice Net Profit',     data:pumicePrf,    backgroundColor:'rgba(196,98,45,.55)', stack:'s'},
     {label:'PPC Revenue (w/ Omni)', data:ppcRevOmni,   backgroundColor:'rgba(46,111,219,.55)',stack:'s'},
     {label:'Rolling Grips Profit',  data:rgPrf,        backgroundColor:'rgba(139,181,0,.55)', stack:'s'},
+    {label:'Sugar Keepers Profit',  data:skPrf,        backgroundColor:'rgba(200,119,34,.55)', stack:'s'},
     {label:'Life Expenses',         data:expenses.map(v=>-v), backgroundColor:'rgba(192,57,43,.35)',stack:'s'},
   ]},
   options:{responsive:true,maintainAspectRatio:false,
