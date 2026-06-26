@@ -227,6 +227,32 @@ table.detail tr.yr td{background:#F5E6D5!important;font-weight:700;}
     <h3>Monthly PPC Income vs Life Expenses</h3>
     <div class="cw"><canvas id="lifeChart"></canvas></div>
   </div>
+
+  <!-- MONTHLY INCOME / EXPENSES BREAKDOWN TABLE -->
+  <div class="tbl-wrap" style="margin-bottom:0">
+    <button class="tbl-toggle op" onclick="this.classList.toggle('op');document.getElementById('momInner').classList.toggle('op')">
+      <span>📅 Month-by-Month Income &amp; Expenses — All Businesses</span>
+      <span class="arr">▼</span>
+    </button>
+    <div class="tbl-inner op" id="momInner">
+      <table class="detail">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:85px">Month</th>
+            <th style="background:#5A2D0C">🪨 Pumice</th>
+            <th style="background:#0D1B2A">📊 PPC</th>
+            <th style="background:#1A3A00">💪 Rolling Grips</th>
+            <th style="background:#5C3A1A">🍬 Sugar</th>
+            <th style="background:#2A1A00">Total Income</th>
+            <th style="background:#4A0000">🏠 Expenses</th>
+            <th style="background:#1A1A2A">Net</th>
+            <th style="background:#0A1A0A">Cumulative</th>
+          </tr>
+        </thead>
+        <tbody id="momBody"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
@@ -546,6 +572,58 @@ new Chart(document.getElementById('lifeChart').getContext('2d'),{
     scales:{x:{ticks:{color:'#888',font:{size:9},maxRotation:45},grid:{color:'#EDE8E0'}},
             y:{ticks:{color:'#888',callback:v=>'$'+v.toLocaleString()},grid:{color:'#EDE8E0'}}}}
 });
+
+// ── MONTH-BY-MONTH TABLE ─────────────────────────────────────────
+(function buildMoM(){
+  const tbody=document.getElementById('momBody');
+  let cumNet=0;
+  months.forEach(m=>{
+    const pumice = pumicePrf[m];
+    const ppc    = ppcRevOmni[m];
+    const rg     = rgPrf[m];
+    const sk     = skPrf[m];
+    const total  = pumice+ppc+rg+sk;
+    const exp    = expenses[m];
+    const net    = total-exp;
+    cumNet      += net;
+
+    const tr=document.createElement('tr');
+    const netColor=net>=0?'var(--grn)':'var(--red)';
+    const cumColor=cumNet>=0?'var(--grn)':'var(--red)';
+    // highlight year boundaries
+    const isYrEnd=(m===4||m===16||m===28);
+    if(isYrEnd) tr.style.borderTop='2px solid #C8A870';
+    tr.innerHTML=`
+      <td style="color:var(--mut);font-size:10.5px">${MFL[m]}</td>
+      <td style="color:var(--c-pumice)">${pumice>0?'+'+$f(pumice):'—'}</td>
+      <td style="color:var(--c-ppc)">+${$f(ppc)}</td>
+      <td style="color:var(--c-rg)">${rg>0?'+'+$f(rg):'—'}</td>
+      <td style="color:var(--c-sk)">+${$f(sk)}</td>
+      <td style="font-weight:700">+${$f(total)}</td>
+      <td style="color:var(--red)">−${$f(exp)}</td>
+      <td style="font-weight:800;color:${netColor}">${net>=0?'+':'−'}${$f(Math.abs(net))}</td>
+      <td style="font-weight:700;color:${cumColor}">${cumNet>=0?'+':'−'}${$f(Math.abs(cumNet))}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  // Total row
+  const totNet=months.reduce((s,m)=>s+pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]+skPrf[m]-expenses[m],0);
+  const totInc=months.reduce((s,m)=>s+pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]+skPrf[m],0);
+  const totExp=months.reduce((s,m)=>s+expenses[m],0);
+  const tot=document.createElement('tr'); tot.className='tot';
+  tot.innerHTML=`
+    <td>TOTAL 36 MO</td>
+    <td>+${$f(months.reduce((s,m)=>s+pumicePrf[m],0))}</td>
+    <td>+${$f(months.reduce((s,m)=>s+ppcRevOmni[m],0))}</td>
+    <td>+${$f(months.reduce((s,m)=>s+rgPrf[m],0))}</td>
+    <td>+${$f(months.reduce((s,m)=>s+skPrf[m],0))}</td>
+    <td>+${$f(totInc)}</td>
+    <td style="color:#E08080">−${$f(totExp)}</td>
+    <td style="color:${totNet>=0?'#7EE8A2':'#E08080'};font-weight:800">${totNet>=0?'+':'−'}${$f(Math.abs(totNet))}</td>
+    <td></td>
+  `;
+  tbody.appendChild(tot);
+})();
 
 // ── SK CHARTS ─────────────────────────────────────────────────────
 new Chart(document.getElementById('skUnitsChart').getContext('2d'),{
