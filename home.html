@@ -245,7 +245,8 @@ table.detail tr.yr td{background:#F5E6D5!important;font-weight:700;}
             <th style="background:#5C3A1A">🍬 Sugar</th>
             <th style="background:#2A1A00">Total Income</th>
             <th style="background:#4A0000">🏠 Expenses</th>
-            <th style="background:#1A1A2A">Net</th>
+            <th style="background:#3A1A1A">📦 Reorders</th>
+            <th style="background:#1A1A2A">Cash Net</th>
             <th style="background:#0A1A0A">Cumulative</th>
           </tr>
         </thead>
@@ -573,6 +574,82 @@ new Chart(document.getElementById('lifeChart').getContext('2d'),{
             y:{ticks:{color:'#888',callback:v=>'$'+v.toLocaleString()},grid:{color:'#EDE8E0'}}}}
 });
 
+// ── REORDER CASH FLOWS (deposits + balance payments by month) ─────
+function buildReorderFlows(){
+  const fl=new Array(36).fill(0);
+
+  // ── PUMICE STONE: 30/70 terms, 4-mo lead, 2-mo balance ───────────
+  {
+    const T_COG=3.935, G_COG=2.685, LEAD=4, BAL=2;
+    let iT=7000, iG=2000, iB=2000;
+    const ords=[];
+    const dT=m=>Math.min(3500,m<1?0:Math.round(100*Math.pow(1.3,m-1)));
+    const dG=m=>Math.min(350,Math.round(20*Math.pow(1.3,m)));
+    for(let m=0;m<36;m++){
+      ords.filter(o=>o.aM===m).forEach(o=>{
+        if(o.s==='T')iT+=o.q; else if(o.s==='G')iG+=o.q; else iB+=o.q;
+      });
+      ords.filter(o=>o.bM===m&&!o.bp).forEach(o=>{fl[m]+=o.t*0.70;o.bp=true;});
+      iT=Math.max(0,iT-dT(m)); iG=Math.max(0,iG-dG(m)); iB=Math.max(0,iB-dG(m));
+      [['T',iT,dT,T_COG,1000],['G',iG,dG,G_COG,500],['B',iB,dG,G_COG,500]].forEach(([s,iv,df,cog,mn])=>{
+        let p=iv;
+        for(let i=1;i<=LEAD;i++) p-=df(m+i<36?m+i:35);
+        if(p<0&&!ords.some(o=>o.s===s&&!o.bp&&o.aM>m&&o.aM<=m+LEAD)){
+          let q=0; for(let i=LEAD;i<LEAD+3;i++) q+=df(m+i<36?m+i:35);
+          q=Math.max(mn,Math.round(q/500)*500);
+          const t=q*cog; fl[m]+=t*0.30;
+          ords.push({s,q,t,aM:m+LEAD,bM:m+BAL,bp:false});
+        }
+      });
+    }
+  }
+
+  // ── SUGAR KEEPERS: hardcoded seasonal schedule, 30/70, 3-mo lead ─
+  // Two orders/year: Sep (holiday) + Feb (spring top-up), proportional to annual demand
+  {
+    const COG=1.10;
+    // [depositMonth, qty, balanceMonth]
+    [[1,5500,3],[6,4500,8],[13,6500,15],[18,5500,20],[25,7500,27],[30,6500,32]].forEach(([dM,q,bM])=>{
+      const t=q*COG;
+      if(dM<36) fl[dM]+=t*0.30;
+      if(bM<36) fl[bM]+=t*0.70;
+    });
+  }
+
+  // ── ROLLING GRIPS: first BOM order + demand-driven subsequent runs ─
+  {
+    const UNIT_COG=16.717, LEAD=4, BAL=2;
+    // First order: deposit m=1, balance m=3, 1000 units arrive m=5
+    fl[1]+=25057*0.30; fl[3]+=25057*0.70;
+    let inv=0;
+    const ords=[];
+    for(let m=5;m<36;m++){
+      ords.filter(o=>o.aM===m).forEach(o=>inv+=o.q);
+      if(m<RG_LAUNCH){continue;}
+      const d=Math.min(RG_PEAK,Math.round(100*Math.pow(1.5,m-RG_LAUNCH)));
+      inv=Math.max(0,inv-d);
+      if(m===5) inv+=1000; // first batch already paid
+      let proj=inv;
+      for(let i=1;i<=LEAD;i++){
+        proj-=Math.min(RG_PEAK,Math.round(100*Math.pow(1.5,m+i-RG_LAUNCH)));
+        ords.filter(o=>o.aM===m+i).forEach(o=>proj+=o.q);
+      }
+      if(proj<0&&!ords.some(o=>o.aM>m&&o.aM<=m+LEAD)){
+        let q=0;
+        for(let i=LEAD;i<LEAD+3;i++) q+=Math.min(RG_PEAK,Math.round(100*Math.pow(1.5,m+i-RG_LAUNCH)));
+        q=Math.max(1000,Math.round(q/500)*500);
+        const t=q*UNIT_COG;
+        if(m<36)    fl[m]   +=t*0.30;
+        if(m+BAL<36)fl[m+BAL]+=t*0.70;
+        ords.push({q,aM:m+LEAD});
+      }
+    }
+  }
+
+  return fl;
+}
+const reorderPay=buildReorderFlows();
+
 // ── MONTH-BY-MONTH TABLE ─────────────────────────────────────────
 (function buildMoM(){
   const tbody=document.getElementById('momBody');
@@ -584,13 +661,13 @@ new Chart(document.getElementById('lifeChart').getContext('2d'),{
     const sk     = skPrf[m];
     const total  = pumice+ppc+rg+sk;
     const exp    = expenses[m];
-    const net    = total-exp;
+    const reord  = reorderPay[m];
+    const net    = total-exp-reord;
     cumNet      += net;
 
     const tr=document.createElement('tr');
     const netColor=net>=0?'var(--grn)':'var(--red)';
     const cumColor=cumNet>=0?'var(--grn)':'var(--red)';
-    // highlight year boundaries
     const isYrEnd=(m===4||m===16||m===28);
     if(isYrEnd) tr.style.borderTop='2px solid #C8A870';
     tr.innerHTML=`
@@ -601,15 +678,17 @@ new Chart(document.getElementById('lifeChart').getContext('2d'),{
       <td style="color:var(--c-sk)">+${$f(sk)}</td>
       <td style="font-weight:700">+${$f(total)}</td>
       <td style="color:var(--red)">−${$f(exp)}</td>
+      <td style="color:#E08080;font-weight:600">${reord>0?'−'+$f(reord):'—'}</td>
       <td style="font-weight:800;color:${netColor}">${net>=0?'+':'−'}${$f(Math.abs(net))}</td>
       <td style="font-weight:700;color:${cumColor}">${cumNet>=0?'+':'−'}${$f(Math.abs(cumNet))}</td>
     `;
     tbody.appendChild(tr);
   });
   // Total row
-  const totNet=months.reduce((s,m)=>s+pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]+skPrf[m]-expenses[m],0);
-  const totInc=months.reduce((s,m)=>s+pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]+skPrf[m],0);
-  const totExp=months.reduce((s,m)=>s+expenses[m],0);
+  const totInc  =months.reduce((s,m)=>s+pumicePrf[m]+ppcRevOmni[m]+rgPrf[m]+skPrf[m],0);
+  const totExp  =months.reduce((s,m)=>s+expenses[m],0);
+  const totReord=months.reduce((s,m)=>s+reorderPay[m],0);
+  const totNet  =totInc-totExp-totReord;
   const tot=document.createElement('tr'); tot.className='tot';
   tot.innerHTML=`
     <td>TOTAL 36 MO</td>
@@ -619,6 +698,7 @@ new Chart(document.getElementById('lifeChart').getContext('2d'),{
     <td>+${$f(months.reduce((s,m)=>s+skPrf[m],0))}</td>
     <td>+${$f(totInc)}</td>
     <td style="color:#E08080">−${$f(totExp)}</td>
+    <td style="color:#E08080">−${$f(totReord)}</td>
     <td style="color:${totNet>=0?'#7EE8A2':'#E08080'};font-weight:800">${totNet>=0?'+':'−'}${$f(Math.abs(totNet))}</td>
     <td></td>
   `;
