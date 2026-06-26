@@ -158,7 +158,7 @@ table.detail tr.yr td{background:#F5E6D5!important;font-weight:700;}
         <div class="bname" style="color:#F2A87E">Pumice Stone</div>
         <div class="bsub">Sifri Art · Amazon FBA · 3 SKUs</div>
         <div class="bamt" id="h-pumice-rev">—</div>
-        <div class="blbl">36-Mo Revenue</div>
+        <div class="blbl">36-Mo Net Profit</div>
         <div class="btn">Full Dashboard →</div>
       </a>
       <a class="biz-card" href="ppc.html">
@@ -166,7 +166,7 @@ table.detail tr.yr td{background:#F5E6D5!important;font-weight:700;}
         <div class="bname" style="color:#6FA3E0">PPC Services</div>
         <div class="bsub">4 Clients · Amazon PPC Management</div>
         <div class="bamt" id="h-ppc-rev">—</div>
-        <div class="blbl">36-Mo Revenue (w/ Omni)</div>
+        <div class="blbl">36-Mo Income (w/ Omni)</div>
         <div class="btn">Full Dashboard →</div>
       </a>
       <a class="biz-card" href="rolling-grips.html">
@@ -174,7 +174,7 @@ table.detail tr.yr td{background:#F5E6D5!important;font-weight:700;}
         <div class="bname" style="color:#C8FF00">Rolling Grips</div>
         <div class="bsub">Kickstarter Launch · Amazon FBA</div>
         <div class="bamt" id="h-rg-rev">—</div>
-        <div class="blbl">36-Mo Revenue</div>
+        <div class="blbl">36-Mo Net Profit</div>
         <div class="btn">Full Dashboard →</div>
       </a>
       <a class="biz-card" href="sugar-keepers.html">
@@ -361,9 +361,9 @@ const totExp=sum36(expenses);
 const totNet=totPumPrf+totPpcRev+totRgPrf+totSkPrf-totExp;
 
 // ── HERO ──────────────────────────────────────────────────────────
-document.getElementById('h-pumice-rev').textContent='$'+Math.round(totPumRev/1000)+'K';
+document.getElementById('h-pumice-rev').textContent='$'+Math.round(totPumPrf/1000)+'K';
 document.getElementById('h-ppc-rev').textContent='$'+Math.round(totPpcRev/1000)+'K';
-document.getElementById('h-rg-rev').textContent='$'+Math.round(totRgRev/1000)+'K';
+document.getElementById('h-rg-rev').textContent='$'+Math.round(totRgPrf/1000)+'K';
 document.getElementById('h-sk-rev').textContent='$'+Math.round(totSkPrf/1000)+'K';
 
 // ── PORTFOLIO KPIs ─────────────────────────────────────────────────
