@@ -459,6 +459,8 @@ function simulate() {
     cash += prevPrf;
 
     // Place reorders BEFORE sales so throttle logic can see newly-placed arrivals
+    // BUFFER_MOS: target months of stock to have on hand after each reorder arrives
+    const BUFFER_MOS = 6;
     let depOut=0;
     SKUS.forEach(sku=>{
       const lead=LEAD[sku];
@@ -480,8 +482,13 @@ function simulate() {
         if(isPS){qty=2000;psUsed=true;}
         else{
           const deficit=-projStock();
-          const fd=dem(Math.min(m+lead,23))[sku];
-          qty=Math.max(MIN_Q[sku], deficit+fd);
+          // Order enough to cover deficit + 6 months of demand after arrival (buffer goal)
+          let bufDem=0;
+          for(let i=lead;i<lead+BUFFER_MOS;i++){
+            const fm=m+i; if(fm>=24) break;
+            bufDem+=dem(fm)[sku];
+          }
+          qty=Math.max(MIN_Q[sku], deficit+bufDem);
           qty=Math.ceil(qty/500)*500;
         }
         const total=qty*cpu, dep=total*0.30;
@@ -683,9 +690,16 @@ rows.forEach(r=>{
     ?`<td style="color:var(--pur);font-weight:800;background:#EEE8F8">+${$f(r.inj)}</td>`
     :`<td class="mut">—</td>`;
 
-  const cashOutTotal = r.depOut + r.balOut;
-  const cashOutCell = cashOutTotal > 0
-    ? `<td style="color:var(--red);font-weight:700">−${$f(cashOutTotal)}</td>`
+  const skuAbbr = {terra:'T', gray:'G', black:'B'};
+  const cashLines = [];
+  orders.filter(o=>o.orderM===r.m).forEach(o=>
+    cashLines.push(`−${$f(o.deposit)} <span style="font-size:9px;font-weight:500;opacity:.75">${skuAbbr[o.sku]}30%${o.isPS?' stone':''}${o.units>=5000?' '+Nf(o.units)+'u':''}</span>`)
+  );
+  orders.filter(o=>o.balM===r.m&&o.balM<24).forEach(o=>
+    cashLines.push(`−${$f(o.total*0.70)} <span style="font-size:9px;font-weight:500;opacity:.75">${skuAbbr[o.sku]}70%</span>`)
+  );
+  const cashOutCell = cashLines.length > 0
+    ? `<td style="color:var(--red);font-weight:700;line-height:1.7;white-space:nowrap">${cashLines.join('<br>')}</td>`
     : `<td class="mut">—</td>`;
 
   tr.innerHTML=`
