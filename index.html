@@ -143,6 +143,7 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
   <a href="#invChart">📦 Inventory</a>
   <a href="#reorders">🔔 Reorder Calendar</a>
   <a href="#monthly">📊 Monthly Table</a>
+  <a href="#fastramp">⚡ Fast Ramp</a>
 </nav>
 
 <div class="hdr">
@@ -404,6 +405,61 @@ tr.tot td{background:#1C1410!important;color:#fff!important;font-weight:700;}
   </div>
 </div>
 
+<!-- FAST RAMP PROJECTION -->
+<div class="sec" id="fastramp" style="padding-top:10px;">
+  <div class="sec-hd">Accelerated Ramp — Fastest Path to 3,500 Terracotta Units/Mo <span class="chip" style="background:var(--gold);color:#1C1410">Scenario 2</span></div>
+  <div style="background:#FEF8ED;border:1.5px solid #EAD9A8;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:11.5px;line-height:1.6;">
+    <strong>What's different from the base case:</strong> Terracotta demand grows <strong>1.6×/month</strong> instead of 1.3×/month (gray &amp; black unchanged, same cash-constrained reorder logic). This pace requires <strong>+$8,500 extra upfront capital</strong> (Aug 2026) on top of the existing plan — total capital becomes <strong>$109,229</strong> instead of $100,729. Without that extra cushion, faster growth just causes deeper stockouts and negative cash, not more sales.
+  </div>
+
+  <div class="kpis" style="grid-template-columns:repeat(5,1fr);padding:0;margin-bottom:10px;">
+    <div class="kpi"><div class="l">First Hits 3,500/mo</div><div class="v" style="color:var(--gold)" id="fFirstHit">—</div><div class="s" id="fBaseFirstHit">—</div></div>
+    <div class="kpi"><div class="l">Sustained From</div><div class="v" style="color:var(--grn)" id="fSustained">—</div><div class="s">never dips below target again</div></div>
+    <div class="kpi"><div class="l">Extra Capital Needed</div><div class="v" style="color:var(--terra)">+$8,500</div><div class="s">upfront, Aug 2026</div></div>
+    <div class="kpi"><div class="l">36-Mo Profit</div><div class="v" style="color:var(--grn)" id="fProfit">—</div><div class="s" id="fProfitDelta">—</div></div>
+    <div class="kpi"><div class="l">Min Cash Balance</div><div class="v" id="fMinCash">—</div><div class="s">vs base case's, see note</div></div>
+  </div>
+
+  <div class="chart-wrap" style="margin-bottom:10px;">
+    <h3>Terracotta Units Sold / Month — Fast Ramp vs Base Case</h3>
+    <div class="leg">
+      <div class="leg-i"><div class="leg-dot" style="background:var(--gold)"></div>Fast Ramp (1.6×/mo)</div>
+      <div class="leg-i"><div class="leg-dot" style="background:var(--terra)"></div>Base Case (1.3×/mo)</div>
+    </div>
+    <div class="cw"><canvas id="fastChart"></canvas></div>
+  </div>
+
+  <div class="tbl-wrap">
+    <button class="tbl-toggle" id="fastTblBtn" onclick="toggleFastTbl()">
+      <span>📋 Fast Ramp — Full 36-Month Breakdown</span>
+      <span class="arr">▼</span>
+    </button>
+    <div class="tbl-inner" id="fastTblInner">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2" style="text-align:left">Month</th>
+            <th colspan="2" style="background:#7A3010">TERRACOTTA+GLASS</th>
+            <th colspan="2" style="background:#3A6060">GRAY</th>
+            <th colspan="2" style="background:#2A2A2A">BLACK</th>
+            <th rowspan="2" style="background:#1A3A5C">Revenue</th>
+            <th rowspan="2" style="background:#1A4A2E">Profit</th>
+            <th rowspan="2" style="background:#4A1A1A">Cash Out<br><span style="font-weight:400;font-size:10px">orders</span></th>
+            <th rowspan="2" style="background:#3A2050">Cash In</th>
+            <th rowspan="2" style="background:#2E1A4A">Cash</th>
+          </tr>
+          <tr>
+            <th style="background:#7A3010">Sold</th><th style="background:#7A3010">Stock</th>
+            <th style="background:#3A6060">Sold</th><th style="background:#3A6060">Stock</th>
+            <th style="background:#2A2A2A">Sold</th><th style="background:#2A2A2A">Stock</th>
+          </tr>
+        </thead>
+        <tbody id="fastTblBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <div class="foot">Sifri Art LLC · Pumice Stone Business Dashboard · Jun 2026 · Cash-constrained simulation — $0 starting cash, no outside capital except $10K Jan 2027</div>
 
 <script>
@@ -423,20 +479,25 @@ const BUFFER_MOS = 6; // target months of stock to hold after each reorder arriv
 const MFL = ['Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026','Jan 2027','Feb 2027','Mar 2027','Apr 2027','May 2027','Jun 2027','Jul 2027','Aug 2027','Sep 2027','Oct 2027','Nov 2027','Dec 2027','Jan 2028','Feb 2028','Mar 2028','Apr 2028','May 2028','Jun 2028','Jul 2028','Aug 2028','Sep 2028','Oct 2028','Nov 2028','Dec 2028','Jan 2029','Feb 2029','Mar 2029','Apr 2029','May 2029','Jun 2029','Jul 2029'];
 const MSH = MFL.map(s=>s.replace(' 20','\''));
 
-// Terra: 1.3× monthly growth starting Sep (m=1), capped at 3,500/mo (~Dec 2027)
+// Terra: growth×/month starting Sep (m=1), capped at 3,500/mo
 // Gray/Black: 1.3× monthly growth starting Aug (m=0), capped at 350/mo
 // First 2 months (m=0,1 = Aug+Sep): all profit → launch ads → zero cash retained
 const TERRA_TARGET = 3500;
-function dem(m) {
-  return {
-    terra: m < 1 ? 0 : Math.min(TERRA_TARGET, Math.round(100 * Math.pow(1.3, m-1))),
-    gray:  Math.min(350, Math.round(20  * Math.pow(1.3, m))),
-    black: Math.min(350, Math.round(20  * Math.pow(1.3, m)))
+const TERRA_GROWTH_BASE = 1.3;
+const TERRA_GROWTH_FAST = 1.6; // accelerated ramp — fastest path to 3,500/mo that still avoids negative cash
+function makeDem(terraGrowth) {
+  return function(m) {
+    return {
+      terra: m < 1 ? 0 : Math.min(TERRA_TARGET, Math.round(100 * Math.pow(terraGrowth, m-1))),
+      gray:  Math.min(350, Math.round(20  * Math.pow(1.3, m))),
+      black: Math.min(350, Math.round(20  * Math.pow(1.3, m)))
+    };
   };
 }
+const dem = makeDem(TERRA_GROWTH_BASE);
 
 // ── SIMULATION ────────────────────────────────────────────────────────────────
-function simulate() {
+function simulate(demFn, injections) {
   let inv  = {terra:4000, gray:1500, black:1500};
   let cash = 0;
   const orders = [], reorders = [];
@@ -449,7 +510,7 @@ function simulate() {
   let prevPrf = 0;
 
   for (let m=0; m<36; m++) {
-    const inj = m===5 ? 10000 : 0;
+    const inj = injections[m] || 0;
     if (inj) cash += inj;
 
     // Arrivals
@@ -474,7 +535,7 @@ function simulate() {
         let p=inv[sku];
         for(let i=1;i<=w;i++){
           const fm=m+i; if(fm>=36) break;
-          p-=dem(fm)[sku];
+          p-=demFn(fm)[sku];
           orders.filter(o=>o.sku===sku&&o.arrM===fm).forEach(o=>p+=o.units);
         }
         return p;
@@ -491,13 +552,13 @@ function simulate() {
           let bufDem=0;
           for(let i=lead;i<lead+BUFFER_MOS;i++){
             const fm=m+i; if(fm>=36) break;
-            bufDem+=dem(fm)[sku];
+            bufDem+=demFn(fm)[sku];
           }
           qty=Math.max(MIN_Q[sku], deficit+bufDem);
           qty=Math.ceil(qty/500)*500;
           cpu=qty>=5000?BULK_COG[sku]:COG[sku];
           if(cash < qty*cpu*0.30){
-            const fd=dem(Math.min(m+lead,23))[sku];
+            const fd=demFn(Math.min(m+lead,23))[sku];
             qty=Math.max(MIN_Q[sku], Math.ceil((Math.max(1,deficit)+fd)/500)*500);
             cpu=qty>=5000?BULK_COG[sku]:COG[sku];
           }
@@ -508,7 +569,7 @@ function simulate() {
         let projBal=cash-dep;
         for(let bi=1;bi<=BAL_M[sku];bi++){
           const bfm=m+bi; if(bfm>=36) break;
-          const bPrf=SKUS.reduce((a,s)=>a+dem(bfm)[s]*PRF[s],0);
+          const bPrf=SKUS.reduce((a,s)=>a+demFn(bfm)[s]*PRF[s],0);
           projBal+=(bfm<2)?0:bPrf;
           orders.filter(o=>o.balM===bfm&&!o.bPaid).forEach(o=>projBal-=o.total*0.70);
         }
@@ -521,7 +582,7 @@ function simulate() {
     });
 
     // Sales — sell as much as stock allows
-    const d=dem(m);
+    const d=demFn(m);
     const sold={
       terra:Math.min(d.terra, Math.max(0,inv.terra)),
       gray: Math.min(d.gray,  Math.max(0,inv.gray)),
@@ -553,8 +614,15 @@ function simulate() {
   return{rows,reorders,orders,totRev,totP,peakP,peakPm,peakR,payM,f10M};
 }
 
-const SIM = simulate();
+const BASE_INJ = {5:10000};
+const SIM = simulate(dem, BASE_INJ);
 const {rows,reorders,orders,totRev,totP,peakP,peakPm,peakR,payM,f10M} = SIM;
+
+// Accelerated scenario: terra grows 1.6×/mo instead of 1.3×/mo, needs +$8,500 upfront
+// (Aug 2026) on top of the existing plan to stay cash-positive throughout.
+const demFast = makeDem(TERRA_GROWTH_FAST);
+const FAST_INJ = {0:8500, 5:10000};
+const FAST_SIM = simulate(demFast, FAST_INJ);
 
 // ── FORMAT ────────────────────────────────────────────────────────────────────
 const $f=(n,d=0)=>'$'+n.toFixed(d).replace(/\B(?=(\d{3})+(?!\d))/g,',');
@@ -675,72 +743,73 @@ const tot=document.createElement('tr');
 tot.innerHTML=`<td class="tot" style="background:#1C1410;color:#fff;font-weight:700" colspan="3">TOTAL (${reorders.length} orders)</td><td class="tot" style="background:#1C1410;color:#fff;font-weight:700;text-align:right">${$f(totalRC)}</td><td colspan="5" class="tot" style="background:#1C1410;color:rgba(255,255,255,.5);font-size:10px">total inventory investment across 36 months</td>`;
 rcBody.appendChild(tot);
 
-// ── MONTHLY TABLE ─────────────────────────────────────────────────────────────
-// Determine first month where Terra demand hits 3500 target
-const targetHitM = rows.findIndex(r => dem(r.m).terra >= TERRA_TARGET);
+// ── MONTHLY TABLE (reusable — used for base case + fast-ramp scenario) ────────
+function renderMonthlyTable(simRows, simOrders, demFn, totRevV, totPV, tbodyId, totInjLabel){
+  const targetHitM = simRows.findIndex(r => demFn(r.m).terra >= TERRA_TARGET);
+  const tbody=document.getElementById(tbodyId);
 
-const tbody=document.getElementById('tblBody');
+  const bannerGrow = document.createElement('tr');
+  const growthEndLabel = targetHitM > 0 ? MFL[targetHitM-1] : MFL[0];
+  bannerGrow.innerHTML=`<td colspan="12" style="background:rgba(142,68,173,.08);border-left:3px solid var(--pur);padding:5px 10px;font-size:11px;font-weight:700;color:var(--pur);">🚀 GROWTH PHASE (Aug 2026 – ${growthEndLabel}) — All profits reinvested into advertising · Target: ${Nf(TERRA_TARGET)} Terra sales/mo</td>`;
+  tbody.appendChild(bannerGrow);
 
-// Growth phase banner
-const bannerGrow = document.createElement('tr');
-const growthEndLabel = targetHitM > 0 ? MFL[targetHitM-1] : MFL[0];
-bannerGrow.innerHTML=`<td colspan="12" style="background:rgba(142,68,173,.08);border-left:3px solid var(--pur);padding:5px 10px;font-size:11px;font-weight:700;color:var(--pur);">🚀 GROWTH PHASE (Aug 2026 – ${growthEndLabel}) — All profits reinvested into advertising · Target: ${Nf(TERRA_TARGET)} Terra sales/mo</td>`;
-tbody.appendChild(bannerGrow);
+  simRows.forEach(r=>{
+    if(r.m === targetHitM){
+      const bannerAcc = document.createElement('tr');
+      bannerAcc.innerHTML=`<td colspan="12" style="background:rgba(46,139,87,.08);border-left:3px solid var(--grn);padding:5px 10px;font-size:11px;font-weight:700;color:var(--grn);">✅ PROFIT ACCUMULATION PHASE (${MFL[targetHitM]}+) — ${Nf(TERRA_TARGET)} Terra/mo target reached · Profits now build cash reserves</td>`;
+      tbody.appendChild(bannerAcc);
+    }
 
-rows.forEach(r=>{
-  // Insert "target reached" banner before the first month at 3500
-  if(r.m === targetHitM){
-    const bannerAcc = document.createElement('tr');
-    bannerAcc.innerHTML=`<td colspan="12" style="background:rgba(46,139,87,.08);border-left:3px solid var(--grn);padding:5px 10px;font-size:11px;font-weight:700;color:var(--grn);">✅ PROFIT ACCUMULATION PHASE (${MFL[targetHitM]}+) — ${Nf(TERRA_TARGET)} Terra/mo target reached · Profits now build cash reserves</td>`;
-    tbody.appendChild(bannerAcc);
-  }
+    const tr=document.createElement('tr');
+    const inGrowth = r.m < targetHitM;
+    const cls=[];
+    if(r.inj)    cls.push('pp');
+    if(r.hasRO)  cls.push('rr');
+    tr.className=cls.join(' ');
+    if(inGrowth) tr.style.background='rgba(142,68,173,.04)';
 
-  const tr=document.createElement('tr');
-  const inGrowth = r.m < targetHitM;
-  const cls=[];
-  if(r.inj)    cls.push('pp');
-  if(r.hasRO)  cls.push('rr');
-  tr.className=cls.join(' ');
-  if(inGrowth) tr.style.background='rgba(142,68,173,.04)';
+    const cashCls=r.cash<0?'neg':r.cash<3000?'wc':'pos';
+    const roTag=r.hasRO?` <span style="font-size:9px;background:var(--ora);color:#fff;padding:1px 4px;border-radius:5px;font-weight:700">ORDER</span>`:'';
+    const growTag=inGrowth?` <span style="font-size:9px;background:var(--pur);color:#fff;padding:1px 4px;border-radius:5px;font-weight:700">→ Ads</span>`:'';
 
-  const cashCls=r.cash<0?'neg':r.cash<3000?'wc':'pos';
-  const roTag=r.hasRO?` <span style="font-size:9px;background:var(--ora);color:#fff;padding:1px 4px;border-radius:5px;font-weight:700">ORDER</span>`:'';
-  const growTag=inGrowth?` <span style="font-size:9px;background:var(--pur);color:#fff;padding:1px 4px;border-radius:5px;font-weight:700">→ Ads</span>`:'';
+    const injCell=r.inj
+      ?`<td style="color:var(--pur);font-weight:800;background:#EEE8F8">+${$f(r.inj)}</td>`
+      :`<td class="mut">—</td>`;
 
-  const injCell=r.inj
-    ?`<td style="color:var(--pur);font-weight:800;background:#EEE8F8">+${$f(r.inj)}</td>`
-    :`<td class="mut">—</td>`;
+    const skuAbbr = {terra:'T', gray:'G', black:'B'};
+    const cashLines = [];
+    simOrders.filter(o=>o.orderM===r.m).forEach(o=>
+      cashLines.push(`−${$f(o.deposit)} <span style="font-size:9px;font-weight:500;opacity:.75">${skuAbbr[o.sku]}30% ${Nf(o.units)}u${o.isPS?' stone':''}</span>`)
+    );
+    simOrders.filter(o=>o.balM===r.m&&o.balM<36).forEach(o=>
+      cashLines.push(`−${$f(o.total*0.70)} <span style="font-size:9px;font-weight:500;opacity:.75">${skuAbbr[o.sku]}70%</span>`)
+    );
+    const cashOutCell = cashLines.length > 0
+      ? `<td style="color:var(--red);font-weight:700;line-height:1.7;white-space:nowrap">${cashLines.join('<br>')}</td>`
+      : `<td class="mut">—</td>`;
 
-  const skuAbbr = {terra:'T', gray:'G', black:'B'};
-  const cashLines = [];
-  orders.filter(o=>o.orderM===r.m).forEach(o=>
-    cashLines.push(`−${$f(o.deposit)} <span style="font-size:9px;font-weight:500;opacity:.75">${skuAbbr[o.sku]}30% ${Nf(o.units)}u${o.isPS?' stone':''}</span>`)
-  );
-  orders.filter(o=>o.balM===r.m&&o.balM<36).forEach(o=>
-    cashLines.push(`−${$f(o.total*0.70)} <span style="font-size:9px;font-weight:500;opacity:.75">${skuAbbr[o.sku]}70%</span>`)
-  );
-  const cashOutCell = cashLines.length > 0
-    ? `<td style="color:var(--red);font-weight:700;line-height:1.7;white-space:nowrap">${cashLines.join('<br>')}</td>`
-    : `<td class="mut">—</td>`;
+    tr.innerHTML=`
+      <td>${r.label}${roTag}${growTag}</td>
+      <td>${Nf(r.sold.terra)}</td>
+      <td>${Nf(r.stockT)}</td>
+      <td>${Nf(r.sold.gray)}</td>
+      <td>${Nf(r.stockGr)}</td>
+      <td>${Nf(r.sold.black)}</td>
+      <td>${Nf(r.stockB)}</td>
+      <td>${$f(r.rev)}</td>
+      <td class="${r.prf>=10000?'pos':r.prf>0?'':'mut'}">${$f(r.prf)}${inGrowth?'<br><span style="font-size:9px;color:var(--pur);font-weight:600">→ reinvested</span>':''}</td>
+      ${cashOutCell}
+      ${injCell}
+      <td class="${cashCls}">${$f(r.cash)}</td>`;
+    tbody.appendChild(tr);
+  });
+  const totR=document.createElement('tr');
+  totR.innerHTML=`<td class="tot" colspan="7">36-MONTH TOTAL</td><td class="tot">${$f(totRevV)}</td><td class="tot">${$f(totPV)}</td><td class="tot" style="color:var(--red)">—</td><td class="tot" style="color:#C8B8F0">${totInjLabel}</td><td class="tot">—</td>`;
+  tbody.appendChild(totR);
+}
 
-  tr.innerHTML=`
-    <td>${r.label}${roTag}${growTag}</td>
-    <td>${Nf(r.sold.terra)}</td>
-    <td>${Nf(r.stockT)}</td>
-    <td>${Nf(r.sold.gray)}</td>
-    <td>${Nf(r.stockGr)}</td>
-    <td>${Nf(r.sold.black)}</td>
-    <td>${Nf(r.stockB)}</td>
-    <td>${$f(r.rev)}</td>
-    <td class="${r.prf>=10000?'pos':r.prf>0?'':'mut'}">${$f(r.prf)}${inGrowth?'<br><span style="font-size:9px;color:var(--pur);font-weight:600">→ reinvested</span>':''}</td>
-    ${cashOutCell}
-    ${injCell}
-    <td class="${cashCls}">${$f(r.cash)}</td>`;
-  tbody.appendChild(tr);
-});
-const totR=document.createElement('tr');
-totR.innerHTML=`<td class="tot" colspan="7">36-MONTH TOTAL</td><td class="tot">${$f(totRev)}</td><td class="tot">${$f(totP)}</td><td class="tot" style="color:var(--red)">—</td><td class="tot" style="color:#C8B8F0">+$10,000</td><td class="tot">—</td>`;
-tbody.appendChild(totR);
+renderMonthlyTable(rows, orders, dem, totRev, totP, 'tblBody', '+$10,000');
+renderMonthlyTable(FAST_SIM.rows, FAST_SIM.orders, demFast, FAST_SIM.totRev, FAST_SIM.totP, 'fastTblBody', '+$18,500');
 
 function toggleTbl(){
   document.getElementById('tblBtn').classList.toggle('op');
@@ -753,10 +822,55 @@ function toggleInv(){
   d.style.display=show?'block':'none';
   chip.textContent=(show?'▲ Hide':'▼ Show')+' breakdown';
 }
+function toggleFastTbl(){
+  document.getElementById('fastTblBtn').classList.toggle('op');
+  document.getElementById('fastTblInner').classList.toggle('op');
+}
+
+// ── FAST RAMP KPIs + CHART ──────────────────────────────────────────────────
+(function(){
+  const findFirst=(simRows)=>simRows.findIndex(r=>r.sold.terra>=TERRA_TARGET);
+  const findSustained=(simRows)=>{
+    for(let i=0;i<simRows.length;i++){
+      if(simRows[i].sold.terra>=TERRA_TARGET){
+        let ok=true;
+        for(let j=i;j<simRows.length;j++){ if(simRows[j].sold.terra<TERRA_TARGET){ok=false;break;} }
+        if(ok) return i;
+      }
+    }
+    return -1;
+  };
+  const baseFirst=findFirst(rows);
+  const fastFirst=findFirst(FAST_SIM.rows);
+  const fastSustained=findSustained(FAST_SIM.rows);
+  const fastMinCash=Math.min(...FAST_SIM.rows.map(r=>r.cash));
+  const baseMinCash=Math.min(...rows.map(r=>r.cash));
+  const profitDelta=FAST_SIM.totP-totP;
+
+  document.getElementById('fFirstHit').textContent=fastFirst>=0?MFL[fastFirst]:'beyond 36 mo';
+  document.getElementById('fBaseFirstHit').textContent='base case: '+(baseFirst>=0?MFL[baseFirst]:'beyond 36 mo');
+  document.getElementById('fSustained').textContent=fastSustained>=0?MFL[fastSustained]:'not within 36 mo';
+  document.getElementById('fProfit').textContent=$f(FAST_SIM.totP);
+  document.getElementById('fProfitDelta').textContent=(profitDelta>=0?'+':'')+$f(profitDelta)+' vs base';
+  document.getElementById('fMinCash').textContent=$f(fastMinCash);
+  document.getElementById('fMinCash').style.color=fastMinCash<0?'var(--red)':'var(--grn)';
+
+  new Chart(document.getElementById('fastChart'),{
+    type:'line',
+    data:{labels:MSH,datasets:[
+      {label:'Fast Ramp (1.6×/mo)',data:FAST_SIM.rows.map(r=>r.sold.terra),borderColor:'#D4A843',backgroundColor:'rgba(212,168,67,.12)',borderWidth:2,fill:true,tension:.3,pointRadius:2},
+      {label:'Base Case (1.3×/mo)', data:rows.map(r=>r.sold.terra),        borderColor:'#C4622D',backgroundColor:'transparent',            borderWidth:1.5,fill:false,tension:.3,pointRadius:1,borderDash:[4,3]}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${Nf(c.parsed.y)} units`}}},
+      scales:{y:{min:0,ticks:{callback:v=>Nf(v)},grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}}
+  });
+})();
 
 // NAV highlight
 const nls=document.querySelectorAll('nav a');
-const sids=['inv','assumptions','chart','invChart','reorders','monthly'];
+const sids=['inv','assumptions','chart','invChart','reorders','monthly','fastramp'];
 window.addEventListener('scroll',()=>{
   const y=window.scrollY+80;
   sids.forEach((id,i)=>{
